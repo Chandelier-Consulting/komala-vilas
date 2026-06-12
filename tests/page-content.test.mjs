@@ -28,7 +28,13 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
     /https:\/\/www\.google\.com\/maps\/place\/Komala\+Vilas\/@37\.3531031,-122\.0116365,15\.64z/,
   );
   assert.match(styles, /\.menu-item:hover[\s\S]*background:/);
-  assert.match(styles, /\.functional-menu-list \.menu-group \+ \.menu-group[\s\S]*linear-gradient/);
+  assert.match(styles, /\.menu-page[\s\S]*background: var\(--background\)/);
+  assert.match(styles, /\.menu-filter-bar\.section-shell\s*{[^}]*width: 100%/);
+  assert.match(styles, /\.menu-filter-bar\.section-shell\s*{[^}]*padding-inline:/);
+  assert.doesNotMatch(
+    styles,
+    /\.functional-menu-list \.menu-group \+ \.menu-group\s*{[^}]*(?:linear-gradient|border-top|border-bottom)/,
+  );
   assert.match(about, /export default function AboutPage/);
   assert.match(about, /timeline-curve/);
   assert.match(about, /timelineItems/);

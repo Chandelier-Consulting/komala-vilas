@@ -1098,6 +1098,10 @@ address {
     padding-inline: 16px;
   }
 
+  .menu-filter-bar.section-shell {
+    padding-inline: 16px;
+  }
+
   .brand-name {
     font-size: 21px;
   }
@@ -1467,6 +1471,10 @@ address {
   color: #bfe3cf;
 }
 
+.menu-page {
+  background: var(--background);
+}
+
 .menu-hero,
 .about-hero {
   display: grid;
@@ -1507,8 +1515,14 @@ address {
   gap: 10px;
   overflow-x: auto;
   padding: 14px 0;
-  background: rgba(251, 243, 230, 0.86);
+  background: var(--background);
+  box-shadow: 0 1px 0 rgba(44, 29, 18, 0.08);
   backdrop-filter: blur(12px);
+}
+
+.menu-filter-bar.section-shell {
+  width: 100%;
+  padding-inline: max(28px, calc((100vw - 1180px) / 2));
 }
 
 .menu-filter-bar a {
@@ -1558,15 +1572,8 @@ address {
 }
 
 .functional-menu-list .menu-group + .menu-group {
-  margin-top: 20px;
-  padding-top: 46px;
-  background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(44, 29, 18, 0.14),
-      transparent
-    )
-    top / 100% 1px no-repeat;
+  margin-top: 34px;
+  padding-top: 24px;
 }
 
 .functional-menu-list .menu-group .menu-group-heading {
