@@ -31,6 +31,9 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
   assert.match(styles, /\.menu-page[\s\S]*background: var\(--background\)/);
   assert.match(styles, /\.menu-filter-bar\.section-shell\s*{[^}]*width: 100%/);
   assert.match(styles, /\.menu-filter-bar\.section-shell\s*{[^}]*padding-inline:/);
+  assert.match(styles, /\.menu-filter-bar a\s*{[^}]*linear-gradient/);
+  assert.match(styles, /\.menu-filter-bar a::before/);
+  assert.match(styles, /\.menu-filter-bar a:hover,\s*\.menu-filter-bar a:focus-visible\s*{[^}]*transform: translateY\(-2px\)/);
   assert.doesNotMatch(
     styles,
     /\.functional-menu-list \.menu-group \+ \.menu-group\s*{[^}]*(?:linear-gradient|border-top|border-bottom)/,
