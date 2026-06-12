@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const orderUrl = "https://komalavilas.com";
 const mapUrl =
-  "https://www.google.com/maps/search/?api=1&query=Komala+Vilas+1020+E+El+Camino+Real+Sunnyvale+CA+94087";
+  "https://www.google.com/maps/place/Komala+Vilas/@37.3531031,-122.0116365,15.64z/data=!4m6!3m5!1s0x808fb589fd36ead1:0x86106cdc3661185f!8m2!3d37.351395!4d-122.006376!16s%2Fg%2F1tf65qdg?entry=ttu&g_ep=EgoyMDI2MDYwOS4wIKXMDSoASAFQAw%3D%3D";
 const phone = "(408) 733-7400";
 
 const signatureDishes = [
