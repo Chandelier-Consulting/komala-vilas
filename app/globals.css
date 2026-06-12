@@ -1591,8 +1591,15 @@ address {
 }
 
 .functional-menu-list .menu-group + .menu-group {
-  margin-top: 34px;
-  padding-top: 24px;
+  margin-top: 20px;
+  padding-top: 46px;
+  background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(44, 29, 18, 0.14),
+      transparent
+    )
+    top / 100% 1px no-repeat;
 }
 
 .functional-menu-list .menu-group .menu-group-heading {
