@@ -3,11 +3,12 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 test("app uses the corrected Komala Vilas brand and restaurant content", async () => {
-  const [page, menu, about, layout, pkg] = await Promise.all([
+  const [page, menu, about, layout, styles, pkg] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/menu/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
   ]);
 
@@ -22,6 +23,12 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
   assert.match(menu, /export default function MenuPage/);
   assert.match(menu, /Unlimited South Indian Thali/);
   assert.match(menu, /menu-filter-bar/);
+  assert.match(
+    layout,
+    /https:\/\/www\.google\.com\/maps\/place\/Komala\+Vilas\/@37\.3531031,-122\.0116365,15\.64z/,
+  );
+  assert.match(styles, /\.menu-item:hover[\s\S]*background:/);
+  assert.match(styles, /\.functional-menu-list \.menu-group \+ \.menu-group[\s\S]*linear-gradient/);
   assert.match(about, /export default function AboutPage/);
   assert.match(about, /timeline-curve/);
   assert.match(about, /timelineItems/);

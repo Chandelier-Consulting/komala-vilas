@@ -13,6 +13,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const visitMapUrl =
+  "https://www.google.com/maps/place/Komala+Vilas/@37.3531031,-122.0116365,15.64z/data=!4m6!3m5!1s0x808fb589fd36ead1:0x86106cdc3661185f!8m2!3d37.351395!4d-122.006376!16s%2Fg%2F1tf65qdg?entry=ttu&g_ep=EgoyMDI2MDYwOS4wIKXMDSoASAFQAw%3D%3D";
+
 export const metadata: Metadata = {
   title: "Komala Vilas | South Indian Vegetarian Restaurant",
   description:
@@ -42,7 +45,7 @@ export default function RootLayout({
             <Link href="/">Home</Link>
             <Link href="/menu">Menu</Link>
             <Link href="/about">About</Link>
-            <Link href="/#visit">Visit</Link>
+            <a href={visitMapUrl}>Visit</a>
             <a className="nav-order" href="https://komalavilas.com">
               Order Online
             </a>
