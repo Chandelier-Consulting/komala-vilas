@@ -1526,57 +1526,32 @@ address {
 }
 
 .menu-filter-bar a {
-  position: relative;
   flex: 0 0 auto;
-  overflow: hidden;
   padding: 10px 16px;
-  border: 1px solid rgba(194, 86, 42, 0.2);
+  border: 1px solid rgba(138, 47, 26, 0.24);
   border-radius: 999px;
-  background:
-    linear-gradient(135deg, rgba(255, 250, 241, 0.96), rgba(246, 208, 113, 0.22)),
-    var(--cream);
-  color: #6f321f;
+  background: var(--spice);
+  color: #fff5e8;
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
   box-shadow:
-    inset 0 -1px 0 rgba(255, 255, 255, 0.7),
-    0 8px 20px -18px rgba(44, 29, 18, 0.5);
+    0 8px 0 rgba(138, 47, 26, 0.32),
+    0 14px 28px -18px rgba(44, 29, 18, 0.7);
   transition:
     transform 0.18s ease,
-    border-color 0.18s ease,
-    color 0.18s ease,
+    background 0.18s ease,
     box-shadow 0.18s ease;
-}
-
-.menu-filter-bar a::before {
-  content: "";
-  position: absolute;
-  inset: 2px auto 2px 2px;
-  width: 26px;
-  border-radius: inherit;
-  background: linear-gradient(135deg, rgba(216, 154, 31, 0.34), rgba(194, 86, 42, 0.22));
-  opacity: 0.7;
-  transform: translateX(-18px) scale(0.8);
-  transition:
-    opacity 0.18s ease,
-    transform 0.18s ease;
 }
 
 .menu-filter-bar a:hover,
 .menu-filter-bar a:focus-visible {
-  border-color: rgba(194, 86, 42, 0.48);
-  color: var(--spice-dark);
+  background: var(--spice-dark);
+  color: #fffaf1;
   box-shadow:
-    inset 0 -1px 0 rgba(255, 255, 255, 0.8),
-    0 16px 30px -20px rgba(138, 47, 26, 0.75);
-  transform: translateY(-2px);
-}
-
-.menu-filter-bar a:hover::before,
-.menu-filter-bar a:focus-visible::before {
-  opacity: 1;
-  transform: translateX(0) scale(1);
+    0 12px 0 rgba(138, 47, 26, 0.36),
+    0 22px 36px -20px rgba(44, 29, 18, 0.82);
+  transform: translateY(-4px);
 }
 
 .menu-filter-bar a:focus-visible {
