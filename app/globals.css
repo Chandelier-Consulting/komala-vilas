@@ -1098,6 +1098,10 @@ address {
     padding-inline: 16px;
   }
 
+  .menu-filter-bar.section-shell {
+    padding-inline: 16px;
+  }
+
   .brand-name {
     font-size: 21px;
   }
@@ -1467,6 +1471,10 @@ address {
   color: #bfe3cf;
 }
 
+.menu-page {
+  background: var(--background);
+}
+
 .menu-hero,
 .about-hero {
   display: grid;
@@ -1507,19 +1515,44 @@ address {
   gap: 10px;
   overflow-x: auto;
   padding: 14px 0;
-  background: rgba(251, 243, 230, 0.86);
+  background: var(--background);
+  box-shadow: 0 1px 0 rgba(44, 29, 18, 0.08);
   backdrop-filter: blur(12px);
+}
+
+.menu-filter-bar.section-shell {
+  width: 100%;
+  padding-inline: max(28px, calc((100vw - 1180px) / 2));
 }
 
 .menu-filter-bar a {
   flex: 0 0 auto;
   padding: 10px 16px;
-  border: 1px solid rgba(44, 29, 18, 0.14);
+  border: 1px solid rgba(138, 47, 26, 0.24);
   border-radius: 999px;
-  background: var(--cream);
+  background: var(--spice);
+  color: #fff5e8;
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
+  box-shadow: 0 10px 24px -14px rgba(44, 29, 18, 0.72);
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.menu-filter-bar a:hover,
+.menu-filter-bar a:focus-visible {
+  background: var(--spice-dark);
+  color: #fffaf1;
+  box-shadow: 0 16px 30px -12px rgba(44, 29, 18, 0.78);
+  transform: translateY(-2px);
+}
+
+.menu-filter-bar a:focus-visible {
+  outline: 3px solid rgba(216, 154, 31, 0.42);
+  outline-offset: 3px;
 }
 
 .menu-workspace {
