@@ -1535,9 +1535,7 @@ address {
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
-  box-shadow:
-    0 8px 0 rgba(138, 47, 26, 0.32),
-    0 14px 28px -18px rgba(44, 29, 18, 0.7);
+  box-shadow: 0 10px 24px -14px rgba(44, 29, 18, 0.72);
   transition:
     transform 0.18s ease,
     background 0.18s ease,
@@ -1548,10 +1546,8 @@ address {
 .menu-filter-bar a:focus-visible {
   background: var(--spice-dark);
   color: #fffaf1;
-  box-shadow:
-    0 12px 0 rgba(138, 47, 26, 0.36),
-    0 22px 36px -20px rgba(44, 29, 18, 0.82);
-  transform: translateY(-4px);
+  box-shadow: 0 16px 30px -12px rgba(44, 29, 18, 0.78);
+  transform: translateY(-2px);
 }
 
 .menu-filter-bar a:focus-visible {

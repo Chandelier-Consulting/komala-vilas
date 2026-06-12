@@ -32,8 +32,9 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
   assert.match(styles, /\.menu-filter-bar\.section-shell\s*{[^}]*width: 100%/);
   assert.match(styles, /\.menu-filter-bar\.section-shell\s*{[^}]*padding-inline:/);
   assert.match(styles, /\.menu-filter-bar a\s*{[^}]*background: var\(--spice\)/);
-  assert.match(styles, /\.menu-filter-bar a\s*{[^}]*box-shadow:[^}]*0 8px 0 rgba\(138, 47, 26, 0\.32\)/);
-  assert.match(styles, /\.menu-filter-bar a:hover,\s*\.menu-filter-bar a:focus-visible\s*{[^}]*box-shadow:[^}]*0 12px 0 rgba\(138, 47, 26, 0\.36\)/);
+  assert.match(styles, /\.menu-filter-bar a\s*{[^}]*box-shadow:[^}]*0 10px 24px -14px rgba\(44, 29, 18, 0\.72\)/);
+  assert.match(styles, /\.menu-filter-bar a:hover,\s*\.menu-filter-bar a:focus-visible\s*{[^}]*box-shadow:[^}]*0 16px 30px -12px rgba\(44, 29, 18, 0\.78\)/);
+  assert.doesNotMatch(styles, /\.menu-filter-bar a\s*{[^}]*box-shadow:[^}]*0 \d+px 0 rgba/);
   assert.doesNotMatch(styles, /\.menu-filter-bar a::before/);
   assert.doesNotMatch(
     styles,
