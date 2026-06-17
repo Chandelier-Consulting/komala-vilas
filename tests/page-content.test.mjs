@@ -21,9 +21,13 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
   assert.match(page, /\/images\/komala-vilas-premium-hero\.jpg/);
   assert.match(page, /\/images\/signature-paper-dosa\.jpg/);
   assert.match(page, /\/images\/signature-thali\.jpg/);
+  assert.match(page, /<section className="hero-background background-pattern">/);
+  assert.match(page, /<div className="hero-premium section-shell">/);
   assert.match(menu, /export default function MenuPage/);
   assert.match(menu, /Unlimited South Indian Thali/);
   assert.match(menu, /menu-filter-bar/);
+  assert.doesNotMatch(menu, /page-hero background-pattern/);
+  assert.doesNotMatch(about, /page-hero background-pattern/);
   assert.match(
     layout,
     /https:\/\/www\.google\.com\/maps\/place\/Komala\+Vilas\/@37\.3531031,-122\.0116365,15\.64z/,
@@ -95,6 +99,7 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
   assert.match(`${page}\n${menu}\n${about}\n${catering}`, /quality=\{85\}/);
   assert.match(layout, /href="\/catering"/);
   assert.match(catering, /Komala Vilas catering/);
+  assert.doesNotMatch(catering, /page-hero background-pattern/);
   assert.match(catering, /CateringOrderForm/);
   assert.match(dashboard, /DashboardClient/);
   assert.match(orders, /validateCateringOrder/);

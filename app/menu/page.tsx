@@ -75,7 +75,7 @@ const menuSections = [
 export default function MenuPage() {
   return (
     <MotionMain className="menu-page">
-      <section className="section-shell page-hero background-pattern">
+      <section className="section-shell page-hero">
         <div>
           <p className="eyebrow">கோமளா விலாஸ் · Pure Vegetarian</p>
           <h1 className="text-balance">The Menu</h1>

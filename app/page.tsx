@@ -35,44 +35,46 @@ const reviews = [
 export default function Home() {
   return (
     <MotionMain>
-      <section className="hero-premium section-shell background-pattern">
-        <div className="hero-copy">
-          <MotionHeadline>
-            <p className="eyebrow">கோமளா விலாஸ் · Sunnyvale</p>
-            <h1 className="text-balance">
-              South Indian food with <span>temple-town depth.</span>
-            </h1>
-          </MotionHeadline>
-          <p className="lede">
-            Komala Vilas is a pure vegetarian South Indian kitchen for paper dosa,
-            rotating thali, idli vada, filter coffee, and catered feasts.
-          </p>
-          <div className="action-row">
-            <Link className="button button-primary" href="/catering">
-              Order Catering
-            </Link>
-            <Link className="button button-light" href="/menu">
-              Explore Menu
-            </Link>
+      <section className="hero-background background-pattern">
+        <div className="hero-premium section-shell">
+          <div className="hero-copy">
+            <MotionHeadline>
+              <p className="eyebrow">கோமளா விலாஸ் · Sunnyvale</p>
+              <h1 className="text-balance">
+                South Indian food with <span>temple-town depth.</span>
+              </h1>
+            </MotionHeadline>
+            <p className="lede">
+              Komala Vilas is a pure vegetarian South Indian kitchen for paper dosa,
+              rotating thali, idli vada, filter coffee, and catered feasts.
+            </p>
+            <div className="action-row">
+              <Link className="button button-primary" href="/catering">
+                Order Catering
+              </Link>
+              <Link className="button button-light" href="/menu">
+                Explore Menu
+              </Link>
+            </div>
+            <div className="quick-info">
+              <strong>Open daily from 8:30 AM</strong>
+              <span>1020 E El Camino Real, Sunnyvale</span>
+              <a href="tel:+14087337400">(408) 733-7400</a>
+            </div>
           </div>
-          <div className="quick-info">
-            <strong>Open daily from 8:30 AM</strong>
-            <span>1020 E El Camino Real, Sunnyvale</span>
-            <a href="tel:+14087337400">(408) 733-7400</a>
-          </div>
-        </div>
 
-        <div className="hero-visual" aria-label="Komala Vilas South Indian dishes">
-          <div className="temple-border">
-            <Image
-              className="photo-grade"
-              src="/images/komala-vilas-premium-hero.jpg"
-              alt="Premium Komala Vilas spread with dosa, thali, filter coffee, and temple pattern"
-              width={1400}
-              height={1800}
-              priority
-              quality={92}
-            />
+          <div className="hero-visual" aria-label="Komala Vilas South Indian dishes">
+            <div className="temple-border">
+              <Image
+                className="photo-grade"
+                src="/images/komala-vilas-premium-hero.jpg"
+                alt="Premium Komala Vilas spread with dosa, thali, filter coffee, and temple pattern"
+                width={1400}
+                height={1800}
+                priority
+                quality={92}
+              />
+            </div>
           </div>
         </div>
       </section>

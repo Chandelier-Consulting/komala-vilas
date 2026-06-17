@@ -97,6 +97,10 @@ img {
   z-index: 1;
 }
 
+.hero-background {
+  width: 100%;
+}
+
 .site-header {
   position: sticky;
   top: 0;

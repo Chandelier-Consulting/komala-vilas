@@ -32,7 +32,7 @@ const timelineItems = [
 export default function AboutPage() {
   return (
     <MotionMain className="about-page">
-      <section className="section-shell page-hero background-pattern">
+      <section className="section-shell page-hero">
         <div>
           <p className="eyebrow">Our story</p>
           <h1 className="text-balance">Not a concept. A rhythm.</h1>

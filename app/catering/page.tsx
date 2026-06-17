@@ -6,7 +6,7 @@ import { cateringPackages } from "@/lib/orders";
 export default function CateringPage() {
   return (
     <MotionMain className="catering-page">
-      <section className="section-shell page-hero background-pattern">
+      <section className="section-shell page-hero">
         <div>
           <p className="eyebrow">Komala Vilas catering</p>
           <h1 className="text-balance">South Indian feasts for serious gatherings.</h1>
