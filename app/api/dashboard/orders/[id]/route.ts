@@ -1,11 +1,11 @@
-import { getAdminAuth } from "@/lib/firebase-admin-auth";
 import { getAdminDb } from "@/lib/firebase-admin";
+import { verifyFirebaseIdToken } from "@/lib/firebase-auth-rest";
 import { isValidOrderStatus } from "@/lib/orders";
 
 async function verifyRequest(request: Request) {
   const token = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
   if (!token) return null;
-  return getAdminAuth().verifyIdToken(token).catch(() => null);
+  return verifyFirebaseIdToken(token);
 }
 
 export async function PATCH(request: Request, context: RouteContext<"/api/dashboard/orders/[id]">) {

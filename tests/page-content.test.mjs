@@ -87,7 +87,7 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
     readFile(new URL("../lib/orders.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/email.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/firebase-admin.ts", import.meta.url), "utf8"),
-    readFile(new URL("../lib/firebase-admin-auth.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/firebase-auth-rest.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/catering-orders/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/dashboard/orders/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/firebase-client.ts", import.meta.url), "utf8"),
@@ -121,10 +121,13 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
   assert.match(firebaseAdmin, /getFirebaseAdmin/);
   assert.match(firebaseAdmin, /getAdminDb/);
   assert.doesNotMatch(firebaseAdmin, /firebase-admin\/auth|getAdminAuth/);
-  assert.match(firebaseAdminAuth, /firebase-admin\/auth/);
+  assert.match(firebaseAdminAuth, /accounts:lookup/);
+  assert.match(firebaseAdminAuth, /NEXT_PUBLIC_FIREBASE_API_KEY/);
+  assert.doesNotMatch(firebaseAdminAuth, /firebase-admin\/auth|getAdminAuth/);
   assert.match(cateringRoute, /getAdminDb/);
-  assert.doesNotMatch(cateringRoute, /getAdminAuth|firebase-admin-auth/);
-  assert.match(dashboardOrdersRoute, /firebase-admin-auth/);
+  assert.doesNotMatch(cateringRoute, /getAdminAuth|firebase-admin-auth|firebase-admin\/auth/);
+  assert.match(dashboardOrdersRoute, /verifyFirebaseIdToken/);
+  assert.doesNotMatch(dashboardOrdersRoute, /getAdminAuth|firebase-admin-auth|firebase-admin\/auth/);
   assert.match(firebaseClient, /getFirebaseClientApp/);
   assert.match(pkg, /"framer-motion"/);
   assert.match(pkg, /"firebase"/);
