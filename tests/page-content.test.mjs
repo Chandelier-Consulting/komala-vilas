@@ -18,8 +18,9 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
   assert.match(page, /South Indian food/);
   assert.match(page, /temple-town depth/);
   assert.match(page, /Every meal should feel like someone was expecting you/);
-  assert.match(page, /\/images\/masala-dosa\.jpg/);
-  assert.match(page, /\/images\/south-indian-thali\.jpg/);
+  assert.match(page, /\/images\/komala-vilas-premium-hero\.jpg/);
+  assert.match(page, /\/images\/signature-paper-dosa\.jpg/);
+  assert.match(page, /\/images\/signature-thali\.jpg/);
   assert.match(menu, /export default function MenuPage/);
   assert.match(menu, /Unlimited South Indian Thali/);
   assert.match(menu, /menu-filter-bar/);

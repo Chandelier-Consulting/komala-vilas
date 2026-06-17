@@ -9,19 +9,19 @@ const signatureDishes = [
   {
     name: "Paper Masala Dosa",
     tamil: "மசாலா தோசை",
-    image: "/images/masala-dosa.jpg",
+    image: "/images/signature-paper-dosa.jpg",
     desc: "A long, crisp rice-lentil crepe folded around potato masala with sambar and chutneys.",
   },
   {
     name: "Unlimited South Indian Thali",
     tamil: "சாப்பாடு",
-    image: "/images/south-indian-thali.jpg",
+    image: "/images/signature-thali.jpg",
     desc: "Rice, sambar, rasam, kootu, poriyal, sweet, buttermilk, and refills from the kitchen.",
   },
   {
     name: "Idli Vada Sambar",
     tamil: "இட்லி வடை",
-    image: "/images/idli-vada.jpg",
+    image: "/images/signature-idli-vada.jpg",
     desc: "Steamed idli and crisp medu vada built for hot sambar, coconut chutney, and coffee.",
   },
 ];
@@ -66,37 +66,13 @@ export default function Home() {
           <div className="temple-border">
             <Image
               className="photo-grade"
-              src="/images/masala-dosa.jpg"
-              alt="Paper masala dosa with chutneys"
-              width={1024}
-              height={768}
+              src="/images/komala-vilas-premium-hero.jpg"
+              alt="Premium Komala Vilas spread with dosa, thali, filter coffee, and temple pattern"
+              width={1400}
+              height={1800}
               priority
               quality={92}
             />
-          </div>
-          <div className="floating-photo thali">
-            <Image
-              className="photo-grade"
-              src="/images/south-indian-thali.jpg"
-              alt="South Indian vegetarian thali"
-              width={900}
-              height={1008}
-              quality={85}
-            />
-          </div>
-          <div className="floating-photo coffee">
-            <Image
-              className="photo-grade"
-              src="/images/filter-coffee.jpg"
-              alt="South Indian filter coffee in dabarah"
-              width={683}
-              height={512}
-              quality={85}
-            />
-          </div>
-          <div className="price-card">
-            <strong>$13.50</strong>
-            <span>Unlimited Thali</span>
           </div>
         </div>
       </section>
