@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { FeastPlanner } from "@/components/feast-planner";
 import {
   MotionAmbient,
   MotionCard,
@@ -166,6 +167,22 @@ export default function Home() {
               </MotionCard>
             ))}
           </MotionGroup>
+        </div>
+      </MotionSection>
+
+      <MotionSection className="home-section home-section-planner" labelledBy="planner-title">
+        <div className="section-shell feast-planner-section">
+          <div>
+            <p className="eyebrow">Best demo feature</p>
+            <h2 id="planner-title" className="text-balance">
+              Build the feast before anyone calls the restaurant.
+            </h2>
+            <p>
+              Choose the room, tune the guest count, and turn a browse into a
+              catering request with package and quantity already set.
+            </p>
+          </div>
+          <FeastPlanner />
         </div>
       </MotionSection>
 

@@ -262,6 +262,25 @@ test("home page has a premium review proof section for demo readiness", async ()
   assert.match(styles, /\.review-proof-bar/);
 });
 
+test("home page includes an interactive feast planner that turns browsing into catering intent", async () => {
+  const [page, planner, styles] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/feast-planner.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(page, /FeastPlanner/);
+  assert.match(page, /home-section-planner/);
+  assert.match(planner, /eventTypes/);
+  assert.match(planner, /recommendedPackage/);
+  assert.match(planner, /estimatedTrays/);
+  assert.match(planner, /Plan this feast/);
+  assert.match(planner, /#request\?package=/);
+  assert.match(styles, /\.feast-planner/);
+  assert.match(styles, /\.planner-guest-control/);
+  assert.match(styles, /\.planner-service-flow/);
+});
+
 test("home page uses full-width section bands with consistent padding and external nav actions", async () => {
   const [page, nav, restaurant, styles] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
