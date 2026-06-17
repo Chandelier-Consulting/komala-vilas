@@ -6,7 +6,7 @@
 
 **Architecture:** Keep public pages mostly server-rendered. Use focused client components only for Framer Motion, catering form state, and Firebase Auth dashboard state. Use App Router route handlers for order creation, order listing, and status updates with lazy Firebase Admin and mail clients.
 
-**Tech Stack:** Next.js App Router, TypeScript, Tailwind v4 CSS tokens, next/font, next/image, Framer Motion, Firebase Admin, Firebase Web SDK, Nodemailer, node:test.
+**Tech Stack:** Next.js App Router, TypeScript, Tailwind v4 CSS tokens, next/font, next/image, Framer Motion, Firebase Admin, Firebase Web SDK, Resend, node:test.
 
 ---
 
@@ -18,7 +18,7 @@
 - Modify: `.gitignore`
 - Create: `docs/superpowers/plans/2026-06-16-komala-vilas-premium-catering.md`
 
-- [ ] Install `framer-motion`, `firebase`, `firebase-admin`, and `nodemailer`.
+- [ ] Install `framer-motion`, `firebase`, `firebase-admin`, and `resend`.
 - [ ] Ignore `.superpowers/`.
 - [ ] Keep the approved plan committed with the implementation.
 

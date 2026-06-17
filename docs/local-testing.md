@@ -7,7 +7,7 @@ This project is a Next.js App Router site with:
 - Staff dashboard: `/dashboard`
 - Firebase Admin for Firestore writes and dashboard API auth
 - Firebase Web Auth for staff sign-in
-- SMTP email notifications through Nodemailer
+- Resend email notifications
 
 ## 1. Install and smoke test
 
@@ -46,11 +46,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=
 
 # Email notifications
 CATERING_ORDER_EMAILS=owner@example.com,manager@example.com
-SMTP_HOST=
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=
-SMTP_PASS=
+RESEND_API_KEY=
 CATERING_EMAIL_FROM="Komala Vilas <orders@example.com>"
 ```
 
@@ -58,7 +54,7 @@ Notes:
 
 - Keep `.env.local` uncommitted.
 - `FIREBASE_PRIVATE_KEY` must preserve newlines as `\n`.
-- If SMTP is missing, orders still save, but email sending is skipped.
+- If Resend is missing, orders still save, but email sending is skipped.
 
 ## 3. Firebase setup
 
@@ -130,7 +126,7 @@ Expected:
 
 - Form shows an order received message.
 - A new document appears in Firestore `cateringOrders`.
-- Email is sent if SMTP is configured.
+- Email is sent if Resend is configured.
 
 API-only test:
 
@@ -196,7 +192,7 @@ Do not deploy with a dirty tree unless the dirty files are intentional.
 To avoid adding cost for a small/medium restaurant:
 
 - Use Firebase free tier unless real order volume proves otherwise.
-- Use an existing low-cost SMTP provider or the restaurant email host.
+- Use Resend's free tier until order volume proves otherwise.
 - Do not add paid analytics, paid monitoring, paid booking tools, or SMS until there is a clear operational need.
 - Test email manually with one real owner inbox before launch.
 - Use Firebase Console as the source of truth while order volume is low.

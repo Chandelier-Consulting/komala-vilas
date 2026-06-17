@@ -21,7 +21,7 @@ Confirm these are ready:
 - Firebase Auth Email/Password enabled.
 - Staff user created.
 - Firebase Admin service account values available.
-- SMTP provider credentials available.
+- Resend API key available.
 - Real recipient emails for catering orders confirmed.
 
 ## 2. Vercel project setup
@@ -62,11 +62,7 @@ NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
 NEXT_PUBLIC_FIREBASE_PROJECT_ID
 NEXT_PUBLIC_FIREBASE_APP_ID
 CATERING_ORDER_EMAILS
-SMTP_HOST
-SMTP_PORT
-SMTP_SECURE
-SMTP_USER
-SMTP_PASS
+RESEND_API_KEY
 CATERING_EMAIL_FROM
 ```
 
@@ -81,11 +77,7 @@ vercel env add NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN production
 vercel env add NEXT_PUBLIC_FIREBASE_PROJECT_ID production
 vercel env add NEXT_PUBLIC_FIREBASE_APP_ID production
 vercel env add CATERING_ORDER_EMAILS production
-vercel env add SMTP_HOST production
-vercel env add SMTP_PORT production
-vercel env add SMTP_SECURE production
-vercel env add SMTP_USER production
-vercel env add SMTP_PASS production
+vercel env add RESEND_API_KEY production
 vercel env add CATERING_EMAIL_FROM production
 ```
 
@@ -93,7 +85,7 @@ Important:
 
 - `FIREBASE_PRIVATE_KEY` should include `\n` newline escapes.
 - `NEXT_PUBLIC_*` values are visible in the browser by design.
-- Firebase Admin and SMTP values must not be exposed as `NEXT_PUBLIC_*`.
+- Firebase Admin and Resend values must not be exposed as `NEXT_PUBLIC_*`.
 
 ## 4. First production deploy
 

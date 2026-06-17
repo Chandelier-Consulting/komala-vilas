@@ -68,6 +68,7 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
     styles,
     variants,
     orders,
+    email,
     firebaseAdmin,
     firebaseClient,
     pkg,
@@ -81,6 +82,7 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../lib/variants.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/orders.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/email.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/firebase-admin.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/firebase-client.ts", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
@@ -106,12 +108,17 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
   assert.match(catering, /CateringOrderForm/);
   assert.match(dashboard, /DashboardClient/);
   assert.match(orders, /validateCateringOrder/);
+  assert.match(email, /import \{ Resend \} from "resend"/);
+  assert.match(email, /RESEND_API_KEY/);
+  assert.match(email, /resend\.emails\.send/);
+  assert.doesNotMatch(email, /nodemailer|SMTP_/);
   assert.match(firebaseAdmin, /getFirebaseAdmin/);
   assert.match(firebaseClient, /getFirebaseClientApp/);
   assert.match(pkg, /"framer-motion"/);
   assert.match(pkg, /"firebase"/);
   assert.match(pkg, /"firebase-admin"/);
-  assert.match(pkg, /"nodemailer"/);
+  assert.match(pkg, /"resend"/);
+  assert.doesNotMatch(pkg, /"nodemailer"/);
 });
 
 test("launch polish adds no-cost ordering, status, menu, catering, and dashboard improvements", async () => {
