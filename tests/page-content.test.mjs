@@ -239,8 +239,10 @@ test("scroll reveal motion waits for meaningful viewport visibility", async () =
   const motionShell = await readFile(new URL("../components/motion-shell.tsx", import.meta.url), "utf8");
 
   assert.match(motionShell, /REVEAL_VIEWPORT/);
+  assert.match(motionShell, /once:\s*false/);
   assert.match(motionShell, /amount:\s*0\.2/);
   assert.match(motionShell, /margin:\s*"0px 0px -12% 0px"/);
+  assert.doesNotMatch(motionShell, /once:\s*true/);
   assert.doesNotMatch(motionShell, /viewport=\{\{ once: true, margin: "-70px" \}\}/);
   assert.doesNotMatch(motionShell, /viewport=\{\{ once: true, margin: "-80px" \}\}/);
 });

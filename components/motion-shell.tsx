@@ -13,7 +13,7 @@ import { useRef } from "react";
 import { useMotionVariants } from "@/lib/variants";
 
 const REVEAL_VIEWPORT = {
-  once: true,
+  once: false,
   amount: 0.2,
   margin: "0px 0px -12% 0px",
 } as const;
