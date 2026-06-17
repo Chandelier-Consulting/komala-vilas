@@ -151,21 +151,29 @@ export function CateringOrderForm() {
     setErrors({});
 
     startTransition(async () => {
-      const response = await fetch("/api/catering-orders", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const body = await response.json();
+      try {
+        const response = await fetch("/api/catering-orders", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(form),
+        });
+        const body = await response.json().catch(() => null);
 
-      if (!response.ok) {
-        setErrors(body.errors ?? {});
-        setMessage("Please fix the highlighted fields.");
-        return;
+        if (!response.ok) {
+          setErrors(body?.errors ?? {});
+          setMessage(
+            body?.errors
+              ? "Please fix the highlighted fields."
+              : "We could not send this request. Please call Komala Vilas to confirm catering.",
+          );
+          return;
+        }
+
+        setForm(initialForm);
+        setConfirmationId(body?.orderId ?? "received");
+      } catch {
+        setMessage("We could not send this request. Please call Komala Vilas to confirm catering.");
       }
-
-      setForm(initialForm);
-      setConfirmationId(body.orderId);
     });
   }
 
