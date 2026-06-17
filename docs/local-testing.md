@@ -47,14 +47,15 @@ NEXT_PUBLIC_FIREBASE_APP_ID=
 # Email notifications
 CATERING_ORDER_EMAILS=owner@example.com,manager@example.com
 RESEND_API_KEY=
-CATERING_EMAIL_FROM="Komala Vilas <orders@example.com>"
+CATERING_EMAIL_FROM="Komala Vilas <onboarding@resend.dev>"
 ```
 
 Notes:
 
 - Keep `.env.local` uncommitted.
 - `FIREBASE_PRIVATE_KEY` must preserve newlines as `\n`.
-- If Resend is missing, orders still save, but email sending is skipped.
+- If Resend is missing, orders still save, and the API response reports the email as skipped.
+- For production, replace `onboarding@resend.dev` with a sender on a verified Resend domain.
 
 ## 3. Firebase setup
 

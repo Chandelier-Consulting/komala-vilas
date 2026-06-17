@@ -86,6 +86,7 @@ Important:
 - `FIREBASE_PRIVATE_KEY` should include `\n` newline escapes.
 - `NEXT_PUBLIC_*` values are visible in the browser by design.
 - Firebase Admin and Resend values must not be exposed as `NEXT_PUBLIC_*`.
+- `CATERING_EMAIL_FROM` must be a Resend-allowed sender. Use `Komala Vilas <onboarding@resend.dev>` for an initial smoke test, then switch to a verified domain sender before launch.
 
 ## 4. First production deploy
 

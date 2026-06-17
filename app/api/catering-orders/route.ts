@@ -17,7 +17,10 @@ export async function POST(request: Request) {
     updatedAt: now,
   });
 
-  await sendCateringOrderEmail(result.order, doc.id);
+  const email = await sendCateringOrderEmail(result.order, doc.id).catch((error) => {
+    console.error("Catering email send crashed", error);
+    return { skipped: false, sent: false, error: "email_send_failed" };
+  });
 
-  return Response.json({ ok: true, orderId: doc.id }, { status: 201 });
+  return Response.json({ ok: true, orderId: doc.id, email }, { status: 201 });
 }

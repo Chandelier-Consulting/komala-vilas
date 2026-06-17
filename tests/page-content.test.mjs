@@ -117,6 +117,12 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
   assert.match(email, /import \{ Resend \} from "resend"/);
   assert.match(email, /RESEND_API_KEY/);
   assert.match(email, /resend\.emails\.send/);
+  assert.match(email, /onboarding@resend\.dev/);
+  assert.match(email, /html: getOrderHtml/);
+  assert.match(email, /replyTo: order\.email/);
+  assert.match(email, /response\.error/);
+  assert.match(email, /console\.warn/);
+  assert.match(email, /console\.error/);
   assert.doesNotMatch(email, /nodemailer|SMTP_/);
   assert.match(firebaseAdmin, /getFirebaseAdmin/);
   assert.match(firebaseAdmin, /getAdminDb/);
@@ -125,6 +131,8 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
   assert.match(firebaseAdminAuth, /NEXT_PUBLIC_FIREBASE_API_KEY/);
   assert.doesNotMatch(firebaseAdminAuth, /firebase-admin\/auth|getAdminAuth/);
   assert.match(cateringRoute, /getAdminDb/);
+  assert.match(cateringRoute, /email/);
+  assert.match(cateringRoute, /email_send_failed/);
   assert.doesNotMatch(cateringRoute, /getAdminAuth|firebase-admin-auth|firebase-admin\/auth/);
   assert.match(dashboardOrdersRoute, /verifyFirebaseIdToken/);
   assert.doesNotMatch(dashboardOrdersRoute, /getAdminAuth|firebase-admin-auth|firebase-admin\/auth/);
