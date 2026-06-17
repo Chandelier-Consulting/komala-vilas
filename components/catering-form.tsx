@@ -35,6 +35,17 @@ function getRequestSelectionFromHash(hash: string) {
   if (queryStart === -1) return null;
 
   const params = new URLSearchParams(hash.slice(queryStart + 1));
+  return getRequestSelectionFromParams(params);
+}
+
+function getRequestSelectionFromHref(href: string) {
+  const hashStart = href.indexOf("#request?");
+  if (hashStart === -1) return null;
+
+  return getRequestSelectionFromHash(href.slice(hashStart));
+}
+
+function getRequestSelectionFromParams(params: URLSearchParams) {
   return {
     packageId: getValidPackageId(params.get("package")),
     guestCount: getValidGuestCount(params.get("guests")),
@@ -46,8 +57,8 @@ export function CateringEstimator() {
   const guests = Math.max(10, Number.parseInt(guestCount, 10) || 10);
   const bestPackage =
     [...cateringPackages]
-      .sort((a, b) => a.minGuests - b.minGuests)
-      .find((item) => guests <= item.minGuests + 20) ?? cateringPackages[cateringPackages.length - 1];
+      .sort((a, b) => b.minGuests - a.minGuests)
+      .find((item) => guests >= item.minGuests) ?? cateringPackages[0];
   const trays = Math.max(1, Math.ceil(guests / 12));
 
   return (
@@ -84,23 +95,48 @@ export function CateringOrderForm() {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [message, setMessage] = useState("");
+  const [confirmationId, setConfirmationId] = useState("");
   const [isPending, startTransition] = useTransition();
 
-  function applyRequestSelection() {
-    const selection = getRequestSelectionFromHash(window.location.hash);
+  function applyRequestSelection(
+    selection: ReturnType<typeof getRequestSelectionFromHash> = getRequestSelectionFromHash(
+      window.location.hash,
+    ),
+  ) {
     if (!selection) return;
 
     setForm((current) => ({ ...current, ...selection }));
+    setConfirmationId("");
+    setMessage("");
     window.history.replaceState(null, "", "#request");
     document.getElementById("request")?.scrollIntoView({ block: "start" });
   }
 
   useEffect(() => {
-    const frame = window.requestAnimationFrame(applyRequestSelection);
-    window.addEventListener("hashchange", applyRequestSelection);
+    function handleRequestLinkClick(event: MouseEvent) {
+      if (!(event.target instanceof Element)) return;
+
+      const link = event.target.closest<HTMLAnchorElement>('a[href*="#request?"]');
+      if (!link) return;
+
+      const selection = getRequestSelectionFromHref(link.href);
+      if (!selection) return;
+
+      event.preventDefault();
+      applyRequestSelection(selection);
+    }
+
+    function handleHashChange() {
+      applyRequestSelection();
+    }
+
+    const frame = window.requestAnimationFrame(() => applyRequestSelection());
+    document.addEventListener("click", handleRequestLinkClick);
+    window.addEventListener("hashchange", handleHashChange);
     return () => {
       window.cancelAnimationFrame(frame);
-      window.removeEventListener("hashchange", applyRequestSelection);
+      document.removeEventListener("click", handleRequestLinkClick);
+      window.removeEventListener("hashchange", handleHashChange);
     };
   }, []);
 
@@ -110,6 +146,7 @@ export function CateringOrderForm() {
 
   function submitOrder(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setConfirmationId("");
     setMessage("");
     setErrors({});
 
@@ -128,10 +165,40 @@ export function CateringOrderForm() {
       }
 
       setForm(initialForm);
-      setMessage(
-        `Order ${body.orderId} received. Komala Vilas will confirm the menu and pickup window.`,
-      );
+      setConfirmationId(body.orderId);
     });
+  }
+
+  if (confirmationId) {
+    return (
+      <section id="request" className="order-form order-confirmation" aria-live="polite">
+        <div className="order-form-heading">
+          <div>
+            <span>Request received</span>
+            <h3 className="text-balance">The Komala Vilas team has your catering request.</h3>
+          </div>
+          <p>Order reference: {confirmationId}</p>
+        </div>
+        <div className="confirmation-copy">
+          <p>
+            A team member should reach out within 1 - 2 business days to confirm the
+            menu, guest count, timing, and pickup or delivery details.
+          </p>
+          <button
+            className="button button-primary"
+            type="button"
+            onClick={() => {
+              setConfirmationId("");
+              setForm(initialForm);
+              setErrors({});
+              setMessage("");
+            }}
+          >
+            Send another request
+          </button>
+        </div>
+      </section>
+    );
   }
 
   return (

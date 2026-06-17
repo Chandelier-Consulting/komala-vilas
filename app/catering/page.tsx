@@ -30,7 +30,10 @@ export default function CateringPage() {
         </div>
       </section>
 
-      <MotionSection className="section-shell section-block" labelledBy="packages-title">
+      <MotionSection
+        className="section-shell section-block catering-packages-section"
+        labelledBy="packages-title"
+      >
         <div className="section-heading">
           <div>
             <p className="eyebrow">Packages</p>
@@ -72,7 +75,7 @@ export default function CateringPage() {
         </div>
       </MotionSection>
 
-      <section className="section-shell section-block catering-layout">
+      <section className="section-shell section-block catering-layout catering-request-section">
         <div>
           <p className="eyebrow">Ordering</p>
           <h2 className="text-balance">Send the details. The kitchen confirms the final count.</h2>

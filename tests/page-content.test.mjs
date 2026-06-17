@@ -225,19 +225,33 @@ test("home page uses full-width section bands with consistent padding and extern
 });
 
 test("catering package cards, calculator, and request form share package and guest selections", async () => {
-  const [page, form, styles] = await Promise.all([
+  const [page, form, styles, orders] = await Promise.all([
     readFile(new URL("../app/catering/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/catering-form.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../lib/orders.ts", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /href=\{`#request\?package=\$\{item\.id\}&guests=\$\{item\.minGuests\}`\}/);
   assert.match(page, /catering-package-link/);
+  assert.match(page, /catering-packages-section/);
+  assert.match(page, /catering-request-section/);
   assert.match(form, /id="request"/);
   assert.match(form, /new URLSearchParams/);
   assert.match(form, /applyRequestSelection/);
+  assert.match(form, /handleRequestLinkClick/);
+  assert.match(form, /getRequestSelectionFromHref/);
+  assert.match(form, /window\.requestAnimationFrame\(\(\) => applyRequestSelection\(\)\)/);
   assert.match(form, /window\.history\.replaceState/);
   assert.match(form, /href=\{`#request\?package=\$\{bestPackage\.id\}&guests=\$\{guests\}`\}/);
+  assert.match(form, /confirmationId/);
+  assert.match(form, /1 - 2 business days/);
   assert.match(styles, /\.catering-package-link/);
+  assert.match(styles, /\.catering-package-link > div\s*{[^}]*grid-template-rows: auto auto 1fr auto/);
+  assert.match(styles, /\.catering-package-link strong\s*{[^}]*width: 100%/);
+  assert.match(styles, /\.catering-request-section\s*{[^}]*border-top: 1px solid var\(--color-line\)/);
+  assert.match(styles, /\.confirmation-copy/);
   assert.match(styles, /\.estimator-actions/);
+  assert.match(orders, /Crisp dosa, masala filling, sambar, chutneys, and rotating chef specials\./);
+  assert.doesNotMatch(orders, /focused live-station style menu/);
 });

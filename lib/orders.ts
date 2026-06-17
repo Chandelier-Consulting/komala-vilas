@@ -19,7 +19,7 @@ export const cateringPackages = [
     id: "dosa-counter",
     name: "Dosa Counter",
     description:
-      "Crisp dosa, masala filling, sambar, coconut chutney, tomato chutney, and rotating chef specials for a focused live-station style menu.",
+      "Crisp dosa, masala filling, sambar, chutneys, and rotating chef specials.",
     serves: "30+ guests",
     minGuests: 30,
   },
