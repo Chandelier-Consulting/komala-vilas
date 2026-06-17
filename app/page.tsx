@@ -86,102 +86,112 @@ export default function Home() {
         </blockquote>
       </section>
 
-      <MotionSection className="section-shell section-block">
-        <OrderLinkPanel />
-      </MotionSection>
-
-      <MotionSection className="section-shell section-block" labelledBy="plates-title">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">The signatures</p>
-            <h2 id="plates-title" className="text-balance">
-              Built around <strong>heat, batter, brass, and patience.</strong>
-            </h2>
-          </div>
-          <Link className="button button-secondary" href="/menu">
-            Open Full Menu
-          </Link>
-        </div>
-        <div className="dish-grid">
-          {signatureDishes.map((dish) => (
-            <MotionCard key={dish.name} className="dish-card">
-              <Image
-                className="photo-grade"
-                src={dish.image}
-                alt={dish.name}
-                width={900}
-                height={675}
-                quality={85}
-              />
-              <div>
-                <p>{dish.tamil}</p>
-                <h3 className="text-balance">{dish.name}</h3>
-                <span>{dish.desc}</span>
-              </div>
-            </MotionCard>
-          ))}
+      <MotionSection className="home-section home-section-order">
+        <div className="section-shell">
+          <OrderLinkPanel />
         </div>
       </MotionSection>
 
-      <MotionSection className="section-shell story-panel">
-        <div>
-          <p className="eyebrow">Catering now open</p>
-          <h2 className="text-balance">Temple-feast scale for offices, weddings, and family functions.</h2>
-          <p>
-            Choose thali service, tiffin breakfast, or a dosa counter. Send the
-            request and the Komala Vilas team can confirm quantities, timing, and
-            pickup from Sunnyvale.
-          </p>
-          <div className="action-row">
-            <Link className="button button-primary" href="/catering">
-              Plan Catering
+      <MotionSection className="home-section home-section-signatures" labelledBy="plates-title">
+        <div className="section-shell">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">The signatures</p>
+              <h2 id="plates-title" className="text-balance">
+                Built around <strong>heat, batter, brass, and patience.</strong>
+              </h2>
+            </div>
+            <Link className="button button-secondary" href="/menu">
+              Open Full Menu
             </Link>
-            <a className="button button-light" href={restaurantInfo.mapUrl}>
+          </div>
+          <div className="dish-grid">
+            {signatureDishes.map((dish) => (
+              <MotionCard key={dish.name} className="dish-card">
+                <Image
+                  className="photo-grade"
+                  src={dish.image}
+                  alt={dish.name}
+                  width={900}
+                  height={675}
+                  quality={85}
+                />
+                <div>
+                  <p>{dish.tamil}</p>
+                  <h3 className="text-balance">{dish.name}</h3>
+                  <span>{dish.desc}</span>
+                </div>
+              </MotionCard>
+            ))}
+          </div>
+        </div>
+      </MotionSection>
+
+      <MotionSection className="home-section home-section-catering">
+        <div className="section-shell story-panel">
+          <div>
+            <p className="eyebrow">Catering now open</p>
+            <h2 className="text-balance">Temple-feast scale for offices, weddings, and family functions.</h2>
+            <p>
+              Choose thali service, tiffin breakfast, or a dosa counter. Send the
+              request and the Komala Vilas team can confirm quantities, timing, and
+              pickup from Sunnyvale.
+            </p>
+            <div className="action-row">
+              <Link className="button button-primary" href="/catering">
+                Plan Catering
+              </Link>
+              <a className="button button-light" href={restaurantInfo.mapUrl} target="_blank" rel="noreferrer">
+                Get Directions
+              </a>
+            </div>
+          </div>
+          <Image
+            className="photo-grade"
+            src="/images/south-indian-breakfast.jpg"
+            alt="South Indian breakfast with idli, vada, sambar, and chutney"
+            width={1024}
+            height={694}
+            quality={92}
+          />
+        </div>
+      </MotionSection>
+
+      <MotionSection className="home-section home-section-reviews" labelledBy="reviews-title">
+        <div className="section-shell">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">From the tables</p>
+              <h2 id="reviews-title" className="text-balance">
+                Sunnyvale regulars come back for the same reason.
+              </h2>
+            </div>
+          </div>
+          <div className="review-grid">
+            {reviews.map((quote) => (
+              <MotionCard key={quote} className="review-card">
+                <p>&quot;{quote}&quot;</p>
+              </MotionCard>
+            ))}
+          </div>
+        </div>
+      </MotionSection>
+
+      <section className="home-section home-section-visit" aria-label="Visit Komala Vilas">
+        <div className="section-shell visit-strip">
+          <div>
+            <p className="eyebrow">Come hungry</p>
+            <h2 className="text-balance">{restaurantInfo.shortAddress}</h2>
+            <p>Open daily from 8:30 AM. Friday and Saturday nights run until 10:00 PM.</p>
+          </div>
+          <div className="action-row">
+            <a className="button button-dark" href={restaurantInfo.mapUrl} target="_blank" rel="noreferrer">
               Get Directions
             </a>
+            <a className="button button-light" href={restaurantInfo.phoneHref}>
+              {restaurantInfo.phone}
+            </a>
           </div>
-        </div>
-        <Image
-          className="photo-grade"
-          src="/images/south-indian-breakfast.jpg"
-          alt="South Indian breakfast with idli, vada, sambar, and chutney"
-          width={1024}
-          height={694}
-          quality={92}
-        />
-      </MotionSection>
-
-      <MotionSection className="section-shell section-block" labelledBy="reviews-title">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">From the tables</p>
-            <h2 id="reviews-title" className="text-balance">
-              Sunnyvale regulars come back for the same reason.
-            </h2>
-          </div>
-        </div>
-        <div className="review-grid">
-          {reviews.map((quote) => (
-            <MotionCard key={quote} className="review-card">
-              <p>&quot;{quote}&quot;</p>
-            </MotionCard>
-          ))}
-        </div>
-      </MotionSection>
-
-      <section className="section-shell visit-strip" aria-label="Visit Komala Vilas">
-        <div>
-          <p className="eyebrow">Come hungry</p>
-          <h2 className="text-balance">{restaurantInfo.shortAddress}</h2>
-          <p>Open daily from 8:30 AM. Friday and Saturday nights run until 10:00 PM.</p>
-        </div>
-        <div className="action-row">
-          <a className="button button-dark" href={restaurantInfo.mapUrl}>
-            Get Directions
-          </a>
-          <a className="button button-light" href={restaurantInfo.phoneHref}>
-            {restaurantInfo.phone}
-          </a>
         </div>
       </section>
     </MotionMain>

@@ -181,3 +181,26 @@ test("catering order form uses a polished grouped intake layout", async () => {
   assert.match(styles, /\.package-choice\s*{[^}]*min-height:/);
   assert.match(styles, /input:focus-visible,\s*textarea:focus-visible,\s*select:focus-visible/);
 });
+
+test("home page uses full-width section bands with consistent padding and external nav actions", async () => {
+  const [page, nav, restaurant, styles] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/primary-nav.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../lib/restaurant.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(page, /home-section home-section-order/);
+  assert.match(page, /home-section home-section-signatures/);
+  assert.match(page, /home-section home-section-catering/);
+  assert.match(page, /home-section home-section-reviews/);
+  assert.match(page, /home-section home-section-visit/);
+  assert.match(styles, /\.home-section\s*{[^}]*width: 100%/);
+  assert.match(styles, /\.home-section > \.section-shell\s*{[^}]*padding-block: 96px/);
+  assert.doesNotMatch(page, /className="section-shell section-block"/);
+  assert.match(restaurant, /orderUrl/);
+  assert.match(nav, /href=\{restaurantInfo\.orderUrl\}/);
+  assert.match(nav, /target="_blank"/);
+  assert.match(nav, /rel="noreferrer"/);
+  assert.match(nav, /Order Online/);
+});

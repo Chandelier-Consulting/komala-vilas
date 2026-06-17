@@ -25,11 +25,12 @@ export function PrimaryNav() {
           {link.label}
         </Link>
       ))}
-      <a href={restaurantInfo.mapUrl}>Visit</a>
-      <Link className="nav-order" href="/catering">
-        Order Catering
-      </Link>
+      <a href={restaurantInfo.mapUrl} target="_blank" rel="noreferrer">
+        Visit
+      </a>
+      <a className="nav-order" href={restaurantInfo.orderUrl} target="_blank" rel="noreferrer">
+        Order Online
+      </a>
     </nav>
   );
 }
-

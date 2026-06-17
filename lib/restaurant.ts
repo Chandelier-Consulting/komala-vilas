@@ -8,12 +8,13 @@ export const restaurantInfo = {
   shortAddress: "1020 E El Camino Real, Sunnyvale",
   mapUrl:
     "https://www.google.com/maps/place/Komala+Vilas/@37.3531031,-122.0116365,15.64z/data=!4m6!3m5!1s0x808fb589fd36ead1:0x86106cdc3661185f!8m2!3d37.351395!4d-122.006376!16s%2Fg%2F1tf65qdg?entry=ttu&g_ep=EgoyMDI2MDYwOS4wIKXMDSoASAFQAw%3D%3D",
+  orderUrl: "https://www.doordash.com/search/store/Komala%20Vilas/",
   feedbackEmail: "mailto:komalavilas.sunnyvale@gmail.com?subject=Komala%20Vilas%20feedback",
   orderLinks: [
     {
-      label: "Call to order",
-      href: "tel:+14087337400",
-      note: "Best for pickup, thali availability, and same-day questions.",
+      label: "Order online",
+      href: "https://www.doordash.com/search/store/Komala%20Vilas/",
+      note: "Opens DoorDash search for current delivery and pickup options.",
     },
     {
       label: "Catering request",
@@ -49,4 +50,3 @@ export function formatHour(time: string) {
   const hour12 = hour % 12 || 12;
   return `${hour12}:${minute.toString().padStart(2, "0")} ${suffix}`;
 }
-
