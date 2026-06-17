@@ -195,6 +195,7 @@ img {
   justify-content: center;
   padding-inline: 22px;
   border: 1px solid transparent;
+  white-space: nowrap;
 }
 
 .button-secondary {
@@ -229,11 +230,15 @@ img {
 
 .hero-premium {
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr);
-  gap: 54px;
+  grid-template-columns: minmax(560px, 1.12fr) minmax(380px, 0.88fr);
+  gap: 48px;
   align-items: center;
   min-height: calc(100svh - 76px);
   padding-block: 72px 88px;
+}
+
+.hero-copy {
+  min-width: 0;
 }
 
 .hero-copy h1,
@@ -249,9 +254,10 @@ img {
 }
 
 .hero-copy h1 {
-  max-width: 780px;
-  font-size: clamp(var(--step-5), 7vw, var(--step-6));
-  line-height: 0.88;
+  max-width: 900px;
+  font-size: clamp(var(--step-4), 6.2vw, var(--step-6));
+  line-height: 0.94;
+  text-wrap: pretty;
 }
 
 .hero-copy h1 span,
@@ -299,9 +305,11 @@ img {
 .temple-border {
   position: absolute;
   inset: 0;
+  isolation: isolate;
   padding: 18px;
   border: 1px solid rgba(125, 36, 24, 0.32);
   background:
+    radial-gradient(circle, rgba(255, 248, 234, 0.58) 0 3px, transparent 4px) 0 0 / 30px 30px,
     conic-gradient(from 45deg, var(--color-tamarind), var(--color-turmeric), var(--color-leaf), var(--color-tamarind)) border-box;
   border-radius: 999px 999px 32px 32px;
   box-shadow: var(--shadow-soft);
@@ -315,12 +323,12 @@ img {
   pointer-events: none;
   border: 2px solid rgba(255, 248, 234, 0.86);
   border-radius: 999px 999px 24px 24px;
-  background:
-    radial-gradient(circle at 50% 16px, rgba(255, 248, 234, 0.8) 0 6px, transparent 7px) 0 0 / 36px 36px,
-    linear-gradient(90deg, rgba(125, 36, 24, 0.22), transparent 18%, transparent 82%, rgba(125, 36, 24, 0.22));
+  box-shadow: inset 0 0 0 1px rgba(36, 21, 15, 0.2);
 }
 
 .temple-border img {
+  position: relative;
+  z-index: 1;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -397,6 +405,14 @@ img {
   margin-bottom: 38px;
 }
 
+.section-heading > div {
+  min-width: 0;
+}
+
+.section-heading .button {
+  flex: 0 0 auto;
+}
+
 .section-heading h2,
 .page-hero h1,
 .story-panel h2,
@@ -442,7 +458,14 @@ img {
 .page-hero img {
   display: block;
   width: 100%;
-  height: auto;
+  object-fit: cover;
+}
+
+.dish-card > img,
+.package-card > img {
+  aspect-ratio: 4 / 3;
+  height: 240px;
+  object-position: center;
 }
 
 .dish-card > div,
@@ -985,6 +1008,11 @@ dd {
 
   .timeline-card {
     grid-template-columns: 1fr;
+  }
+
+  .dish-card > img,
+  .package-card > img {
+    height: 220px;
   }
 }
 

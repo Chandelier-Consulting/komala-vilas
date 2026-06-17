@@ -15,7 +15,7 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
   assert.match(pkg, /"name": "komala-vilas"/);
   assert.match(layout, /Komala Vilas/);
   assert.match(page, /Komala Vilas/);
-  assert.match(page, /The taste of South India/);
+  assert.match(page, /South Indian food/);
   assert.match(page, /temple-town depth/);
   assert.match(page, /Every meal should feel like someone was expecting you/);
   assert.match(page, /\/images\/masala-dosa\.jpg/);

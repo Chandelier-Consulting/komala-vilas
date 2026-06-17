@@ -40,7 +40,7 @@ export default function Home() {
           <MotionHeadline>
             <p className="eyebrow">கோமளா விலாஸ் · Sunnyvale</p>
             <h1 className="text-balance">
-              The taste of South India, <span>served with temple-town depth.</span>
+              South Indian food with <span>temple-town depth.</span>
             </h1>
           </MotionHeadline>
           <p className="lede">
