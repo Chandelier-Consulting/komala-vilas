@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import Link from "next/link";
+import { useEffect, useState, useTransition } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { cateringPackages, type CateringOrderInput } from "@/lib/orders";
 import { EASE_SPRING } from "@/lib/variants";
@@ -18,8 +19,30 @@ const initialForm = {
   notes: "",
 };
 
+function getValidPackageId(packageId: string | null) {
+  return cateringPackages.find((item) => item.id === packageId)?.id ?? initialForm.packageId;
+}
+
+function getValidGuestCount(guestCount: string | null) {
+  const parsedGuests = Number.parseInt(guestCount ?? "", 10);
+  return Number.isFinite(parsedGuests) && parsedGuests >= 10
+    ? String(parsedGuests)
+    : initialForm.guestCount;
+}
+
+function getRequestSelectionFromHash(hash: string) {
+  const queryStart = hash.indexOf("?");
+  if (queryStart === -1) return null;
+
+  const params = new URLSearchParams(hash.slice(queryStart + 1));
+  return {
+    packageId: getValidPackageId(params.get("package")),
+    guestCount: getValidGuestCount(params.get("guests")),
+  };
+}
+
 export function CateringEstimator() {
-  const [guestCount, setGuestCount] = useState("25");
+  const [guestCount, setGuestCount] = useState(initialForm.guestCount);
   const guests = Math.max(10, Number.parseInt(guestCount, 10) || 10);
   const bestPackage =
     [...cateringPackages]
@@ -43,6 +66,14 @@ export function CateringEstimator() {
         Plan roughly <strong>{trays}</strong> serving tray{trays === 1 ? "" : "s"} before
         the kitchen confirms the final menu.
       </p>
+      <div className="estimator-actions">
+        <Link
+          className="button button-primary"
+          href={`#request?package=${bestPackage.id}&guests=${guests}`}
+        >
+          Use this estimate
+        </Link>
+      </div>
       <small>Pickup is standard. Delivery is confirmed case by case.</small>
     </div>
   );
@@ -54,6 +85,24 @@ export function CateringOrderForm() {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
+
+  function applyRequestSelection() {
+    const selection = getRequestSelectionFromHash(window.location.hash);
+    if (!selection) return;
+
+    setForm((current) => ({ ...current, ...selection }));
+    window.history.replaceState(null, "", "#request");
+    document.getElementById("request")?.scrollIntoView({ block: "start" });
+  }
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(applyRequestSelection);
+    window.addEventListener("hashchange", applyRequestSelection);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("hashchange", applyRequestSelection);
+    };
+  }, []);
 
   function updateField(field: keyof typeof initialForm, value: string) {
     setForm((current) => ({ ...current, [field]: value }));
@@ -86,7 +135,7 @@ export function CateringOrderForm() {
   }
 
   return (
-    <form className="order-form" onSubmit={submitOrder}>
+    <form id="request" className="order-form" onSubmit={submitOrder}>
       <div className="order-form-heading">
         <div>
           <span>Request details</span>

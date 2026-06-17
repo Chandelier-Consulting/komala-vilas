@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { CateringEstimator, CateringOrderForm } from "@/components/catering-form";
 import { MotionCard, MotionMain, MotionSection } from "@/components/motion-shell";
 import { cateringPackages } from "@/lib/orders";
@@ -41,25 +42,31 @@ export default function CateringPage() {
         <div className="package-grid">
           {cateringPackages.map((item, index) => (
             <MotionCard key={item.id} className="package-card">
-              <Image
-                className="photo-grade"
-                src={
-                  index === 0
-                    ? "/images/south-indian-thali.jpg"
-                    : index === 1
-                      ? "/images/idli-vada.jpg"
-                      : "/images/masala-dosa.jpg"
-                }
-                alt={item.name}
-                width={900}
-                height={675}
-                quality={85}
-              />
-              <div>
-                <p>{item.serves}</p>
-                <h3 className="text-balance">{item.name}</h3>
-                <span>{item.description}</span>
-              </div>
+              <Link
+                className="catering-package-link"
+                href={`#request?package=${item.id}&guests=${item.minGuests}`}
+              >
+                <Image
+                  className="photo-grade"
+                  src={
+                    index === 0
+                      ? "/images/south-indian-thali.jpg"
+                      : index === 1
+                        ? "/images/idli-vada.jpg"
+                        : "/images/masala-dosa.jpg"
+                  }
+                  alt={item.name}
+                  width={900}
+                  height={675}
+                  quality={85}
+                />
+                <div>
+                  <p>{item.serves}</p>
+                  <h3 className="text-balance">{item.name}</h3>
+                  <span>{item.description}</span>
+                  <strong>Start request</strong>
+                </div>
+              </Link>
             </MotionCard>
           ))}
         </div>

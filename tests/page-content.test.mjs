@@ -204,3 +204,21 @@ test("home page uses full-width section bands with consistent padding and extern
   assert.match(nav, /rel="noreferrer"/);
   assert.match(nav, /Order Online/);
 });
+
+test("catering package cards, calculator, and request form share package and guest selections", async () => {
+  const [page, form, styles] = await Promise.all([
+    readFile(new URL("../app/catering/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/catering-form.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(page, /href=\{`#request\?package=\$\{item\.id\}&guests=\$\{item\.minGuests\}`\}/);
+  assert.match(page, /catering-package-link/);
+  assert.match(form, /id="request"/);
+  assert.match(form, /new URLSearchParams/);
+  assert.match(form, /applyRequestSelection/);
+  assert.match(form, /window\.history\.replaceState/);
+  assert.match(form, /href=\{`#request\?package=\$\{bestPackage\.id\}&guests=\$\{guests\}`\}/);
+  assert.match(styles, /\.catering-package-link/);
+  assert.match(styles, /\.estimator-actions/);
+});
