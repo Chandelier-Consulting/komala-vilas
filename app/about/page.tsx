@@ -32,28 +32,30 @@ const timelineItems = [
 export default function AboutPage() {
   return (
     <MotionMain className="about-page">
-      <section className="section-shell page-hero">
-        <div>
-          <p className="eyebrow">Our story</p>
-          <h1 className="text-balance">Not a concept. A rhythm.</h1>
-          <p>
-            Komala Vilas works because the day has a pulse: batter before
-            sunrise, dosa on the griddle, thali at lunch, coffee in the afternoon,
-            and refills whenever the table asks.
-          </p>
-          <Link className="button button-primary" href="/menu">
-            See the Food
-          </Link>
+      <section className="hero-background background-pattern">
+        <div className="section-shell page-hero">
+          <div>
+            <p className="eyebrow">Our story</p>
+            <h1 className="text-balance">Not a concept. A rhythm.</h1>
+            <p>
+              Komala Vilas works because the day has a pulse: batter before
+              sunrise, dosa on the griddle, thali at lunch, coffee in the afternoon,
+              and refills whenever the table asks.
+            </p>
+            <Link className="button button-primary" href="/menu">
+              See the Food
+            </Link>
+          </div>
+          <Image
+            className="photo-grade"
+            src="/images/south-indian-breakfast.jpg"
+            alt="South Indian breakfast plate"
+            width={1024}
+            height={694}
+            priority
+            quality={92}
+          />
         </div>
-        <Image
-          className="photo-grade"
-          src="/images/south-indian-breakfast.jpg"
-          alt="South Indian breakfast plate"
-          width={1024}
-          height={694}
-          priority
-          quality={92}
-        />
       </section>
 
       <MotionSection className="timeline-section section-shell section-block" labelledBy="timeline-title">

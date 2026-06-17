@@ -3,11 +3,14 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 test("app uses the corrected Komala Vilas brand and restaurant content", async () => {
-  const [page, menu, about, layout, styles, pkg] = await Promise.all([
+  const [page, menu, menuExplorer, menuData, about, layout, restaurant, styles, pkg] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/menu/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/menu-explorer.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../lib/menu.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../lib/restaurant.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
   ]);
@@ -24,12 +27,12 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
   assert.match(page, /<section className="hero-background background-pattern">/);
   assert.match(page, /<div className="hero-premium section-shell">/);
   assert.match(menu, /export default function MenuPage/);
-  assert.match(menu, /Unlimited South Indian Thali/);
-  assert.match(menu, /menu-filter-bar/);
-  assert.doesNotMatch(menu, /page-hero background-pattern/);
-  assert.doesNotMatch(about, /page-hero background-pattern/);
+  assert.match(menuData, /Unlimited South Indian Thali/);
+  assert.match(menuExplorer, /menu-filter-bar/);
+  assert.match(menu, /<section className="hero-background background-pattern">/);
+  assert.match(about, /<section className="hero-background background-pattern">/);
   assert.match(
-    layout,
+    restaurant,
     /https:\/\/www\.google\.com\/maps\/place\/Komala\+Vilas\/@37\.3531031,-122\.0116365,15\.64z/,
   );
   assert.match(styles, /\.menu-item:hover[\s\S]*background:/);
@@ -47,7 +50,7 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
   );
   assert.match(about, /export default function AboutPage/);
   assert.match(about, /timelineItems/);
-  assert.match(page, /1020 E El Camino Real/);
+  assert.match(restaurant, /1020 E El Camino Real/);
   assert.doesNotMatch(
     `${page}\n${menu}\n${about}\n${layout}\n${pkg}`,
     /komala-vibes|Komala Vibes|Komala Viles|komala-viles/,
@@ -99,7 +102,7 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
   assert.match(`${page}\n${menu}\n${about}\n${catering}`, /quality=\{85\}/);
   assert.match(layout, /href="\/catering"/);
   assert.match(catering, /Komala Vilas catering/);
-  assert.doesNotMatch(catering, /page-hero background-pattern/);
+  assert.match(catering, /<section className="hero-background background-pattern">/);
   assert.match(catering, /CateringOrderForm/);
   assert.match(dashboard, /DashboardClient/);
   assert.match(orders, /validateCateringOrder/);
@@ -109,4 +112,45 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
   assert.match(pkg, /"firebase"/);
   assert.match(pkg, /"firebase-admin"/);
   assert.match(pkg, /"nodemailer"/);
+});
+
+test("launch polish adds no-cost ordering, status, menu, catering, and dashboard improvements", async () => {
+  const [
+    page,
+    menu,
+    about,
+    catering,
+    dashboardClient,
+    layout,
+    styles,
+  ] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/menu/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/catering/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/dashboard-client.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(layout, /MobileActionBar/);
+  assert.match(layout, /restaurantInfo/);
+  assert.match(page, /OpenStatus/);
+  assert.match(page, /OrderLinkPanel/);
+  assert.match(menu, /MenuExplorer/);
+  assert.match(catering, /CateringEstimator/);
+  assert.match(dashboardClient, /statusCounts/);
+  assert.match(dashboardClient, /exportOrdersCsv/);
+  assert.match(dashboardClient, /window\.print/);
+  assert.match(styles, /\.mobile-action-bar/);
+  assert.match(styles, /\.open-status/);
+  assert.match(styles, /\.order-link-panel/);
+  assert.match(styles, /\.menu-search/);
+  assert.match(styles, /\.dashboard-filters/);
+
+  assert.match(page, /<div className="hero-premium section-shell">/);
+  for (const source of [menu, about, catering]) {
+    assert.match(source, /<section className="hero-background background-pattern">/);
+    assert.match(source, /<div className="section-shell page-hero/);
+  }
 });

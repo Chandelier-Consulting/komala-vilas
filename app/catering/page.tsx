@@ -1,30 +1,32 @@
 import Image from "next/image";
-import { CateringOrderForm } from "@/components/catering-form";
+import { CateringEstimator, CateringOrderForm } from "@/components/catering-form";
 import { MotionCard, MotionMain, MotionSection } from "@/components/motion-shell";
 import { cateringPackages } from "@/lib/orders";
 
 export default function CateringPage() {
   return (
     <MotionMain className="catering-page">
-      <section className="section-shell page-hero">
-        <div>
-          <p className="eyebrow">Komala Vilas catering</p>
-          <h1 className="text-balance">South Indian feasts for serious gatherings.</h1>
-          <p>
-            Order dosa counters, tiffin breakfasts, and thali-style spreads for
-            offices, weddings, pujas, birthdays, and family weekends across the
-            South Bay.
-          </p>
+      <section className="hero-background background-pattern">
+        <div className="section-shell page-hero">
+          <div>
+            <p className="eyebrow">Komala Vilas catering</p>
+            <h1 className="text-balance">South Indian feasts for serious gatherings.</h1>
+            <p>
+              Order dosa counters, tiffin breakfasts, and thali-style spreads for
+              offices, weddings, pujas, birthdays, and family weekends across the
+              South Bay.
+            </p>
+          </div>
+          <Image
+            className="photo-grade"
+            src="/images/south-indian-thali.jpg"
+            alt="Catering-ready South Indian vegetarian thali"
+            width={900}
+            height={1008}
+            priority
+            quality={92}
+          />
         </div>
-        <Image
-          className="photo-grade"
-          src="/images/south-indian-thali.jpg"
-          alt="Catering-ready South Indian vegetarian thali"
-          width={900}
-          height={1008}
-          priority
-          quality={92}
-        />
       </section>
 
       <MotionSection className="section-shell section-block" labelledBy="packages-title">
@@ -71,6 +73,7 @@ export default function CateringPage() {
             Catering starts at 10 guests. Pickup is from 1020 E El Camino Real in
             Sunnyvale unless delivery is confirmed by the team.
           </p>
+          <CateringEstimator />
         </div>
         <CateringOrderForm />
       </section>

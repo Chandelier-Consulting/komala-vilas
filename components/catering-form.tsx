@@ -18,6 +18,36 @@ const initialForm = {
   notes: "",
 };
 
+export function CateringEstimator() {
+  const [guestCount, setGuestCount] = useState("25");
+  const guests = Math.max(10, Number.parseInt(guestCount, 10) || 10);
+  const bestPackage =
+    [...cateringPackages]
+      .sort((a, b) => a.minGuests - b.minGuests)
+      .find((item) => guests <= item.minGuests + 20) ?? cateringPackages[cateringPackages.length - 1];
+  const trays = Math.max(1, Math.ceil(guests / 12));
+
+  return (
+    <div className="catering-estimator" aria-label="Catering quantity estimator">
+      <label>
+        <span>Serves calculator</span>
+        <input
+          type="number"
+          min="10"
+          value={guestCount}
+          onChange={(event) => setGuestCount(event.target.value)}
+        />
+      </label>
+      <p>
+        Start with <strong>{bestPackage.name}</strong> for {guests} guests.
+        Plan roughly <strong>{trays}</strong> serving tray{trays === 1 ? "" : "s"} before
+        the kitchen confirms the final menu.
+      </p>
+      <small>Pickup is standard. Delivery is confirmed case by case.</small>
+    </div>
+  );
+}
+
 export function CateringOrderForm() {
   const reduceMotion = useReducedMotion();
   const [form, setForm] = useState(initialForm);

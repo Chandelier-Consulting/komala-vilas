@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MotionCard, MotionHeadline, MotionMain, MotionSection } from "@/components/motion-shell";
-
-const mapUrl =
-  "https://www.google.com/maps/place/Komala+Vilas/@37.3531031,-122.0116365,15.64z/data=!4m6!3m5!1s0x808fb589fd36ead1:0x86106cdc3661185f!8m2!3d37.351395!4d-122.006376!16s%2Fg%2F1tf65qdg?entry=ttu&g_ep=EgoyMDI2MDYwOS4wIKXMDSoASAFQAw%3D%3D";
+import { OpenStatus } from "@/components/open-status";
+import { OrderLinkPanel } from "@/components/order-link-panel";
+import { restaurantInfo } from "@/lib/restaurant";
 
 const signatureDishes = [
   {
@@ -57,9 +57,9 @@ export default function Home() {
               </Link>
             </div>
             <div className="quick-info">
-              <strong>Open daily from 8:30 AM</strong>
-              <span>1020 E El Camino Real, Sunnyvale</span>
-              <a href="tel:+14087337400">(408) 733-7400</a>
+              <OpenStatus />
+              <span>{restaurantInfo.shortAddress}</span>
+              <a href={restaurantInfo.phoneHref}>{restaurantInfo.phone}</a>
             </div>
           </div>
 
@@ -85,6 +85,10 @@ export default function Home() {
           <cite>Fermented overnight · simmered slow · served with refills</cite>
         </blockquote>
       </section>
+
+      <MotionSection className="section-shell section-block">
+        <OrderLinkPanel />
+      </MotionSection>
 
       <MotionSection className="section-shell section-block" labelledBy="plates-title">
         <div className="section-heading">
@@ -132,7 +136,7 @@ export default function Home() {
             <Link className="button button-primary" href="/catering">
               Plan Catering
             </Link>
-            <a className="button button-light" href={mapUrl}>
+            <a className="button button-light" href={restaurantInfo.mapUrl}>
               Get Directions
             </a>
           </div>
@@ -168,15 +172,15 @@ export default function Home() {
       <section className="section-shell visit-strip" aria-label="Visit Komala Vilas">
         <div>
           <p className="eyebrow">Come hungry</p>
-          <h2 className="text-balance">1020 E El Camino Real, Sunnyvale</h2>
+          <h2 className="text-balance">{restaurantInfo.shortAddress}</h2>
           <p>Open daily from 8:30 AM. Friday and Saturday nights run until 10:00 PM.</p>
         </div>
         <div className="action-row">
-          <a className="button button-dark" href={mapUrl}>
+          <a className="button button-dark" href={restaurantInfo.mapUrl}>
             Get Directions
           </a>
-          <a className="button button-light" href="tel:+14087337400">
-            (408) 733-7400
+          <a className="button button-light" href={restaurantInfo.phoneHref}>
+            {restaurantInfo.phone}
           </a>
         </div>
       </section>

@@ -5,6 +5,7 @@ export const cateringPackages = [
     description:
       "A complete South Indian vegetarian spread with dosa batter service, rice, sambar, rasam, poriyal, kootu, chutneys, sweet, and curd rice.",
     serves: "25+ guests",
+    minGuests: 25,
   },
   {
     id: "tiffin-table",
@@ -12,6 +13,7 @@ export const cateringPackages = [
     description:
       "Idli, medu vada, pongal, chutneys, sambar, mini dosa batter, and filter coffee service for morning and early afternoon events.",
     serves: "15+ guests",
+    minGuests: 15,
   },
   {
     id: "dosa-counter",
@@ -19,6 +21,7 @@ export const cateringPackages = [
     description:
       "Crisp dosa, masala filling, sambar, coconut chutney, tomato chutney, and rotating chef specials for a focused live-station style menu.",
     serves: "30+ guests",
+    minGuests: 30,
   },
 ] as const;
 

@@ -16,13 +16,41 @@ export function DashboardClient() {
   const [password, setPassword] = useState("");
   const [orders, setOrders] = useState<DashboardOrder[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<OrderStatus | "all">("all");
   const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
   const configured = hasFirebaseClientConfig();
 
+  const filteredOrders = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    return orders.filter((order) => {
+      const matchesStatus = statusFilter === "all" || order.status === statusFilter;
+      const haystack = `${order.name} ${order.email} ${order.phone} ${order.packageName}`.toLowerCase();
+      const matchesQuery = !normalizedQuery || haystack.includes(normalizedQuery);
+      return matchesStatus && matchesQuery;
+    });
+  }, [orders, query, statusFilter]);
+
+  const statusCounts = useMemo(() => {
+    return orderStatuses.reduce<Record<OrderStatus, number>>(
+      (counts, status) => {
+        counts[status] = orders.filter((order) => order.status === status).length;
+        return counts;
+      },
+      {
+        new: 0,
+        contacted: 0,
+        confirmed: 0,
+        completed: 0,
+        cancelled: 0,
+      },
+    );
+  }, [orders]);
+
   const selectedOrder = useMemo(
-    () => orders.find((order) => order.id === selectedId) ?? orders[0],
-    [orders, selectedId],
+    () => filteredOrders.find((order) => order.id === selectedId) ?? filteredOrders[0],
+    [filteredOrders, selectedId],
   );
 
   useEffect(() => {
@@ -82,6 +110,29 @@ export function DashboardClient() {
     });
   }
 
+  function exportOrdersCsv() {
+    const header = ["Name", "Email", "Phone", "Package", "Date", "Guests", "Status"];
+    const rows = filteredOrders.map((order) => [
+      order.name,
+      order.email,
+      order.phone,
+      order.packageName,
+      order.eventDate,
+      String(order.guestCount),
+      order.status,
+    ]);
+    const csv = [header, ...rows]
+      .map((row) => row.map((cell) => `"${cell.replaceAll('"', '""')}"`).join(","))
+      .join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "komala-vilas-catering-orders.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
   if (!configured) {
     return (
       <div className="dashboard-empty">
@@ -125,16 +176,57 @@ export function DashboardClient() {
           <span>Signed in</span>
           <strong>{user.email}</strong>
         </div>
-        <button className="button button-secondary" onClick={() => signOut(getFirebaseClientAuth())}>
-          Sign out
-        </button>
+        <div className="action-row">
+          <button className="button button-secondary" type="button" onClick={exportOrdersCsv}>
+            Export CSV
+          </button>
+          <button className="button button-secondary" type="button" onClick={() => window.print()}>
+            Print order
+          </button>
+          <button className="button button-secondary" onClick={() => signOut(getFirebaseClientAuth())}>
+            Sign out
+          </button>
+        </div>
+      </div>
+
+      <div className="dashboard-filters">
+        <label>
+          <span>Search</span>
+          <input
+            value={query}
+            placeholder="Name, phone, email..."
+            onChange={(event) => setQuery(event.target.value)}
+          />
+        </label>
+        <label>
+          <span>Status</span>
+          <select
+            value={statusFilter}
+            onChange={(event) => setStatusFilter(event.target.value as OrderStatus | "all")}
+          >
+            <option value="all">All statuses</option>
+            {orderStatuses.map((status) => (
+              <option key={status} value={status}>
+                {status} ({statusCounts[status]})
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      <div className="status-counts" aria-label="Order status counts">
+        {orderStatuses.map((status) => (
+          <span key={status}>
+            <strong>{statusCounts[status]}</strong> {status}
+          </span>
+        ))}
       </div>
 
       <div className="order-list">
-        {orders.length === 0 && !isPending ? (
+        {filteredOrders.length === 0 && !isPending ? (
           <p>No catering orders yet.</p>
         ) : (
-          orders.map((order) => (
+          filteredOrders.map((order) => (
             <button
               key={order.id}
               className={selectedOrder?.id === order.id ? "order-row active" : "order-row"}
