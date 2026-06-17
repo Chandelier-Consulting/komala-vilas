@@ -43,10 +43,7 @@ html {
 
 body {
   margin: 0;
-  background:
-    radial-gradient(circle at 12% 4%, rgba(217, 155, 38, 0.16), transparent 28rem),
-    radial-gradient(circle at 88% 10%, rgba(125, 36, 24, 0.1), transparent 24rem),
-    var(--color-ivory);
+  background: var(--color-ivory);
   color: var(--color-ink);
   font-family: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
 }
@@ -81,13 +78,12 @@ img {
 .background-pattern::before {
   content: "";
   position: absolute;
-  inset: 38px 0;
+  inset: 0;
   pointer-events: none;
   background:
     radial-gradient(circle, rgba(185, 133, 45, 0.16) 0 2px, transparent 3px) 0 0 / 32px 32px,
     linear-gradient(135deg, rgba(125, 36, 24, 0.07) 25%, transparent 25%) 0 0 / 48px 48px,
     linear-gradient(225deg, rgba(31, 96, 68, 0.055) 25%, transparent 25%) 0 0 / 48px 48px;
-  border-block: 1px solid rgba(125, 36, 24, 0.1);
   opacity: 0.72;
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
@@ -99,6 +95,11 @@ img {
 
 .hero-background {
   width: 100%;
+  border-bottom: 1px solid var(--color-line);
+  background:
+    radial-gradient(circle at 12% 4%, rgba(217, 155, 38, 0.16), transparent 28rem),
+    radial-gradient(circle at 88% 10%, rgba(125, 36, 24, 0.1), transparent 24rem),
+    var(--color-ivory);
 }
 
 .site-header {

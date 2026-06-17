@@ -154,3 +154,12 @@ test("launch polish adds no-cost ordering, status, menu, catering, and dashboard
     assert.match(source, /<div className="section-shell page-hero/);
   }
 });
+
+test("hero background pattern runs as one full-width section band without internal breaks", async () => {
+  const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(styles, /\.background-pattern::before\s*{[^}]*inset: 0;/);
+  assert.doesNotMatch(styles, /\.background-pattern::before\s*{[^}]*inset: 38px 0/);
+  assert.doesNotMatch(styles, /\.background-pattern::before\s*{[^}]*border-block:/);
+  assert.match(styles, /\.hero-background\s*{[^}]*background:/);
+});
