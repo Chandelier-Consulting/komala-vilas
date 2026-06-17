@@ -163,3 +163,19 @@ test("hero background pattern runs as one full-width section band without intern
   assert.doesNotMatch(styles, /\.background-pattern::before\s*{[^}]*border-block:/);
   assert.match(styles, /\.hero-background\s*{[^}]*background:/);
 });
+
+test("catering order form uses a polished grouped intake layout", async () => {
+  const [form, styles] = await Promise.all([
+    readFile(new URL("../components/catering-form.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(form, /order-form-heading/);
+  assert.match(form, /form-section/);
+  assert.match(form, /form-section-title/);
+  assert.match(form, /form-submit-row/);
+  assert.match(styles, /\.order-form-heading/);
+  assert.match(styles, /\.form-section/);
+  assert.match(styles, /\.package-choice\s*{[^}]*min-height:/);
+  assert.match(styles, /input:focus-visible,\s*textarea:focus-visible,\s*select:focus-visible/);
+});

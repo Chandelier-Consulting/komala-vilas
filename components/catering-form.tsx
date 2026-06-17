@@ -87,70 +87,99 @@ export function CateringOrderForm() {
 
   return (
     <form className="order-form" onSubmit={submitOrder}>
-      <div className="form-grid">
-        <label>
-          <span>Name</span>
-          <input
-            name="name"
-            value={form.name}
-            onChange={(event) => updateField("name", event.target.value)}
-          />
-          {errors.name ? <em>{errors.name}</em> : null}
-        </label>
-        <label>
-          <span>Email</span>
-          <input
-            name="email"
-            type="email"
-            value={form.email}
-            onChange={(event) => updateField("email", event.target.value)}
-          />
-          {errors.email ? <em>{errors.email}</em> : null}
-        </label>
-        <label>
-          <span>Phone</span>
-          <input
-            name="phone"
-            value={form.phone}
-            onChange={(event) => updateField("phone", event.target.value)}
-          />
-          {errors.phone ? <em>{errors.phone}</em> : null}
-        </label>
-        <label>
-          <span>Event date</span>
-          <input
-            name="eventDate"
-            type="date"
-            value={form.eventDate}
-            onChange={(event) => updateField("eventDate", event.target.value)}
-          />
-          {errors.eventDate ? <em>{errors.eventDate}</em> : null}
-        </label>
-        <label>
-          <span>Guests</span>
-          <input
-            name="guestCount"
-            type="number"
-            min="10"
-            value={form.guestCount}
-            onChange={(event) => updateField("guestCount", event.target.value)}
-          />
-          {errors.guestCount ? <em>{errors.guestCount}</em> : null}
-        </label>
-        <label>
-          <span>Pickup / delivery window</span>
-          <input
-            name="pickupWindow"
-            value={form.pickupWindow}
-            placeholder="Saturday, 11:30 AM"
-            onChange={(event) => updateField("pickupWindow", event.target.value)}
-          />
-          {errors.pickupWindow ? <em>{errors.pickupWindow}</em> : null}
-        </label>
+      <div className="order-form-heading">
+        <div>
+          <span>Request details</span>
+          <h3 className="text-balance">Tell us what the kitchen should prepare.</h3>
+        </div>
+        <p>Response by phone or email after staff confirms timing and quantity.</p>
       </div>
 
-      <fieldset>
-        <legend>Package</legend>
+      <section className="form-section" aria-labelledby="contact-section-title">
+        <div className="form-section-title">
+          <span>01</span>
+          <h4 id="contact-section-title">Contact</h4>
+        </div>
+        <div className="form-grid">
+          <label>
+            <span>Name</span>
+            <input
+              name="name"
+              placeholder="Priya Raman"
+              value={form.name}
+              onChange={(event) => updateField("name", event.target.value)}
+            />
+            {errors.name ? <em>{errors.name}</em> : null}
+          </label>
+          <label>
+            <span>Email</span>
+            <input
+              name="email"
+              type="email"
+              placeholder="priya@example.com"
+              value={form.email}
+              onChange={(event) => updateField("email", event.target.value)}
+            />
+            {errors.email ? <em>{errors.email}</em> : null}
+          </label>
+          <label>
+            <span>Phone</span>
+            <input
+              name="phone"
+              placeholder="(408) 733-7400"
+              value={form.phone}
+              onChange={(event) => updateField("phone", event.target.value)}
+            />
+            {errors.phone ? <em>{errors.phone}</em> : null}
+          </label>
+        </div>
+      </section>
+
+      <section className="form-section" aria-labelledby="event-section-title">
+        <div className="form-section-title">
+          <span>02</span>
+          <h4 id="event-section-title">Event</h4>
+        </div>
+        <div className="form-grid">
+          <label>
+            <span>Event date</span>
+            <input
+              name="eventDate"
+              type="date"
+              value={form.eventDate}
+              onChange={(event) => updateField("eventDate", event.target.value)}
+            />
+            {errors.eventDate ? <em>{errors.eventDate}</em> : null}
+          </label>
+          <label>
+            <span>Guests</span>
+            <input
+              name="guestCount"
+              type="number"
+              min="10"
+              value={form.guestCount}
+              onChange={(event) => updateField("guestCount", event.target.value)}
+            />
+            {errors.guestCount ? <em>{errors.guestCount}</em> : null}
+          </label>
+          <label className="wide-field">
+            <span>Pickup / delivery window</span>
+            <input
+              name="pickupWindow"
+              value={form.pickupWindow}
+              placeholder="Saturday, 11:30 AM"
+              onChange={(event) => updateField("pickupWindow", event.target.value)}
+            />
+            {errors.pickupWindow ? <em>{errors.pickupWindow}</em> : null}
+          </label>
+        </div>
+      </section>
+
+      <fieldset className="form-section">
+        <div className="form-section-title">
+          <span>03</span>
+          <legend>Package</legend>
+        </div>
         <div className="package-choice-grid">
           {cateringPackages.map((item) => (
             <motion.label
@@ -172,27 +201,38 @@ export function CateringOrderForm() {
                 checked={form.packageId === item.id}
                 onChange={(event) => updateField("packageId", event.target.value)}
               />
-              <strong>{item.name}</strong>
-              <span>{item.serves}</span>
+              <span className="package-choice-copy">
+                <strong>{item.name}</strong>
+                <span>{item.serves}</span>
+              </span>
             </motion.label>
           ))}
         </div>
         {errors.packageId ? <em>{errors.packageId}</em> : null}
       </fieldset>
 
-      <label>
-        <span>Notes for the kitchen</span>
-        <textarea
-          name="notes"
-          value={form.notes}
-          onChange={(event) => updateField("notes", event.target.value)}
-        />
-      </label>
+      <section className="form-section" aria-labelledby="notes-section-title">
+        <div className="form-section-title">
+          <span>04</span>
+          <h4 id="notes-section-title">Kitchen notes</h4>
+        </div>
+        <label>
+          <span>Notes for the kitchen</span>
+          <textarea
+            name="notes"
+            placeholder="Jain-friendly request, extra chutney, delivery notes, serving style..."
+            value={form.notes}
+            onChange={(event) => updateField("notes", event.target.value)}
+          />
+        </label>
+      </section>
 
-      <button className="button button-primary" type="submit" disabled={isPending}>
-        {isPending ? "Sending order" : "Send catering order"}
-      </button>
-      {message ? <p className="form-message">{message}</p> : null}
+      <div className="form-submit-row">
+        <button className="button button-primary" type="submit" disabled={isPending}>
+          {isPending ? "Sending order" : "Send catering order"}
+        </button>
+        {message ? <p className="form-message">{message}</p> : null}
+      </div>
     </form>
   );
 }
