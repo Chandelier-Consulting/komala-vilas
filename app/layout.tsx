@@ -1,16 +1,32 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Cormorant_Garamond, Geist_Mono, Manrope, Noto_Sans_Tamil } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
   subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  display: "swap",
+});
+
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const tamil = Noto_Sans_Tamil({
+  variable: "--font-tamil",
+  subsets: ["tamil"],
+  weight: ["500", "700"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const visitMapUrl =
@@ -19,7 +35,7 @@ const visitMapUrl =
 export const metadata: Metadata = {
   title: "Komala Vilas | South Indian Vegetarian Restaurant",
   description:
-    "Komala Vilas serves South Indian vegetarian dosas, idli, thali, filter coffee, and more in Sunnyvale, California.",
+    "Komala Vilas serves South Indian vegetarian dosas, idli, thali, filter coffee, and catering in Sunnyvale, California.",
 };
 
 export default function RootLayout({
@@ -30,7 +46,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${cormorant.variable} ${manrope.variable} ${tamil.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <header className="site-header">
@@ -38,17 +54,18 @@ export default function RootLayout({
             <span className="brand-mark">க</span>
             <span>
               <span className="brand-name">Komala Vilas</span>
-              <span className="brand-kicker">Sunnyvale · Est. South Indian</span>
+              <span className="brand-kicker">Sunnyvale · South Indian</span>
             </span>
           </Link>
           <nav className="nav" aria-label="Primary navigation">
             <Link href="/">Home</Link>
             <Link href="/menu">Menu</Link>
+            <Link href="/catering">Catering</Link>
             <Link href="/about">About</Link>
             <a href={visitMapUrl}>Visit</a>
-            <a className="nav-order" href="https://komalavilas.com">
-              Order Online
-            </a>
+            <Link className="nav-order" href="/catering">
+              Order Catering
+            </Link>
           </nav>
         </header>
         {children}
@@ -60,8 +77,8 @@ export default function RootLayout({
                 <strong>Komala Vilas</strong>
               </div>
               <p>
-                Traditional home-style South Indian vegetarian cooking in Sunnyvale.
-                Breakfast to dinner, every day.
+                Traditional South Indian vegetarian cooking in Sunnyvale: dosa,
+                thali, tiffin, filter coffee, and catered feasts.
               </p>
               <span>கோமளா விலாஸ்</span>
             </div>
@@ -69,6 +86,7 @@ export default function RootLayout({
               <strong>Explore</strong>
               <Link href="/">Home</Link>
               <Link href="/menu">Menu</Link>
+              <Link href="/catering">Catering</Link>
               <Link href="/about">About</Link>
             </div>
             <div>
@@ -79,14 +97,14 @@ export default function RootLayout({
                 Sunnyvale, CA 94087
               </p>
               <a href="tel:+14087337400">(408) 733-7400</a>
-              <a className="footer-order" href="https://komalavilas.com">
-                Order Online
-              </a>
+              <Link className="footer-order" href="/catering">
+                Order Catering
+              </Link>
             </div>
           </div>
           <div className="footer-bottom">
             <span>© 2026 Komala Vilas · Sunnyvale</span>
-            <span>Pure vegetarian · Made fresh daily</span>
+            <span>Pure vegetarian · Fermented daily · Served with refills</span>
           </div>
         </footer>
       </body>

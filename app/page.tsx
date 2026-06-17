@@ -1,71 +1,99 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import { MotionCard, MotionHeadline, MotionMain, MotionSection } from "@/components/motion-shell";
 
-const orderUrl = "https://komalavilas.com";
 const mapUrl =
   "https://www.google.com/maps/place/Komala+Vilas/@37.3531031,-122.0116365,15.64z/data=!4m6!3m5!1s0x808fb589fd36ead1:0x86106cdc3661185f!8m2!3d37.351395!4d-122.006376!16s%2Fg%2F1tf65qdg?entry=ttu&g_ep=EgoyMDI2MDYwOS4wIKXMDSoASAFQAw%3D%3D";
-const phone = "(408) 733-7400";
 
 const signatureDishes = [
   {
     name: "Paper Masala Dosa",
     tamil: "மசாலா தோசை",
     image: "/images/masala-dosa.jpg",
-    desc: "A crisp griddle crepe wrapped around spiced potato, with chutneys and sambar.",
+    desc: "A long, crisp rice-lentil crepe folded around potato masala with sambar and chutneys.",
   },
   {
-    name: "Unlimited Thali",
+    name: "Unlimited South Indian Thali",
     tamil: "சாப்பாடு",
     image: "/images/south-indian-thali.jpg",
-    desc: "Rotating vegetables, rice, sambar, rasam, sweet, buttermilk, and refills.",
+    desc: "Rice, sambar, rasam, kootu, poriyal, sweet, buttermilk, and refills from the kitchen.",
   },
   {
-    name: "Idli & Vada",
+    name: "Idli Vada Sambar",
     tamil: "இட்லி வடை",
     image: "/images/idli-vada.jpg",
-    desc: "Soft steamed idli, crisp vada, and deep sambar comfort.",
+    desc: "Steamed idli and crisp medu vada built for hot sambar, coconut chutney, and coffee.",
   },
 ];
 
 const reviews = [
-  "The thali tastes like the kind of lunch someone makes when they care whether you eat well.",
-  "Crisp dosa, fast service, and the filter coffee actually tastes like home.",
-  "A Sunnyvale staple for South Indian vegetarian food without any fuss.",
+  "The thali tastes like a proper South Indian lunch, not a shortcut plate.",
+  "Crisp dosa, fast service, and filter coffee that actually tastes like home.",
+  "A Sunnyvale staple for vegetarian food when the whole family needs to agree.",
 ];
 
 export default function Home() {
   return (
-    <main>
-      <section className="new-hero section-shell">
+    <MotionMain>
+      <section className="hero-premium section-shell background-pattern">
         <div className="hero-copy">
-          <p className="eyebrow">கோமளா விலாஸ் · Sunnyvale</p>
-          <h1>
-            The taste of South India, <span>turned all the way up.</span>
-          </h1>
+          <MotionHeadline>
+            <p className="eyebrow">கோமளா விலாஸ் · Sunnyvale</p>
+            <h1 className="text-balance">
+              The taste of South India, <span>served with temple-town depth.</span>
+            </h1>
+          </MotionHeadline>
           <p className="lede">
-            Komala Vilas is a warm, vegetarian South Indian kitchen for dosas,
-            idli, thali, filter coffee, and the steady comfort of food made daily.
+            Komala Vilas is a pure vegetarian South Indian kitchen for paper dosa,
+            rotating thali, idli vada, filter coffee, and catered feasts.
           </p>
           <div className="action-row">
-            <Link className="button button-dark" href="/menu">
-              Explore the Menu
+            <Link className="button button-primary" href="/catering">
+              Order Catering
             </Link>
-            <a className="button button-light" href={orderUrl}>
-              Order Online
-            </a>
+            <Link className="button button-light" href="/menu">
+              Explore Menu
+            </Link>
           </div>
           <div className="quick-info">
-            <span className="status-dot" aria-hidden="true" />
             <strong>Open daily from 8:30 AM</strong>
             <span>1020 E El Camino Real, Sunnyvale</span>
-            <a href="tel:+14087337400">{phone}</a>
+            <a href="tel:+14087337400">(408) 733-7400</a>
           </div>
         </div>
 
-        <div className="hero-photo-stack" aria-label="South Indian dishes from Komala Vilas">
-          <Image className="hero-photo hero-photo-main" src="/images/masala-dosa.jpg" alt="Paper masala dosa with chutneys" width={1024} height={768} priority />
-          <Image className="hero-photo hero-photo-float hero-photo-thali" src="/images/south-indian-thali.jpg" alt="South Indian vegetarian thali" width={900} height={1008} />
-          <Image className="hero-photo hero-photo-float hero-photo-coffee" src="/images/filter-coffee.jpg" alt="South Indian filter coffee in dabarah" width={683} height={512} />
+        <div className="hero-visual" aria-label="Komala Vilas South Indian dishes">
+          <div className="temple-border">
+            <Image
+              className="photo-grade"
+              src="/images/masala-dosa.jpg"
+              alt="Paper masala dosa with chutneys"
+              width={1024}
+              height={768}
+              priority
+              quality={92}
+            />
+          </div>
+          <div className="floating-photo thali">
+            <Image
+              className="photo-grade"
+              src="/images/south-indian-thali.jpg"
+              alt="South Indian vegetarian thali"
+              width={900}
+              height={1008}
+              quality={85}
+            />
+          </div>
+          <div className="floating-photo coffee">
+            <Image
+              className="photo-grade"
+              src="/images/filter-coffee.jpg"
+              alt="South Indian filter coffee in dabarah"
+              width={683}
+              height={512}
+              quality={85}
+            />
+          </div>
           <div className="price-card">
             <strong>$13.50</strong>
             <span>Unlimited Thali</span>
@@ -73,89 +101,96 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="falling-spices" aria-label="Komala Vilas quote">
-        <video
-          className="spice-video"
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster="/images/south-indian-breakfast.jpg"
-        />
-        <div className="spice-rain" aria-hidden="true">
-          {Array.from({ length: 34 }).map((_, index) => (
-            <span key={index} className={`falling-spice falling-spice-${(index % 5) + 1}`} />
-          ))}
-        </div>
+      <section className="quote-band">
         <blockquote>
-          <p>Every meal should feel like someone was expecting you.</p>
+          <p className="text-balance">Every meal should feel like someone was expecting you.</p>
           <cite>Fermented overnight · simmered slow · served with refills</cite>
         </blockquote>
       </section>
 
-      <section className="section-shell home-feature-grid" aria-labelledby="plates-title">
-        <div className="section-heading compact-heading">
+      <MotionSection className="section-shell section-block" labelledBy="plates-title">
+        <div className="section-heading">
           <div>
             <p className="eyebrow">The signatures</p>
-            <h2 id="plates-title">Built around the plate, not the pitch.</h2>
+            <h2 id="plates-title" className="text-balance">
+              Built around <strong>heat, batter, brass, and patience.</strong>
+            </h2>
           </div>
-          <Link href="/menu">Open the full menu</Link>
+          <Link className="button button-secondary" href="/menu">
+            Open Full Menu
+          </Link>
         </div>
-        <div className="real-dish-grid">
+        <div className="dish-grid">
           {signatureDishes.map((dish) => (
-            <article key={dish.name} className="real-dish-card">
-              <Image src={dish.image} alt={dish.name} width={900} height={675} />
+            <MotionCard key={dish.name} className="dish-card">
+              <Image
+                className="photo-grade"
+                src={dish.image}
+                alt={dish.name}
+                width={900}
+                height={675}
+                quality={85}
+              />
               <div>
                 <p>{dish.tamil}</p>
-                <h3>{dish.name}</h3>
+                <h3 className="text-balance">{dish.name}</h3>
                 <span>{dish.desc}</span>
               </div>
-            </article>
+            </MotionCard>
           ))}
         </div>
-      </section>
+      </MotionSection>
 
-      <section className="section-shell split-story">
+      <MotionSection className="section-shell story-panel">
         <div>
-          <p className="eyebrow">From breakfast to dinner</p>
-          <h2>Easy enough for a weekday. Good enough to bring family.</h2>
+          <p className="eyebrow">Catering now open</p>
+          <h2 className="text-balance">Temple-feast scale for offices, weddings, and family functions.</h2>
           <p>
-            The site is built around the workflows guests need: decide what to eat,
-            understand the thali, get directions, and order without digging.
+            Choose thali service, tiffin breakfast, or a dosa counter. Send the
+            request and the Komala Vilas team can confirm quantities, timing, and
+            pickup from Sunnyvale.
           </p>
           <div className="action-row">
-            <Link className="button button-spice" href="/about">
-              See the Timeline
+            <Link className="button button-primary" href="/catering">
+              Plan Catering
             </Link>
             <a className="button button-light" href={mapUrl}>
               Get Directions
             </a>
           </div>
         </div>
-        <Image src="/images/south-indian-breakfast.jpg" alt="South Indian breakfast with idli, vada, sambar, and chutney" width={1024} height={694} />
-      </section>
+        <Image
+          className="photo-grade"
+          src="/images/south-indian-breakfast.jpg"
+          alt="South Indian breakfast with idli, vada, sambar, and chutney"
+          width={1024}
+          height={694}
+          quality={92}
+        />
+      </MotionSection>
 
-      <section className="reviews" aria-labelledby="reviews-title">
-        <div className="section-shell">
-          <div className="center-heading">
+      <MotionSection className="section-shell section-block" labelledBy="reviews-title">
+        <div className="section-heading">
+          <div>
             <p className="eyebrow">From the tables</p>
-            <h2 id="reviews-title">&quot;One of the best in the Bay Area&quot;</h2>
-          </div>
-          <div className="review-grid">
-            {reviews.map((quote) => (
-              <article key={quote}>
-                <div aria-label="Five stars">★★★★★</div>
-                <p>&quot;{quote}&quot;</p>
-              </article>
-            ))}
+            <h2 id="reviews-title" className="text-balance">
+              Sunnyvale regulars come back for the same reason.
+            </h2>
           </div>
         </div>
-      </section>
+        <div className="review-grid">
+          {reviews.map((quote) => (
+            <MotionCard key={quote} className="review-card">
+              <p>&quot;{quote}&quot;</p>
+            </MotionCard>
+          ))}
+        </div>
+      </MotionSection>
 
       <section className="section-shell visit-strip" aria-label="Visit Komala Vilas">
         <div>
           <p className="eyebrow">Come hungry</p>
-          <h2>1020 E El Camino Real, Sunnyvale</h2>
+          <h2 className="text-balance">1020 E El Camino Real, Sunnyvale</h2>
           <p>Open daily from 8:30 AM. Friday and Saturday nights run until 10:00 PM.</p>
         </div>
         <div className="action-row">
@@ -163,10 +198,10 @@ export default function Home() {
             Get Directions
           </a>
           <a className="button button-light" href="tel:+14087337400">
-            {phone}
+            (408) 733-7400
           </a>
         </div>
       </section>
-    </main>
+    </MotionMain>
   );
 }

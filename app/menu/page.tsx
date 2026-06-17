@@ -1,7 +1,6 @@
-import Link from "next/link";
 import Image from "next/image";
-
-const orderUrl = "https://komalavilas.com";
+import Link from "next/link";
+import { MotionMain, MotionSection } from "@/components/motion-shell";
 
 const menuSections = [
   {
@@ -34,28 +33,12 @@ const menuSections = [
     ],
   },
   {
-    id: "uthappam",
-    title: "Uthappam",
-    tamil: "ஊத்தப்பம்",
-    note: "Thick, soft griddle pancakes with toppings.",
-    items: [
-      ["Onion Uthappam", "Topped with onion and green chili.", "$9.50", ""],
-      ["Tomato Onion Uthappam", "Onion, tomato, and coriander.", "$10.00", ""],
-      ["Mixed Veg Uthappam", "Onion, tomato, carrot, and capsicum.", "$10.50", "Vegan"],
-    ],
-  },
-  {
     id: "thali",
     title: "Thali & Rice Plates",
     tamil: "சாப்பாடு",
     note: "The daily ritual: dishes rotate through the week.",
     items: [
-      [
-        "Unlimited South Indian Thali",
-        "Six rotating dishes, rice, sambar, rasam, kootu, chips, sweet, and buttermilk. Refilled.",
-        "$13.50",
-        "Signature",
-      ],
+      ["Unlimited South Indian Thali", "Six rotating dishes, rice, sambar, rasam, kootu, chips, sweet, and buttermilk. Refilled.", "$13.50", "Signature"],
       ["Mini Thali", "A lighter set plate with the same home-style flavours.", "$11.50", ""],
       ["Curd Rice", "Soft rice with yogurt and tempering.", "$7.50", ""],
       ["Lemon / Tamarind Rice", "Tangy rice with peanuts and curry leaf.", "$8.00", "Vegan"],
@@ -91,17 +74,25 @@ const menuSections = [
 
 export default function MenuPage() {
   return (
-    <main className="menu-page">
-      <section className="section-shell menu-hero">
+    <MotionMain className="menu-page">
+      <section className="section-shell page-hero background-pattern">
         <div>
           <p className="eyebrow">கோமளா விலாஸ் · Pure Vegetarian</p>
-          <h1>The Menu</h1>
+          <h1 className="text-balance">The Menu</h1>
           <p>
-            A practical all-day menu for quick scanning: breakfast staples,
-            griddle dosas, thali, rice plates, drinks, and sweets.
+            Breakfast staples, griddle dosas, unlimited thali, rice plates,
+            sweets, and filter coffee arranged for fast scanning.
           </p>
         </div>
-        <Image src="/images/south-indian-thali.jpg" alt="South Indian vegetarian thali" width={900} height={1008} priority />
+        <Image
+          className="photo-grade"
+          src="/images/south-indian-thali.jpg"
+          alt="South Indian vegetarian thali"
+          width={900}
+          height={1008}
+          priority
+          quality={92}
+        />
       </section>
 
       <nav className="menu-filter-bar section-shell" aria-label="Menu categories">
@@ -115,21 +106,25 @@ export default function MenuPage() {
       <section className="section-shell menu-workspace">
         <aside className="menu-aside">
           <strong>Today&apos;s anchor</strong>
-          <Image src="/images/masala-dosa.jpg" alt="Masala dosa" width={1024} height={768} />
+          <Image
+            className="photo-grade"
+            src="/images/masala-dosa.jpg"
+            alt="Masala dosa"
+            width={1024}
+            height={768}
+            quality={85}
+          />
           <p>Unlimited South Indian Thali: $13.50</p>
-          <a className="button button-spice" href={orderUrl}>
-            Order Online
-          </a>
-          <Link className="button button-light" href="/about">
-            Why Komala Vilas
+          <Link className="button button-primary" href="/catering">
+            Order Catering
           </Link>
         </aside>
 
         <div className="menu-list functional-menu-list">
           {menuSections.map((section) => (
-            <section id={section.id} key={section.id} className="menu-group">
+            <MotionSection id={section.id} key={section.id} className="menu-group">
               <div className="menu-group-heading">
-                <h2>{section.title}</h2>
+                <h2 className="text-balance">{section.title}</h2>
                 <span>{section.tamil}</span>
               </div>
               <p>{section.note}</p>
@@ -142,11 +137,10 @@ export default function MenuPage() {
                     </h3>
                     <p>{desc}</p>
                   </div>
-                  <span className="menu-dots" aria-hidden="true" />
                   <strong>{price}</strong>
                 </div>
               ))}
-            </section>
+            </MotionSection>
           ))}
           <p className="menu-disclaimer">
             Menu and prices are representative and can rotate. Call (408) 733-7400
@@ -154,6 +148,6 @@ export default function MenuPage() {
           </p>
         </div>
       </section>
-    </main>
+    </MotionMain>
   );
 }

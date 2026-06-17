@@ -16,7 +16,7 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
   assert.match(layout, /Komala Vilas/);
   assert.match(page, /Komala Vilas/);
   assert.match(page, /The taste of South India/);
-  assert.match(page, /falling-spices/);
+  assert.match(page, /temple-town depth/);
   assert.match(page, /Every meal should feel like someone was expecting you/);
   assert.match(page, /\/images\/masala-dosa\.jpg/);
   assert.match(page, /\/images\/south-indian-thali\.jpg/);
@@ -28,10 +28,10 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
     /https:\/\/www\.google\.com\/maps\/place\/Komala\+Vilas\/@37\.3531031,-122\.0116365,15\.64z/,
   );
   assert.match(styles, /\.menu-item:hover[\s\S]*background:/);
-  assert.match(styles, /\.menu-page[\s\S]*background: var\(--background\)/);
-  assert.match(styles, /\.menu-filter-bar\.section-shell\s*{[^}]*width: 100%/);
-  assert.match(styles, /\.menu-filter-bar\.section-shell\s*{[^}]*padding-inline:/);
-  assert.match(styles, /\.menu-filter-bar a\s*{[^}]*background: var\(--spice\)/);
+  assert.match(styles, /\.menu-page,\s*\.about-page,\s*\.catering-page,\s*\.dashboard-page\s*{[^}]*background: transparent/);
+  assert.match(styles, /\.menu-filter-bar\s*{[^}]*width: 100%/);
+  assert.match(styles, /\.menu-filter-bar\s*{[^}]*padding:/);
+  assert.match(styles, /\.menu-filter-bar a\s*{[^}]*background: var\(--color-tamarind\)/);
   assert.match(styles, /\.menu-filter-bar a\s*{[^}]*box-shadow:[^}]*0 10px 24px -14px rgba\(44, 29, 18, 0\.72\)/);
   assert.match(styles, /\.menu-filter-bar a:hover,\s*\.menu-filter-bar a:focus-visible\s*{[^}]*box-shadow:[^}]*0 16px 30px -12px rgba\(44, 29, 18, 0\.78\)/);
   assert.doesNotMatch(styles, /\.menu-filter-bar a\s*{[^}]*box-shadow:[^}]*0 \d+px 0 rgba/);
@@ -41,11 +41,66 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
     /\.functional-menu-list \.menu-group \+ \.menu-group\s*{[^}]*(?:linear-gradient|border-top|border-bottom)/,
   );
   assert.match(about, /export default function AboutPage/);
-  assert.match(about, /timeline-curve/);
   assert.match(about, /timelineItems/);
   assert.match(page, /1020 E El Camino Real/);
   assert.doesNotMatch(
     `${page}\n${menu}\n${about}\n${layout}\n${pkg}`,
     /komala-vibes|Komala Vibes|Komala Viles|komala-viles/,
   );
+});
+
+test("premium catering refresh adds design tokens, motion, Firebase, and dashboard surfaces", async () => {
+  const [
+    page,
+    menu,
+    about,
+    catering,
+    dashboard,
+    layout,
+    styles,
+    variants,
+    orders,
+    firebaseAdmin,
+    firebaseClient,
+    pkg,
+  ] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/menu/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/catering/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/dashboard/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../lib/variants.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/orders.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/firebase-admin.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/firebase-client.ts", import.meta.url), "utf8"),
+    readFile(new URL("../package.json", import.meta.url), "utf8"),
+  ]);
+
+  assert.doesNotMatch(styles, /@import url\(/);
+  assert.match(layout, /Cormorant_Garamond/);
+  assert.match(layout, /Manrope/);
+  assert.match(styles, /--color-tamarind/);
+  assert.match(styles, /--step-5/);
+  assert.match(styles, /\.photo-grade/);
+  assert.match(styles, /temple-border/);
+  assert.match(styles, /background-pattern/);
+  assert.match(variants, /EASE_OUT_EXPO/);
+  assert.match(variants, /EASE_SPRING/);
+  assert.match(variants, /EASE_DRAMATIC/);
+  assert.match(variants, /useReducedMotion/);
+  assert.match(`${page}\n${menu}\n${about}\n${catering}`, /quality=\{92\}/);
+  assert.match(`${page}\n${menu}\n${about}\n${catering}`, /quality=\{85\}/);
+  assert.match(layout, /href="\/catering"/);
+  assert.match(catering, /Komala Vilas catering/);
+  assert.match(catering, /CateringOrderForm/);
+  assert.match(dashboard, /DashboardClient/);
+  assert.match(orders, /validateCateringOrder/);
+  assert.match(firebaseAdmin, /getFirebaseAdmin/);
+  assert.match(firebaseClient, /getFirebaseClientApp/);
+  assert.match(pkg, /"framer-motion"/);
+  assert.match(pkg, /"firebase"/);
+  assert.match(pkg, /"firebase-admin"/);
+  assert.match(pkg, /"nodemailer"/);
 });
