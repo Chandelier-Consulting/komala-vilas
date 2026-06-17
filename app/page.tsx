@@ -173,7 +173,7 @@ export default function Home() {
       <MotionSection className="home-section home-section-planner" labelledBy="planner-title">
         <div className="section-shell feast-planner-section">
           <div>
-            <p className="eyebrow">Best demo feature</p>
+            <p className="eyebrow">Plan your order</p>
             <h2 id="planner-title" className="text-balance">
               Build the feast before anyone calls the restaurant.
             </h2>
