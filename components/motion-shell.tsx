@@ -12,6 +12,12 @@ import {
 import { useRef } from "react";
 import { useMotionVariants } from "@/lib/variants";
 
+const REVEAL_VIEWPORT = {
+  once: true,
+  amount: 0.2,
+  margin: "0px 0px -12% 0px",
+} as const;
+
 export function MotionMain({
   children,
   className,
@@ -43,7 +49,7 @@ export function MotionSection({
       variants={variants.section}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
+      viewport={REVEAL_VIEWPORT}
     >
       {children}
     </motion.section>
@@ -73,7 +79,7 @@ export function MotionGroup({
       variants={variants.group}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-70px" }}
+      viewport={REVEAL_VIEWPORT}
     >
       {children}
     </motion.div>
@@ -231,7 +237,7 @@ export function MotionHeadline({
       variants={variants.headline}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-70px" }}
+      viewport={REVEAL_VIEWPORT}
     >
       {children}
     </motion.div>
@@ -265,7 +271,7 @@ export function MotionHeroVisual({
       variants={useMotionVariants().item}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-70px" }}
+      viewport={REVEAL_VIEWPORT}
     >
       {children}
     </motion.div>

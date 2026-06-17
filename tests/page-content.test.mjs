@@ -235,6 +235,16 @@ test("menu items render as image-backed accordion reveals", async () => {
   assert.match(styles, /\.menu-item-details/);
 });
 
+test("scroll reveal motion waits for meaningful viewport visibility", async () => {
+  const motionShell = await readFile(new URL("../components/motion-shell.tsx", import.meta.url), "utf8");
+
+  assert.match(motionShell, /REVEAL_VIEWPORT/);
+  assert.match(motionShell, /amount:\s*0\.2/);
+  assert.match(motionShell, /margin:\s*"0px 0px -12% 0px"/);
+  assert.doesNotMatch(motionShell, /viewport=\{\{ once: true, margin: "-70px" \}\}/);
+  assert.doesNotMatch(motionShell, /viewport=\{\{ once: true, margin: "-80px" \}\}/);
+});
+
 test("home page uses full-width section bands with consistent padding and external nav actions", async () => {
   const [page, nav, restaurant, styles] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
