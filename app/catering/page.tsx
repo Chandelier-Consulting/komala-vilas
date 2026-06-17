@@ -1,7 +1,14 @@
 import Image from "next/image";
-import Link from "next/link";
 import { CateringEstimator, CateringOrderForm } from "@/components/catering-form";
-import { MotionCard, MotionMain, MotionSection } from "@/components/motion-shell";
+import {
+  MotionCard,
+  MotionGroup,
+  MotionHeadline,
+  MotionHeroVisual,
+  MotionItem,
+  MotionMain,
+  MotionSection,
+} from "@/components/motion-shell";
 import { cateringPackages } from "@/lib/orders";
 
 export default function CateringPage() {
@@ -11,22 +18,30 @@ export default function CateringPage() {
         <div className="section-shell page-hero">
           <div>
             <p className="eyebrow">Komala Vilas catering</p>
-            <h1 className="text-balance">South Indian feasts for serious gatherings.</h1>
-            <p>
-              Order dosa counters, tiffin breakfasts, and thali-style spreads for
-              offices, weddings, pujas, birthdays, and family weekends across the
-              South Bay.
-            </p>
+            <MotionHeadline>
+              <h1 className="text-balance">South Indian feasts for serious gatherings.</h1>
+            </MotionHeadline>
+            <MotionGroup>
+              <MotionItem>
+                <p>
+                  Order dosa counters, tiffin breakfasts, and thali-style spreads for
+                  offices, weddings, pujas, birthdays, and family weekends across the
+                  South Bay.
+                </p>
+              </MotionItem>
+            </MotionGroup>
           </div>
-          <Image
-            className="photo-grade"
-            src="/images/south-indian-thali.jpg"
-            alt="Catering-ready South Indian vegetarian thali"
-            width={900}
-            height={1008}
-            priority
-            quality={92}
-          />
+          <MotionHeroVisual className="page-hero-visual" labelledBy="Catering-ready South Indian vegetarian thali">
+            <Image
+              className="photo-grade"
+              src="/images/south-indian-thali.jpg"
+              alt="Catering-ready South Indian vegetarian thali"
+              width={900}
+              height={1008}
+              priority
+              quality={92}
+            />
+          </MotionHeroVisual>
         </div>
       </section>
 
@@ -42,10 +57,10 @@ export default function CateringPage() {
             </h2>
           </div>
         </div>
-        <div className="package-grid">
+        <MotionGroup className="package-grid">
           {cateringPackages.map((item, index) => (
             <MotionCard key={item.id} className="package-card">
-              <Link
+              <a
                 className="catering-package-link"
                 href={`#request?package=${item.id}&guests=${item.minGuests}`}
               >
@@ -69,13 +84,13 @@ export default function CateringPage() {
                   <span>{item.description}</span>
                   <strong>Start request</strong>
                 </div>
-              </Link>
+              </a>
             </MotionCard>
           ))}
-        </div>
+        </MotionGroup>
       </MotionSection>
 
-      <section className="section-shell section-block catering-layout catering-request-section">
+      <MotionSection className="section-shell section-block catering-layout catering-request-section">
         <div>
           <p className="eyebrow">Ordering</p>
           <h2 className="text-balance">Send the details. The kitchen confirms the final count.</h2>
@@ -86,7 +101,7 @@ export default function CateringPage() {
           <CateringEstimator />
         </div>
         <CateringOrderForm />
-      </section>
+      </MotionSection>
     </MotionMain>
   );
 }

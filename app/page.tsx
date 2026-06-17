@@ -1,6 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MotionCard, MotionHeadline, MotionMain, MotionSection } from "@/components/motion-shell";
+import {
+  MotionAmbient,
+  MotionCard,
+  MotionGroup,
+  MotionHeadline,
+  MotionHeroVisual,
+  MotionItem,
+  MotionLink,
+  MotionMain,
+  MotionScrub,
+  MotionSection,
+} from "@/components/motion-shell";
 import { OpenStatus } from "@/components/open-status";
 import { OrderLinkPanel } from "@/components/order-link-panel";
 import { restaurantInfo } from "@/lib/restaurant";
@@ -44,26 +55,33 @@ export default function Home() {
                 South Indian food with <span>temple-town depth.</span>
               </h1>
             </MotionHeadline>
-            <p className="lede">
-              Komala Vilas is a pure vegetarian South Indian kitchen for paper dosa,
-              rotating thali, idli vada, filter coffee, and catered feasts.
-            </p>
-            <div className="action-row">
-              <Link className="button button-primary" href="/catering">
-                Order Catering
-              </Link>
-              <Link className="button button-light" href="/menu">
-                Explore Menu
-              </Link>
-            </div>
-            <div className="quick-info">
-              <OpenStatus />
+            <MotionGroup>
+              <MotionItem>
+                <p className="lede">
+                  Komala Vilas is a pure vegetarian South Indian kitchen for paper dosa,
+                  rotating thali, idli vada, filter coffee, and catered feasts.
+                </p>
+              </MotionItem>
+              <MotionItem className="action-row">
+                <MotionLink className="button button-primary" href="/catering">
+                  Order Catering
+                </MotionLink>
+                <MotionLink className="button button-light" href="/menu">
+                  Explore Menu
+                </MotionLink>
+              </MotionItem>
+            </MotionGroup>
+            <MotionGroup className="quick-info">
+              <MotionItem>
+                <OpenStatus />
+              </MotionItem>
               <span>{restaurantInfo.shortAddress}</span>
               <a href={restaurantInfo.phoneHref}>{restaurantInfo.phone}</a>
-            </div>
+            </MotionGroup>
           </div>
 
-          <div className="hero-visual" aria-label="Komala Vilas South Indian dishes">
+          <MotionHeroVisual className="hero-visual" labelledBy="Komala Vilas South Indian dishes">
+            <MotionAmbient className="hero-brass-ring" />
             <div className="temple-border">
               <Image
                 className="photo-grade"
@@ -75,13 +93,16 @@ export default function Home() {
                 quality={92}
               />
             </div>
-          </div>
+          </MotionHeroVisual>
         </div>
       </section>
 
       <section className="quote-band">
+        <MotionAmbient className="quote-ambient-line" />
         <blockquote>
-          <p className="text-balance">Every meal should feel like someone was expecting you.</p>
+          <MotionScrub distance={24} scaleTo={1.02}>
+            <p className="text-balance">Every meal should feel like someone was expecting you.</p>
+          </MotionScrub>
           <cite>Fermented overnight · simmered slow · served with refills</cite>
         </blockquote>
       </section>
@@ -105,7 +126,7 @@ export default function Home() {
               Open Full Menu
             </Link>
           </div>
-          <div className="dish-grid">
+          <MotionGroup className="dish-grid">
             {signatureDishes.map((dish) => (
               <MotionCard key={dish.name} className="dish-card">
                 <Image
@@ -123,7 +144,7 @@ export default function Home() {
                 </div>
               </MotionCard>
             ))}
-          </div>
+          </MotionGroup>
         </div>
       </MotionSection>
 
@@ -138,22 +159,24 @@ export default function Home() {
               pickup from Sunnyvale.
             </p>
             <div className="action-row">
-              <Link className="button button-primary" href="/catering">
+              <MotionLink className="button button-primary" href="/catering">
                 Plan Catering
-              </Link>
-              <a className="button button-light" href={restaurantInfo.mapUrl} target="_blank" rel="noreferrer">
+              </MotionLink>
+              <MotionLink className="button button-light" href={restaurantInfo.mapUrl} target="_blank" rel="noreferrer">
                 Get Directions
-              </a>
+              </MotionLink>
             </div>
           </div>
-          <Image
-            className="photo-grade"
-            src="/images/south-indian-breakfast.jpg"
-            alt="South Indian breakfast with idli, vada, sambar, and chutney"
-            width={1024}
-            height={694}
-            quality={92}
-          />
+          <MotionScrub className="story-image-motion" distance={28}>
+            <Image
+              className="photo-grade"
+              src="/images/south-indian-breakfast.jpg"
+              alt="South Indian breakfast with idli, vada, sambar, and chutney"
+              width={1024}
+              height={694}
+              quality={92}
+            />
+          </MotionScrub>
         </div>
       </MotionSection>
 
@@ -167,13 +190,13 @@ export default function Home() {
               </h2>
             </div>
           </div>
-          <div className="review-grid">
+          <MotionGroup className="review-grid">
             {reviews.map((quote) => (
               <MotionCard key={quote} className="review-card">
                 <p>&quot;{quote}&quot;</p>
               </MotionCard>
             ))}
-          </div>
+          </MotionGroup>
         </div>
       </MotionSection>
 
@@ -185,12 +208,12 @@ export default function Home() {
             <p>Open daily from 8:30 AM. Friday and Saturday nights run until 10:00 PM.</p>
           </div>
           <div className="action-row">
-            <a className="button button-dark" href={restaurantInfo.mapUrl} target="_blank" rel="noreferrer">
+            <MotionLink className="button button-dark" href={restaurantInfo.mapUrl} target="_blank" rel="noreferrer">
               Get Directions
-            </a>
-            <a className="button button-light" href={restaurantInfo.phoneHref}>
+            </MotionLink>
+            <MotionLink className="button button-light" href={restaurantInfo.phoneHref}>
               {restaurantInfo.phone}
-            </a>
+            </MotionLink>
           </div>
         </div>
       </section>

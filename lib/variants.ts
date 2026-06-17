@@ -27,7 +27,33 @@ export function useMotionVariants() {
       visible: {
         opacity: 1,
         y: 0,
-        transition: { duration: instant ?? 0.72, ease: EASE_OUT_EXPO },
+        transition: {
+          duration: instant ?? 0.72,
+          ease: EASE_OUT_EXPO,
+          staggerChildren: reduceMotion ? 0 : 0.06,
+        },
+      },
+    },
+    group: {
+      hidden: {},
+      visible: {
+        transition: {
+          staggerChildren: reduceMotion ? 0 : 0.065,
+          delayChildren: reduceMotion ? 0 : 0.04,
+        },
+      },
+    },
+    item: {
+      hidden: reduceMotion ? { opacity: 1 } : { opacity: 0, y: 18 },
+      visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: instant ?? 0.54, ease: EASE_OUT_EXPO },
+      },
+      exit: {
+        opacity: 0,
+        y: reduceMotion ? 0 : 10,
+        transition: { duration: instant ?? 0.2, ease: EASE_OUT_EXPO },
       },
     },
     headline: {
@@ -52,6 +78,18 @@ export function useMotionVariants() {
       tap: {
         scale: reduceMotion ? 1 : 0.985,
         transition: { duration: instant ?? 0.2, ease: EASE_SPRING },
+      },
+    },
+    action: {
+      hover: {
+        scale: reduceMotion ? 1 : 1.025,
+        y: reduceMotion ? 0 : -1,
+        transition: { duration: instant ?? 0.2, ease: EASE_SPRING },
+      },
+      tap: {
+        scale: reduceMotion ? 1 : 0.985,
+        y: 0,
+        transition: { duration: instant ?? 0.16, ease: EASE_SPRING },
       },
     },
   };

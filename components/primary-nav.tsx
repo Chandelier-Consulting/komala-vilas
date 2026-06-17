@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { MotionLink } from "@/components/motion-shell";
 import { restaurantInfo } from "@/lib/restaurant";
 
 const links = [
@@ -17,20 +17,20 @@ export function PrimaryNav() {
   return (
     <nav className="nav" aria-label="Primary navigation">
       {links.map((link) => (
-        <Link
+        <MotionLink
           key={link.href}
           href={link.href}
-          aria-current={pathname === link.href ? "page" : undefined}
+          ariaCurrent={pathname === link.href ? "page" : undefined}
         >
           {link.label}
-        </Link>
+        </MotionLink>
       ))}
-      <a href={restaurantInfo.mapUrl} target="_blank" rel="noreferrer">
+      <MotionLink href={restaurantInfo.mapUrl} target="_blank" rel="noreferrer">
         Visit
-      </a>
-      <a className="nav-order" href={restaurantInfo.orderUrl} target="_blank" rel="noreferrer">
+      </MotionLink>
+      <MotionLink className="nav-order" href={restaurantInfo.orderUrl} target="_blank" rel="noreferrer">
         Order Online
-      </a>
+      </MotionLink>
     </nav>
   );
 }

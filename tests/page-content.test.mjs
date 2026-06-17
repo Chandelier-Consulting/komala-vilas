@@ -212,6 +212,29 @@ test("catering order form uses a polished grouped intake layout", async () => {
   assert.match(styles, /input:focus-visible,\s*textarea:focus-visible,\s*select:focus-visible/);
 });
 
+test("menu items render as image-backed accordion reveals", async () => {
+  const [menuData, menuExplorer, styles] = await Promise.all([
+    readFile(new URL("../lib/menu.ts", import.meta.url), "utf8"),
+    readFile(new URL("../components/menu-explorer.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  const menuItemCount = (menuData.match(/\{\s*name:\s*"/g) ?? []).length;
+  const imageFieldCount = (menuData.match(/image:\s*"\/images\//g) ?? []).length;
+
+  assert.ok(menuItemCount > 20);
+  assert.equal(imageFieldCount, menuItemCount);
+  assert.match(menuData, /image: string/);
+  assert.match(menuExplorer, /expandedItemKey/);
+  assert.match(menuExplorer, /aria-expanded/);
+  assert.match(menuExplorer, /onMouseEnter/);
+  assert.match(menuExplorer, /menu-item-photo/);
+  assert.match(menuExplorer, /menu-item-details/);
+  assert.match(styles, /\.menu-item-accordion/);
+  assert.match(styles, /\.menu-item-photo/);
+  assert.match(styles, /\.menu-item-details/);
+});
+
 test("home page uses full-width section bands with consistent padding and external nav actions", async () => {
   const [page, nav, restaurant, styles] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),

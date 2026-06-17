@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { MotionLink } from "@/components/motion-shell";
 import { cateringPackages, type CateringOrderInput } from "@/lib/orders";
 import { EASE_SPRING } from "@/lib/variants";
 
@@ -78,12 +78,12 @@ export function CateringEstimator() {
         the kitchen confirms the final menu.
       </p>
       <div className="estimator-actions">
-        <Link
+        <MotionLink
           className="button button-primary"
           href={`#request?package=${bestPackage.id}&guests=${guests}`}
         >
           Use this estimate
-        </Link>
+        </MotionLink>
       </div>
       <small>Pickup is standard. Delivery is confirmed case by case.</small>
     </div>
@@ -179,7 +179,15 @@ export function CateringOrderForm() {
 
   if (confirmationId) {
     return (
-      <section id="request" className="order-form order-confirmation" aria-live="polite">
+      <motion.section
+        id="request"
+        className="order-form order-confirmation"
+        aria-live="polite"
+        layout
+        initial={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: reduceMotion ? 0 : 0.36, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div className="order-form-heading">
           <div>
             <span>Request received</span>
@@ -192,9 +200,11 @@ export function CateringOrderForm() {
             A team member should reach out within 1 - 2 business days to confirm the
             menu, guest count, timing, and pickup or delivery details.
           </p>
-          <button
+          <motion.button
             className="button button-primary"
             type="button"
+            whileHover={{ scale: reduceMotion ? 1 : 1.025 }}
+            whileTap={{ scale: reduceMotion ? 1 : 0.985 }}
             onClick={() => {
               setConfirmationId("");
               setForm(initialForm);
@@ -203,14 +213,14 @@ export function CateringOrderForm() {
             }}
           >
             Send another request
-          </button>
+          </motion.button>
         </div>
-      </section>
+      </motion.section>
     );
   }
 
   return (
-    <form id="request" className="order-form" onSubmit={submitOrder}>
+    <motion.form id="request" className="order-form" onSubmit={submitOrder} layout>
       <div className="order-form-heading">
         <div>
           <span>Request details</span>
@@ -351,12 +361,18 @@ export function CateringOrderForm() {
         </label>
       </section>
 
-      <div className="form-submit-row">
-        <button className="button button-primary" type="submit" disabled={isPending}>
+      <motion.div className="form-submit-row" layout>
+        <motion.button
+          className="button button-primary"
+          type="submit"
+          disabled={isPending}
+          whileHover={{ scale: reduceMotion || isPending ? 1 : 1.025 }}
+          whileTap={{ scale: reduceMotion || isPending ? 1 : 0.985 }}
+        >
           {isPending ? "Sending order" : "Send catering order"}
-        </button>
+        </motion.button>
         {message ? <p className="form-message">{message}</p> : null}
-      </div>
-    </form>
+      </motion.div>
+    </motion.form>
   );
 }

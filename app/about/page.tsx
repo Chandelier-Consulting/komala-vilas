@@ -1,6 +1,14 @@
 import Image from "next/image";
-import Link from "next/link";
-import { MotionCard, MotionMain, MotionSection } from "@/components/motion-shell";
+import {
+  MotionCard,
+  MotionGroup,
+  MotionHeadline,
+  MotionHeroVisual,
+  MotionItem,
+  MotionLink,
+  MotionMain,
+  MotionSection,
+} from "@/components/motion-shell";
 
 const timelineItems = [
   {
@@ -36,25 +44,35 @@ export default function AboutPage() {
         <div className="section-shell page-hero">
           <div>
             <p className="eyebrow">Our story</p>
-            <h1 className="text-balance">Not a concept. A rhythm.</h1>
-            <p>
-              Komala Vilas works because the day has a pulse: batter before
-              sunrise, dosa on the griddle, thali at lunch, coffee in the afternoon,
-              and refills whenever the table asks.
-            </p>
-            <Link className="button button-primary" href="/menu">
-              See the Food
-            </Link>
+            <MotionHeadline>
+              <h1 className="text-balance">Not a concept. A rhythm.</h1>
+            </MotionHeadline>
+            <MotionGroup>
+              <MotionItem>
+                <p>
+                  Komala Vilas works because the day has a pulse: batter before
+                  sunrise, dosa on the griddle, thali at lunch, coffee in the afternoon,
+                  and refills whenever the table asks.
+                </p>
+              </MotionItem>
+              <MotionItem>
+                <MotionLink className="button button-primary" href="/menu">
+                  See the Food
+                </MotionLink>
+              </MotionItem>
+            </MotionGroup>
           </div>
-          <Image
-            className="photo-grade"
-            src="/images/south-indian-breakfast.jpg"
-            alt="South Indian breakfast plate"
-            width={1024}
-            height={694}
-            priority
-            quality={92}
-          />
+          <MotionHeroVisual className="page-hero-visual" labelledBy="South Indian breakfast plate">
+            <Image
+              className="photo-grade"
+              src="/images/south-indian-breakfast.jpg"
+              alt="South Indian breakfast plate"
+              width={1024}
+              height={694}
+              priority
+              quality={92}
+            />
+          </MotionHeroVisual>
         </div>
       </section>
 
@@ -67,7 +85,7 @@ export default function AboutPage() {
             </h2>
           </div>
         </div>
-        <div className="timeline-stage">
+        <MotionGroup className="timeline-stage">
           {timelineItems.map((item) => (
             <MotionCard key={item.title} className="timeline-card">
               <Image
@@ -85,23 +103,23 @@ export default function AboutPage() {
               </div>
             </MotionCard>
           ))}
-        </div>
+        </MotionGroup>
       </MotionSection>
 
-      <section className="section-shell values-panel section-block">
-        <article>
+      <MotionSection className="section-shell values-panel section-block">
+        <MotionCard>
           <strong>Pure vegetarian</strong>
           <span>Every dish, every day. Much of the menu is vegan by nature.</span>
-        </article>
-        <article>
+        </MotionCard>
+        <MotionCard>
           <strong>Rotating thali</strong>
           <span>Six dishes that change through the week, like a home kitchen.</span>
-        </article>
-        <article>
+        </MotionCard>
+        <MotionCard>
           <strong>No shortcut cooking</strong>
           <span>Fermented batter, slow sambar, and coffee pulled the old way.</span>
-        </article>
-      </section>
+        </MotionCard>
+      </MotionSection>
     </MotionMain>
   );
 }

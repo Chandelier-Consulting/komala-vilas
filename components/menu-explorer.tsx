@@ -1,16 +1,40 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { MotionSection } from "@/components/motion-shell";
+import {
+  MotionCard,
+  MotionDiv,
+  MotionLayoutGroup,
+  MotionLayoutItem,
+  MotionLink,
+  MotionPresence,
+  MotionSection,
+} from "@/components/motion-shell";
 import { menuSections } from "@/lib/menu";
 
 const filters = ["All", "Vegan", "Popular", "Catering-friendly"] as const;
 
+function getItemBadges(item: {
+  tags: string[];
+  popular?: boolean;
+  cateringFriendly?: boolean;
+}) {
+  return [
+    ...item.tags,
+    item.popular ? "Popular" : "",
+    item.cateringFriendly ? "Catering-friendly" : "",
+  ].filter(Boolean);
+}
+
+function getMenuItemKey(sectionId: string, itemName: string) {
+  return `${sectionId}-${itemName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+}
+
 export function MenuExplorer() {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<(typeof filters)[number]>("All");
+  const [expandedItemKey, setExpandedItemKey] = useState("");
 
   const filteredSections = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -36,9 +60,9 @@ export function MenuExplorer() {
     <>
       <nav className="menu-filter-bar section-shell" aria-label="Menu categories">
         {menuSections.map((section) => (
-          <a key={section.id} href={`#${section.id}`}>
+          <MotionLink key={section.id} href={`#${section.id}`}>
             {section.title}
-          </a>
+          </MotionLink>
         ))}
       </nav>
 
@@ -48,25 +72,32 @@ export function MenuExplorer() {
           <input
             value={query}
             placeholder="Search dosa, thali, coffee..."
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) => {
+              setQuery(event.target.value);
+              setExpandedItemKey("");
+            }}
           />
         </label>
         <div className="menu-tabs" role="tablist" aria-label="Dietary and menu filters">
           {filters.map((item) => (
-            <button
-              key={item}
-              type="button"
-              className={filter === item ? "active" : ""}
-              onClick={() => setFilter(item)}
-            >
-              {item}
-            </button>
+            <MotionDiv key={item} className="menu-tab-motion">
+              <button
+                type="button"
+                className={filter === item ? "active" : ""}
+                onClick={() => {
+                  setFilter(item);
+                  setExpandedItemKey("");
+                }}
+              >
+                {item}
+              </button>
+            </MotionDiv>
           ))}
         </div>
       </section>
 
       <section className="section-shell menu-workspace">
-        <aside className="menu-aside">
+        <MotionCard className="menu-aside">
           <strong>Today&apos;s anchor</strong>
           <Image
             className="photo-grade"
@@ -77,50 +108,98 @@ export function MenuExplorer() {
             quality={85}
           />
           <p>Unlimited South Indian Thali: $13.50</p>
-          <Link className="button button-primary" href="/catering">
+          <MotionLink className="button button-primary" href="/catering">
             Order Catering
-          </Link>
-        </aside>
+          </MotionLink>
+        </MotionCard>
 
-        <div className="menu-list functional-menu-list">
-          {filteredSections.map((section) => (
-            <MotionSection id={section.id} key={section.id} className="menu-group">
-              <div className="menu-group-heading">
-                <h2 className="text-balance">{section.title}</h2>
-                <span>{section.tamil}</span>
-              </div>
-              <p>{section.note}</p>
-              {section.items.map((item) => (
-                <div className="menu-item" key={item.name}>
-                  <div>
-                    <h3>
-                      {item.name}
-                      {[...item.tags, item.popular ? "Popular" : "", item.cateringFriendly ? "Catering-friendly" : ""]
-                        .filter(Boolean)
-                        .map((tag) => (
-                          <span key={tag}>{tag}</span>
-                        ))}
-                    </h3>
-                    <p>{item.description}</p>
+        <MotionLayoutGroup className="menu-list functional-menu-list">
+          <MotionPresence>
+            {filteredSections.map((section) => (
+              <MotionLayoutItem key={section.id}>
+                <MotionSection id={section.id} className="menu-group">
+                  <div className="menu-group-heading">
+                    <h2 className="text-balance">{section.title}</h2>
+                    <span>{section.tamil}</span>
                   </div>
-                  <strong>{item.price}</strong>
-                </div>
-              ))}
-            </MotionSection>
-          ))}
-          {filteredSections.length === 0 ? (
-            <div className="menu-group">
-              <h2>No dishes found</h2>
-              <p>Try a different search or filter.</p>
-            </div>
-          ) : null}
+                  <p>{section.note}</p>
+                  <MotionLayoutGroup className="menu-items-list">
+                    <MotionPresence>
+                      {section.items.map((item) => {
+                        const itemKey = getMenuItemKey(section.id, item.name);
+                        const detailsId = `${itemKey}-details`;
+                        const isExpanded = expandedItemKey === itemKey;
+
+                        return (
+                          <MotionLayoutItem
+                            className={isExpanded ? "menu-item expanded" : "menu-item"}
+                            key={item.name}
+                            onMouseEnter={() => setExpandedItemKey(itemKey)}
+                            onMouseLeave={() => setExpandedItemKey("")}
+                          >
+                            <div
+                              className="menu-item-accordion"
+                              aria-expanded={isExpanded}
+                              aria-controls={detailsId}
+                              tabIndex={0}
+                              role="button"
+                              onFocus={() => setExpandedItemKey(itemKey)}
+                              onBlur={() => setExpandedItemKey("")}
+                              onKeyDown={(event) => {
+                                if (event.key !== "Enter" && event.key !== " ") return;
+
+                                event.preventDefault();
+                                setExpandedItemKey(isExpanded ? "" : itemKey);
+                              }}
+                            >
+                              <Image
+                                className="menu-item-photo photo-grade"
+                                src={item.image}
+                                alt={item.name}
+                                width={360}
+                                height={240}
+                                quality={82}
+                              />
+                              <span className="menu-item-summary">
+                                <span className="menu-item-title">
+                                  <span>{item.name}</span>
+                                  <span className="menu-item-badges">
+                                    {getItemBadges(item).map((tag) => (
+                                      <span key={tag}>{tag}</span>
+                                    ))}
+                                  </span>
+                                </span>
+                                <MotionPresence>
+                                  {isExpanded ? (
+                                    <MotionLayoutItem id={detailsId} className="menu-item-details">
+                                      <p>{item.description}</p>
+                                    </MotionLayoutItem>
+                                  ) : null}
+                                </MotionPresence>
+                              </span>
+                              <strong>{item.price}</strong>
+                            </div>
+                          </MotionLayoutItem>
+                        );
+                      })}
+                    </MotionPresence>
+                  </MotionLayoutGroup>
+                </MotionSection>
+              </MotionLayoutItem>
+            ))}
+            {filteredSections.length === 0 ? (
+              <MotionLayoutItem className="menu-group">
+                <h2>No dishes found</h2>
+                <p>Try a different search or filter.</p>
+              </MotionLayoutItem>
+            ) : null}
+          </MotionPresence>
           <p className="menu-disclaimer">
             Menu and prices are representative and can rotate. Call (408) 733-7400
             for today&apos;s thali and specials.
           </p>
-        </div>
+        </MotionLayoutGroup>
       </section>
     </>
   );
 }
-

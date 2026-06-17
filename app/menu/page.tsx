@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { MenuExplorer } from "@/components/menu-explorer";
-import { MotionMain } from "@/components/motion-shell";
+import { MotionGroup, MotionHeadline, MotionHeroVisual, MotionItem, MotionMain } from "@/components/motion-shell";
 
 export default function MenuPage() {
   return (
@@ -9,21 +9,29 @@ export default function MenuPage() {
         <div className="section-shell page-hero">
           <div>
             <p className="eyebrow">கோமளா விலாஸ் · Pure Vegetarian</p>
-            <h1 className="text-balance">The Menu</h1>
-            <p>
-              Breakfast staples, griddle dosas, unlimited thali, rice plates,
-              sweets, and filter coffee arranged for fast scanning.
-            </p>
+            <MotionHeadline>
+              <h1 className="text-balance">The Menu</h1>
+            </MotionHeadline>
+            <MotionGroup>
+              <MotionItem>
+                <p>
+                  Breakfast staples, griddle dosas, unlimited thali, rice plates,
+                  sweets, and filter coffee arranged for fast scanning.
+                </p>
+              </MotionItem>
+            </MotionGroup>
           </div>
-          <Image
-            className="photo-grade"
-            src="/images/south-indian-thali.jpg"
-            alt="South Indian vegetarian thali"
-            width={900}
-            height={1008}
-            priority
-            quality={92}
-          />
+          <MotionHeroVisual className="page-hero-visual" labelledBy="South Indian vegetarian thali">
+            <Image
+              className="photo-grade"
+              src="/images/south-indian-thali.jpg"
+              alt="South Indian vegetarian thali"
+              width={900}
+              height={1008}
+              priority
+              quality={92}
+            />
+          </MotionHeroVisual>
         </div>
       </section>
 
