@@ -38,10 +38,31 @@ const signatureDishes = [
 ];
 
 const reviews = [
-  "The thali tastes like a proper South Indian lunch, not a shortcut plate.",
-  "Crisp dosa, fast service, and filter coffee that actually tastes like home.",
-  "A Sunnyvale staple for vegetarian food when the whole family needs to agree.",
+  {
+    quote: "The thali tastes like a proper South Indian lunch, not a shortcut plate.",
+    name: "Lunch regular",
+    detail: "Comes back for thali refills",
+  },
+  {
+    quote: "Crisp dosa, fast service, and filter coffee that actually tastes like home.",
+    name: "Weekend table",
+    detail: "Orders dosa and coffee",
+  },
+  {
+    quote: "A Sunnyvale staple for vegetarian food when the whole family needs to agree.",
+    name: "Family order",
+    detail: "Catering and takeout",
+  },
 ];
+
+const featuredReview = {
+  quote:
+    "When the dosa lands hot, the sambar is still steaming, and the coffee comes in a steel tumbler, the table goes quiet first. Then everyone starts planning the next visit.",
+  name: "A note from the dining room",
+  detail: "What regulars keep describing",
+};
+
+const reviewHighlights = ["Crisp dosas", "Unlimited thali", "Filter coffee", "Vegetarian catering"];
 
 export default function Home() {
   return (
@@ -181,21 +202,54 @@ export default function Home() {
       </MotionSection>
 
       <MotionSection className="home-section home-section-reviews" labelledBy="reviews-title">
-        <div className="section-shell">
+        <div className="section-shell review-showcase">
           <div className="section-heading">
             <div>
               <p className="eyebrow">From the tables</p>
               <h2 id="reviews-title" className="text-balance">
-                Sunnyvale regulars come back for the same reason.
+                Proof you can feel before the first bite.
               </h2>
             </div>
+            <MotionLink className="button button-secondary" href="/catering">
+              Book catering from the reviews
+            </MotionLink>
           </div>
-          <MotionGroup className="review-grid">
-            {reviews.map((quote) => (
-              <MotionCard key={quote} className="review-card">
-                <p>&quot;{quote}&quot;</p>
-              </MotionCard>
-            ))}
+
+          <MotionGroup className="review-layout">
+            <MotionCard className="review-feature">
+              <div className="review-feature-mark" aria-hidden="true">
+                ★★★★★
+              </div>
+              <blockquote>
+                <p className="text-balance">&quot;{featuredReview.quote}&quot;</p>
+                <cite>
+                  <strong>{featuredReview.name}</strong>
+                  <span>{featuredReview.detail}</span>
+                </cite>
+              </blockquote>
+            </MotionCard>
+
+            <div className="review-side">
+              <div className="review-proof-bar">
+                <span>Most mentioned</span>
+                <div>
+                  {reviewHighlights.map((item) => (
+                    <strong key={item}>{item}</strong>
+                  ))}
+                </div>
+              </div>
+              <MotionGroup className="review-grid">
+                {reviews.map((review) => (
+                  <MotionCard key={review.quote} className="review-card">
+                    <p>&quot;{review.quote}&quot;</p>
+                    <span>
+                      <strong>{review.name}</strong>
+                      {review.detail}
+                    </span>
+                  </MotionCard>
+                ))}
+              </MotionGroup>
+            </div>
           </MotionGroup>
         </div>
       </MotionSection>

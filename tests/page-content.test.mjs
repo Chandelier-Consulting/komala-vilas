@@ -245,6 +245,23 @@ test("scroll reveal motion waits for meaningful viewport visibility", async () =
   assert.doesNotMatch(motionShell, /viewport=\{\{ once: true, margin: "-80px" \}\}/);
 });
 
+test("home page has a premium review proof section for demo readiness", async () => {
+  const [page, styles] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(page, /featuredReview/);
+  assert.match(page, /reviewHighlights/);
+  assert.match(page, /review-feature/);
+  assert.match(page, /review-proof-bar/);
+  assert.match(page, /Most mentioned/);
+  assert.match(page, /Book catering from the reviews/);
+  assert.match(styles, /\.review-showcase/);
+  assert.match(styles, /\.review-feature/);
+  assert.match(styles, /\.review-proof-bar/);
+});
+
 test("home page uses full-width section bands with consistent padding and external nav actions", async () => {
   const [page, nav, restaurant, styles] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
