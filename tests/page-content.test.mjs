@@ -162,6 +162,8 @@ test("hero background pattern runs as one full-width section band without intern
   assert.doesNotMatch(styles, /\.background-pattern::before\s*{[^}]*inset: 38px 0/);
   assert.doesNotMatch(styles, /\.background-pattern::before\s*{[^}]*border-block:/);
   assert.match(styles, /\.hero-background\s*{[^}]*background:/);
+  assert.match(styles, /\.site-header\s*{[^}]*radial-gradient/);
+  assert.doesNotMatch(styles, /\.site-header\s*{[^}]*background: rgba\(255, 248, 234, 0\.9\)/);
 });
 
 test("catering order form uses a polished grouped intake layout", async () => {

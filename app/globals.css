@@ -113,7 +113,10 @@ img {
   min-height: 76px;
   padding-inline: max(28px, calc((100vw - 1180px) / 2));
   border-bottom: 1px solid var(--color-line);
-  background: rgba(255, 248, 234, 0.9);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(217, 155, 38, 0.16), transparent 28rem),
+    radial-gradient(circle at 88% 0%, rgba(125, 36, 24, 0.1), transparent 24rem),
+    rgba(255, 248, 234, 0.94);
   backdrop-filter: blur(16px);
 }
 
