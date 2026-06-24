@@ -178,6 +178,7 @@ img {
 }
 
 .nav a,
+.nav button,
 .button,
 .footer-order {
   min-height: 46px;
@@ -194,7 +195,19 @@ img {
   color: var(--color-muted);
 }
 
-.nav a:hover {
+.nav button {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: 13px;
+  border: 0;
+  color: var(--color-muted);
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.nav a:hover,
+.nav button:hover {
   color: var(--color-tamarind);
   background: rgba(125, 36, 24, 0.08);
 }
@@ -1122,6 +1135,55 @@ img {
   padding-block: 88px;
 }
 
+.about-hero-copy {
+  min-width: 0;
+}
+
+.about-hero-flow {
+  display: grid;
+  gap: 18px;
+}
+
+.about-hero-flow p {
+  max-width: 58ch;
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.about-story-grid,
+.about-values-grid {
+  align-items: stretch;
+}
+
+.about-values-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.about-story-card {
+  display: grid;
+  gap: 14px;
+  padding: 24px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background:
+    linear-gradient(135deg, rgba(185, 133, 45, 0.08), transparent 52%),
+    rgba(255, 248, 234, 0.76);
+  box-shadow: var(--shadow-card);
+}
+
+.about-story-card h3 {
+  margin: 0;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: var(--step-2);
+  line-height: 1.08;
+}
+
+.about-story-card p {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.62;
+}
+
 .story-panel img,
 .page-hero img {
   border-radius: var(--radius-card);
@@ -1427,6 +1489,97 @@ img {
   margin: 6px 0;
   font-family: var(--font-cormorant), Georgia, serif;
   font-size: var(--step-2);
+  line-height: 1.08;
+}
+
+.timeline-card p {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.62;
+  text-wrap: pretty;
+}
+
+.pickup-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(36, 21, 15, 0.56);
+  backdrop-filter: blur(8px);
+}
+
+.pickup-modal {
+  width: min(680px, 100%);
+  padding: 28px;
+  border: 1px solid rgba(255, 248, 234, 0.24);
+  border-radius: calc(var(--radius-card) + 4px);
+  background:
+    radial-gradient(circle at top left, rgba(217, 155, 38, 0.13), transparent 18rem),
+    rgba(255, 248, 234, 0.98);
+  box-shadow: 0 32px 90px -44px rgba(36, 21, 15, 0.88);
+}
+
+.pickup-modal-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.pickup-modal-header h2 {
+  margin: 0;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(var(--step-2), 4vw, var(--step-4));
+  line-height: 0.98;
+}
+
+.pickup-modal-copy {
+  margin: 14px 0 22px;
+  max-width: 52ch;
+  color: var(--color-muted);
+  line-height: 1.58;
+}
+
+.pickup-modal-close {
+  min-height: 42px;
+  padding-inline: 16px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: rgba(255, 248, 234, 0.86);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.pickup-link-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.pickup-link-grid a {
+  display: grid;
+  gap: 8px;
+  min-height: 144px;
+  padding: 18px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.62);
+  text-decoration: none;
+}
+
+.pickup-link-grid strong {
+  color: var(--color-tamarind);
+  font-size: 1rem;
+}
+
+.pickup-link-grid span {
+  color: var(--color-muted);
+  line-height: 1.5;
 }
 
 .catering-layout {
@@ -2142,15 +2295,20 @@ dd {
   backdrop-filter: blur(16px);
 }
 
-.mobile-action-bar a {
+.mobile-action-bar a,
+.mobile-action-bar button {
   display: grid;
   min-height: 54px;
   width: 100%;
   place-items: center;
+  border: 0;
+  background: transparent;
   color: var(--color-ivory);
+  font: inherit;
   font-size: 0.78rem;
   font-weight: 900;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .mobile-action-bar .motion-action + .motion-action {
@@ -2192,8 +2350,10 @@ dd {
   .dish-grid,
   .package-grid,
   .review-grid,
+  .about-story-grid,
   .values-panel,
   .order-link-grid,
+  .pickup-link-grid,
   .footer-grid,
   .dashboard-tab-bar {
     grid-template-columns: 1fr 1fr;
@@ -2245,8 +2405,10 @@ dd {
   .dish-grid,
   .package-grid,
   .review-grid,
+  .about-story-grid,
   .values-panel,
   .order-link-grid,
+  .pickup-link-grid,
   .footer-grid,
   .form-grid,
   .package-choice-grid,
@@ -2265,6 +2427,14 @@ dd {
   .review-feature {
     min-height: 0;
     padding: 26px;
+  }
+
+  .pickup-modal {
+    padding: 24px 18px 18px;
+  }
+
+  .pickup-modal-header {
+    flex-direction: column;
   }
 
   .review-feature p {

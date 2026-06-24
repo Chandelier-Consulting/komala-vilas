@@ -1,6 +1,7 @@
 "use client";
 
 import { MotionLink } from "@/components/motion-shell";
+import { PickupModalTrigger } from "@/components/pickup-modal";
 import { restaurantInfo } from "@/lib/restaurant";
 
 export function MobileActionBar() {
@@ -10,9 +11,9 @@ export function MobileActionBar() {
       <MotionLink href={restaurantInfo.mapUrl} target="_blank" rel="noreferrer">
         Directions
       </MotionLink>
-      <MotionLink href={restaurantInfo.orderUrl} target="_blank" rel="noreferrer">
-        Order
-      </MotionLink>
+      <span className="motion-action">
+        <PickupModalTrigger label="Order" />
+      </span>
       <MotionLink href="/catering">Catering</MotionLink>
     </nav>
   );

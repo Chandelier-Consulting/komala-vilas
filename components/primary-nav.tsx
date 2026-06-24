@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { MotionLink } from "@/components/motion-shell";
+import { PickupModalTrigger } from "@/components/pickup-modal";
 import { restaurantInfo } from "@/lib/restaurant";
 
 const links = [
@@ -28,9 +29,9 @@ export function PrimaryNav() {
       <MotionLink href={restaurantInfo.mapUrl} target="_blank" rel="noreferrer">
         Visit
       </MotionLink>
-      <MotionLink className="nav-order" href={restaurantInfo.orderUrl} target="_blank" rel="noreferrer">
-        Order Online
-      </MotionLink>
+      <span className="motion-action">
+        <PickupModalTrigger className="nav-order" label="Order Online" />
+      </span>
     </nav>
   );
 }

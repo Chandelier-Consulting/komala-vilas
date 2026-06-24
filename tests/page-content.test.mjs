@@ -293,10 +293,13 @@ test("home page includes an interactive feast planner that turns browsing into c
 });
 
 test("home page uses full-width section bands with consistent padding and external nav actions", async () => {
-  const [page, nav, restaurant, styles] = await Promise.all([
+  const [page, nav, mobileActionBar, pickupModal, restaurant, about, styles] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/primary-nav.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/mobile-action-bar.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/pickup-modal.tsx", import.meta.url), "utf8"),
     readFile(new URL("../lib/restaurant.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
 
@@ -308,11 +311,22 @@ test("home page uses full-width section bands with consistent padding and extern
   assert.match(styles, /\.home-section\s*{[^}]*width: 100%/);
   assert.match(styles, /\.home-section > \.section-shell\s*{[^}]*padding-block: 96px/);
   assert.doesNotMatch(page, /className="section-shell section-block"/);
-  assert.match(restaurant, /orderUrl/);
-  assert.match(nav, /href=\{restaurantInfo\.orderUrl\}/);
-  assert.match(nav, /target="_blank"/);
-  assert.match(nav, /rel="noreferrer"/);
+  assert.match(restaurant, /pickupLinks/);
+  assert.match(restaurant, /DoorDash/);
+  assert.match(restaurant, /Uber Eats/);
+  assert.match(restaurant, /Grubhub/);
+  assert.match(nav, /PickupModalTrigger/);
+  assert.match(mobileActionBar, /PickupModalTrigger/);
+  assert.match(pickupModal, /role="dialog"/);
+  assert.match(pickupModal, /aria-modal="true"/);
+  assert.match(pickupModal, /Choose pickup/);
   assert.match(nav, /Order Online/);
+  assert.match(about, /storySections/);
+  assert.match(about, /hospitalityPillars/);
+  assert.match(about, /Sunnyvale regulars/);
+  assert.match(styles, /\.about-story-grid/);
+  assert.match(styles, /\.pickup-modal-backdrop/);
+  assert.match(styles, /\.pickup-link-grid/);
 });
 
 test("catering package cards, calculator, and request form share package and guest selections", async () => {
