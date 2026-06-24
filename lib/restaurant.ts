@@ -28,20 +28,20 @@ export const restaurantInfo = {
   ],
   orderLinks: [
     {
-      label: "Order online",
-      href: "https://www.doordash.com/store/komala-vilas-sunnyvale-93323/597973/?pickup=true&rwg_token=AE37R_hW6e3xOhg3manNQD_oxcemsThoZf7PLfD4zXdh3TksMp0m4Iz1fPK4Pl-OXBJA3IMxjDV_MJcO5BuRW807rkmtBqYIOg==&utm_campaign=gpa",
-      note: "Direct pickup ordering for the Sunnyvale restaurant.",
-    },
-    {
-      label: "Catering request",
-      href: "/catering",
-      note: "Office meals, family functions, and dosa counters.",
+      label: "Pickup menu",
+      href: "/menu",
+      note: "See the menu before you place a pickup order.",
     },
     {
       label: "Directions",
       href:
         "https://www.google.com/maps/place/Komala+Vilas/@37.3531031,-122.0116365,15.64z/data=!4m6!3m5!1s0x808fb589fd36ead1:0x86106cdc3661185f!8m2!3d37.351395!4d-122.006376!16s%2Fg%2F1tf65qdg?entry=ttu&g_ep=EgoyMDI2MDYwOS4wIKXMDSoASAFQAw%3D%3D",
-      note: "Open maps for pickup routing.",
+      note: "Open the route to the Sunnyvale storefront.",
+    },
+    {
+      label: "Catering",
+      href: "/catering",
+      note: "Packages, guest counts, and the request form.",
     },
   ],
 } as const;

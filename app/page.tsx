@@ -157,7 +157,7 @@ export default async function Home() {
 
       <MotionSection className="home-section home-section-order">
         <div className="section-shell">
-          <OrderLinkPanel />
+          <OrderLinkPanel backdropImage={sitePhotos["home-order-panel-backdrop"].image} />
         </div>
       </MotionSection>
 
