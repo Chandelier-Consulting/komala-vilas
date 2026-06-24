@@ -167,14 +167,21 @@ export function MotionCard({
 export function MotionDiv({
   children,
   className,
+  ...props
 }: {
   children: React.ReactNode;
   className?: string;
-}) {
+} & Omit<HTMLMotionProps<"div">, "children" | "className">) {
   const variants = useMotionVariants();
 
   return (
-    <motion.div className={className} variants={variants.card} whileHover="hover" whileTap="tap">
+    <motion.div
+      {...props}
+      className={className}
+      variants={variants.card}
+      whileHover="hover"
+      whileTap="tap"
+    >
       {children}
     </motion.div>
   );
