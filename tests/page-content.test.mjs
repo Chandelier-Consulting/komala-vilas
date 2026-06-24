@@ -248,7 +248,7 @@ test("menu items render as image-backed accordion reveals", async () => {
   assert.match(menuExplorer, /menu-item-details/);
   assert.match(menuExplorer, /<div className="section-shell menu-workspace">/);
   assert.doesNotMatch(menuExplorer, /<MotionSection className="section-shell menu-workspace">/);
-  assert.match(menuExplorer, /<MotionSection id=\{section\.id\} className="menu-group">/);
+  assert.match(menuExplorer, /<MotionSection id=\{section\.id\} className="menu-group" inherit=\{false\}>/);
   assert.match(styles, /\.menu-item-accordion/);
   assert.match(styles, /\.menu-item-photo/);
   assert.match(styles, /\.menu-item-details/);
@@ -276,14 +276,14 @@ test("all route pages use the shared reveal structure", async () => {
     readFile(new URL("../components/dashboard-client.tsx", import.meta.url), "utf8"),
   ]);
 
-  for (const source of [home, menu, catering, about, dashboard]) {
+  for (const source of [home, menu, catering, about]) {
     assert.match(source, /MotionMain/);
   }
 
-  assert.match(dashboard, /MotionHeadline/);
-  assert.match(dashboard, /MotionSection/);
-  assert.match(dashboardClient, /MotionDiv/);
-  assert.match(dashboardClient, /MotionSection/);
+  assert.doesNotMatch(dashboard, /MotionHeadline|MotionMain|MotionSection/);
+  assert.doesNotMatch(dashboardClient, /MotionDiv|MotionSection/);
+  assert.match(dashboard, /<main className="dashboard-page">/);
+  assert.match(dashboardClient, /className="dashboard-tab-bar"/);
 });
 
 test("dashboard supports direct menu-item image uploads and unused image pruning", async () => {

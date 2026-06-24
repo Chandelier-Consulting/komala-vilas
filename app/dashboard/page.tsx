@@ -1,18 +1,17 @@
 import { DashboardClient } from "@/components/dashboard-client";
-import { MotionHeadline, MotionMain, MotionSection } from "@/components/motion-shell";
 
 export default function DashboardPage() {
   return (
-    <MotionMain className="dashboard-page">
-      <MotionSection className="section-shell section-block" labelledBy="dashboard-title">
+    <main className="dashboard-page">
+      <section className="section-shell section-block" aria-labelledby="dashboard-title">
         <p className="eyebrow">Komala Vilas staff</p>
-        <MotionHeadline>
+        <div>
           <h1 id="dashboard-title" className="text-balance">
             Staff operations dashboard
           </h1>
-        </MotionHeadline>
+        </div>
         <DashboardClient />
-      </MotionSection>
-    </MotionMain>
+      </section>
+    </main>
   );
 }

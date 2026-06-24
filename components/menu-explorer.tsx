@@ -121,7 +121,7 @@ export function MenuExplorer({
           <MotionPresence>
             {filteredSections.map((section) => (
               <MotionLayoutItem key={section.id}>
-                <MotionSection id={section.id} className="menu-group">
+                <MotionSection id={section.id} className="menu-group" inherit={false}>
                   <div className="menu-group-heading">
                     <h2 className="text-balance">{section.title}</h2>
                     <span>{section.tamil}</span>

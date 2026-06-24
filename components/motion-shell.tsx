@@ -33,16 +33,18 @@ export function MotionSection({
   className,
   id,
   labelledBy,
+  ...props
 }: {
   children: React.ReactNode;
   className?: string;
   id?: string;
   labelledBy?: string;
-}) {
+} & Omit<HTMLMotionProps<"section">, "children" | "className" | "id">) {
   const variants = useMotionVariants();
 
   return (
     <motion.section
+      {...props}
       id={id}
       className={className}
       aria-labelledby={labelledBy}
