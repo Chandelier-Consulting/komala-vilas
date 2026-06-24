@@ -23,6 +23,8 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
   assert.match(page, /Every meal should feel like someone was expecting you/);
   assert.match(page, /getResolvedSitePhotoSlots/);
   assert.match(page, /sitePhotos\["home-hero"\]/);
+  assert.match(page, /sitePhotos\["home-hero-corner-top"\]/);
+  assert.match(page, /sitePhotos\["home-hero-corner-bottom"\]/);
   assert.match(page, /<section className="hero-background background-pattern">/);
   assert.match(page, /<div className="hero-premium section-shell">/);
   assert.match(menu, /export default async function MenuPage/);
@@ -102,7 +104,7 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
   assert.match(styles, /--color-tamarind/);
   assert.match(styles, /--step-5/);
   assert.match(styles, /\.photo-grade/);
-  assert.match(styles, /temple-border/);
+  assert.match(styles, /hero-photo-frame/);
   assert.match(styles, /background-pattern/);
   assert.match(variants, /EASE_OUT_EXPO/);
   assert.match(variants, /EASE_SPRING/);
@@ -243,7 +245,9 @@ test("menu items render as image-backed accordion reveals", async () => {
   assert.match(menuExplorer, /menuSections:\s*MenuSection\[]/);
   assert.match(menuExplorer, /expandedItemKey/);
   assert.match(menuExplorer, /aria-expanded/);
+  assert.match(menuExplorer, /onClick=\{\(\) => setExpandedItemKey\(isExpanded \? "" : itemKey\)\}/);
   assert.match(menuExplorer, /onMouseEnter/);
+  assert.match(menuExplorer, /<MotionLayoutItem id=\{detailsId\} className="menu-item-details">/);
   assert.match(menuExplorer, /menu-item-photo/);
   assert.match(menuExplorer, /menu-item-details/);
   assert.match(menuExplorer, /<div className="section-shell menu-workspace">/);

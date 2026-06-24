@@ -17,7 +17,9 @@ function slot(id: string, label: string, description: string, assetId: string, s
 }
 
 export const defaultSitePhotoSlots: Record<string, SitePhotoSlot> = {
-  "home-hero": slot("home-hero", "Home hero", "Main landing image on the homepage.", "default-home-hero", "/images/komala-vilas-premium-hero.jpg", "Premium Komala Vilas spread with dosa, thali, filter coffee, and temple pattern", 1400, 1800),
+  "home-hero": slot("home-hero", "Home hero", "Main landing image on the homepage.", "default-home-hero", "/images/south-indian-thali.jpg", "South Indian vegetarian thali on a banana leaf", 900, 1008),
+  "home-hero-corner-top": slot("home-hero-corner-top", "Home hero corner: top", "Top circular image beside the homepage hero.", "default-home-hero-corner-top", "/images/signature-paper-dosa.jpg", "Paper masala dosa", 900, 675),
+  "home-hero-corner-bottom": slot("home-hero-corner-bottom", "Home hero corner: bottom", "Bottom circular image beside the homepage hero.", "default-home-hero-corner-bottom", "/images/signature-idli-vada.jpg", "Idli vada sambar", 900, 675),
   "home-signature-paper-dosa": slot("home-signature-paper-dosa", "Home signature: paper dosa", "Signature dish card on the homepage.", "default-signature-paper-dosa", "/images/signature-paper-dosa.jpg", "Paper masala dosa", 900, 675),
   "home-signature-thali": slot("home-signature-thali", "Home signature: thali", "Signature dish card on the homepage.", "default-signature-thali", "/images/signature-thali.jpg", "Unlimited South Indian thali", 900, 675),
   "home-signature-idli-vada": slot("home-signature-idli-vada", "Home signature: idli vada", "Signature dish card on the homepage.", "default-signature-idli-vada", "/images/signature-idli-vada.jpg", "Idli vada sambar", 900, 675),

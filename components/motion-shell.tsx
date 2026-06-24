@@ -132,14 +132,15 @@ export function MotionLayoutItem({
 export function MotionItem({
   children,
   className,
+  ...props
 }: {
   children: React.ReactNode;
   className?: string;
-}) {
+} & Omit<HTMLMotionProps<"div">, "children" | "className">) {
   const variants = useMotionVariants();
 
   return (
-    <motion.div className={className} variants={variants.item}>
+    <motion.div {...props} className={className} variants={variants.item}>
       {children}
     </motion.div>
   );

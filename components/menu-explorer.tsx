@@ -120,7 +120,7 @@ export function MenuExplorer({
         <MotionLayoutGroup className="menu-list functional-menu-list">
           <MotionPresence>
             {filteredSections.map((section) => (
-              <MotionLayoutItem key={section.id}>
+              <div key={section.id}>
                 <MotionSection id={section.id} className="menu-group" inherit={false}>
                   <div className="menu-group-heading">
                     <h2 className="text-balance">{section.title}</h2>
@@ -137,9 +137,9 @@ export function MenuExplorer({
                         return (
                           <MotionLayoutItem
                             className={isExpanded ? "menu-item expanded" : "menu-item"}
-                            key={item.name}
+                            key={item.id}
                             onMouseEnter={() => setExpandedItemKey(itemKey)}
-                            onMouseLeave={() => setExpandedItemKey("")}
+                            onMouseLeave={() => setExpandedItemKey((current) => (current === itemKey ? "" : current))}
                           >
                             <div
                               className="menu-item-accordion"
@@ -147,6 +147,7 @@ export function MenuExplorer({
                               aria-controls={detailsId}
                               tabIndex={0}
                               role="button"
+                              onClick={() => setExpandedItemKey(isExpanded ? "" : itemKey)}
                               onFocus={() => setExpandedItemKey(itemKey)}
                               onBlur={() => setExpandedItemKey("")}
                               onKeyDown={(event) => {
@@ -164,15 +165,15 @@ export function MenuExplorer({
                                 height={item.image.height}
                                 quality={82}
                               />
-                              <span className="menu-item-summary">
-                                <span className="menu-item-title">
+                              <div className="menu-item-summary">
+                                <div className="menu-item-title">
                                   <span>{item.name}</span>
-                                  <span className="menu-item-badges">
+                                  <div className="menu-item-badges">
                                     {getItemBadges(item).map((tag) => (
                                       <span key={tag}>{tag}</span>
                                     ))}
-                                  </span>
-                                </span>
+                                  </div>
+                                </div>
                                 <MotionPresence>
                                   {isExpanded ? (
                                     <MotionLayoutItem id={detailsId} className="menu-item-details">
@@ -180,7 +181,7 @@ export function MenuExplorer({
                                     </MotionLayoutItem>
                                   ) : null}
                                 </MotionPresence>
-                              </span>
+                              </div>
                               <strong>{item.price}</strong>
                             </div>
                           </MotionLayoutItem>
@@ -189,7 +190,7 @@ export function MenuExplorer({
                     </MotionPresence>
                   </MotionLayoutGroup>
                 </MotionSection>
-              </MotionLayoutItem>
+              </div>
             ))}
             {filteredSections.length === 0 ? (
               <MotionLayoutItem className="menu-group">

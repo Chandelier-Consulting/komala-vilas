@@ -108,17 +108,38 @@ export default async function Home() {
           </div>
 
           <MotionHeroVisual className="hero-visual" labelledBy="Komala Vilas South Indian dishes">
-            <MotionAmbient className="hero-brass-ring" />
-            <div className="temple-border">
-              <Image
-                className="photo-grade"
-                src={sitePhotos["home-hero"].image.src}
-                alt={sitePhotos["home-hero"].image.alt}
-                width={sitePhotos["home-hero"].image.width}
-                height={sitePhotos["home-hero"].image.height}
-                priority
-                quality={92}
-              />
+            <div className="hero-photo-stage">
+              <div className="hero-photo-frame">
+                <Image
+                  className="photo-grade"
+                  src={sitePhotos["home-hero"].image.src}
+                  alt={sitePhotos["home-hero"].image.alt}
+                  width={sitePhotos["home-hero"].image.width}
+                  height={sitePhotos["home-hero"].image.height}
+                  priority
+                  quality={92}
+                />
+              </div>
+              <div className="hero-corner-photo hero-corner-photo-top">
+                <Image
+                  className="photo-grade"
+                  src={sitePhotos["home-hero-corner-top"].image.src}
+                  alt=""
+                  width={sitePhotos["home-hero-corner-top"].image.width}
+                  height={sitePhotos["home-hero-corner-top"].image.height}
+                  quality={85}
+                />
+              </div>
+              <div className="hero-corner-photo hero-corner-photo-bottom">
+                <Image
+                  className="photo-grade"
+                  src={sitePhotos["home-hero-corner-bottom"].image.src}
+                  alt=""
+                  width={sitePhotos["home-hero-corner-bottom"].image.width}
+                  height={sitePhotos["home-hero-corner-bottom"].image.height}
+                  quality={85}
+                />
+              </div>
             </div>
           </MotionHeroVisual>
         </div>
