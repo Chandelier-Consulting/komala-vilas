@@ -1,9 +1,10 @@
 import { getAdminDb, getAdminStorage } from "@/lib/firebase-admin";
-import { buildAssetMap, defaultMenuSections, mergeMenuContent, type MenuSection } from "@/lib/menu";
+import { buildAssetMap, defaultMenuSections, mergeMenuContentWithCustomItems, type MenuSection } from "@/lib/menu";
 import { defaultSitePhotoSlots, resolveSitePhotoSlots, type SitePhotoSlot } from "@/lib/site-photos";
-import type { ImageAsset, MenuItemOverride, SitePhotoAssignment } from "@/lib/content";
+import type { CustomMenuItem, ImageAsset, MenuItemOverride, SitePhotoAssignment } from "@/lib/content";
 
 const MENU_OVERRIDE_COLLECTION = "menuItemOverrides";
+const MENU_CUSTOM_ITEM_COLLECTION = "menuCustomItems";
 const IMAGE_ASSET_COLLECTION = "imageAssets";
 const SITE_PHOTO_ASSIGNMENT_COLLECTION = "sitePhotoAssignments";
 
@@ -72,11 +73,35 @@ async function loadMenuOverrides() {
       tags: Array.isArray(data.tags) ? data.tags.filter((item): item is string => typeof item === "string") : undefined,
       popular: typeof data.popular === "boolean" ? data.popular : undefined,
       cateringFriendly: typeof data.cateringFriendly === "boolean" ? data.cateringFriendly : undefined,
+      available: typeof data.available === "boolean" ? data.available : undefined,
       imageAssetId: typeof data.imageAssetId === "string" ? data.imageAssetId : data.imageAssetId === null ? null : undefined,
       updatedAt: typeof data.updatedAt === "string" ? data.updatedAt : undefined,
     }));
   } catch {
     return {};
+  }
+}
+
+async function loadCustomMenuItems() {
+  try {
+    const items = await readCollectionMap<CustomMenuItem>(MENU_CUSTOM_ITEM_COLLECTION, (id, data) => ({
+      id,
+      sectionId: typeof data.sectionId === "string" ? data.sectionId : "specials",
+      name: String(data.name ?? "New dish"),
+      description: String(data.description ?? ""),
+      price: String(data.price ?? ""),
+      tags: Array.isArray(data.tags) ? data.tags.filter((item): item is string => typeof item === "string") : [],
+      popular: typeof data.popular === "boolean" ? data.popular : undefined,
+      cateringFriendly: typeof data.cateringFriendly === "boolean" ? data.cateringFriendly : undefined,
+      available: typeof data.available === "boolean" ? data.available : undefined,
+      imageAssetId: typeof data.imageAssetId === "string" ? data.imageAssetId : data.imageAssetId === null ? null : undefined,
+      createdAt: typeof data.createdAt === "string" ? data.createdAt : undefined,
+      updatedAt: typeof data.updatedAt === "string" ? data.updatedAt : undefined,
+    }));
+
+    return Object.values(items);
+  } catch {
+    return [];
   }
 }
 
@@ -99,8 +124,16 @@ export async function getImageAssetLibrary() {
 }
 
 export async function getResolvedMenuSections(): Promise<MenuSection[]> {
-  const [assets, itemOverrides] = await Promise.all([getImageAssetLibrary(), loadMenuOverrides()]);
-  return mergeMenuContent(defaultMenuSections, { assets, itemOverrides });
+  const [assets, itemOverrides, customItems] = await Promise.all([
+    getImageAssetLibrary(),
+    loadMenuOverrides(),
+    loadCustomMenuItems(),
+  ]);
+  return mergeMenuContentWithCustomItems(
+    defaultMenuSections,
+    { assets, itemOverrides, customItems },
+    { includeUnavailable: false },
+  );
 }
 
 export async function getResolvedSitePhotoSlots(): Promise<Record<string, SitePhotoSlot>> {
@@ -109,11 +142,17 @@ export async function getResolvedSitePhotoSlots(): Promise<Record<string, SitePh
 }
 
 export async function getAdminMenuEditorData() {
-  const [assets, sections, overrides] = await Promise.all([
+  const [assets, itemOverrides, customItems] = await Promise.all([
     getImageAssetLibrary(),
-    getResolvedMenuSections(),
     loadMenuOverrides(),
+    loadCustomMenuItems(),
   ]);
+  const sections = mergeMenuContentWithCustomItems(
+    defaultMenuSections,
+    { assets, itemOverrides, customItems },
+    { includeUnavailable: true },
+  );
+  const overrides = itemOverrides;
 
   return { assets, sections, overrides };
 }
@@ -135,12 +174,22 @@ export async function getUploadedImageAsset(assetId: string) {
 }
 
 async function getReferencedImageAssetIds() {
-  const [menuOverrides, assignments] = await Promise.all([loadMenuOverrides(), loadSitePhotoAssignments()]);
+  const [menuOverrides, customItems, assignments] = await Promise.all([
+    loadMenuOverrides(),
+    loadCustomMenuItems(),
+    loadSitePhotoAssignments(),
+  ]);
   const referencedAssetIds = new Set<string>();
 
   for (const override of Object.values(menuOverrides)) {
     if (typeof override.imageAssetId === "string" && override.imageAssetId) {
       referencedAssetIds.add(override.imageAssetId);
+    }
+  }
+
+  for (const item of customItems) {
+    if (typeof item.imageAssetId === "string" && item.imageAssetId) {
+      referencedAssetIds.add(item.imageAssetId);
     }
   }
 

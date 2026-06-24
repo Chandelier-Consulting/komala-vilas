@@ -34,7 +34,23 @@ export type MenuItemOverride = {
   tags?: string[];
   popular?: boolean;
   cateringFriendly?: boolean;
+  available?: boolean;
   imageAssetId?: string | null;
+  updatedAt?: string;
+};
+
+export type CustomMenuItem = {
+  id: string;
+  sectionId: string;
+  name: string;
+  description: string;
+  price: string;
+  tags: string[];
+  popular?: boolean;
+  cateringFriendly?: boolean;
+  available?: boolean;
+  imageAssetId?: string | null;
+  createdAt?: string;
   updatedAt?: string;
 };
 

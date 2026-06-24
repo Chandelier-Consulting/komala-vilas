@@ -1,4 +1,4 @@
-import { resolveImageAsset, type ImageAsset, type MenuItemOverride, type ResolvedImage } from "./content";
+import { resolveImageAsset, type CustomMenuItem, type ImageAsset, type MenuItemOverride, type ResolvedImage } from "./content";
 
 export type MenuItem = {
   id: string;
@@ -9,6 +9,7 @@ export type MenuItem = {
   tags: string[];
   popular?: boolean;
   cateringFriendly?: boolean;
+  available?: boolean;
 };
 
 export type MenuSection = {
@@ -119,7 +120,10 @@ export function mergeMenuContent(
     itemOverrides: Record<string, MenuItemOverride>;
     assets: Record<string, ImageAsset>;
   },
+  options: { includeUnavailable?: boolean } = {},
 ) {
+  const includeUnavailable = options.includeUnavailable ?? false;
+
   return sections.map((section) => ({
     ...section,
     items: section.items.map((item) => {
@@ -133,10 +137,57 @@ export function mergeMenuContent(
         tags: override.tags ?? item.tags,
         popular: override.popular ?? item.popular,
         cateringFriendly: override.cateringFriendly ?? item.cateringFriendly,
+        available: override.available ?? true,
         image: resolveImageAsset(item.image, override.imageAssetId, input.assets),
       };
-    }),
-  }));
+    }).filter((item) => includeUnavailable || item.available),
+  })).filter((section) => includeUnavailable || section.items.length > 0);
+}
+
+export function mergeMenuContentWithCustomItems(
+  sections: MenuSection[],
+  input: {
+    itemOverrides: Record<string, MenuItemOverride>;
+    customItems: CustomMenuItem[];
+    assets: Record<string, ImageAsset>;
+  },
+  options: { includeUnavailable?: boolean } = {},
+) {
+  const includeUnavailable = options.includeUnavailable ?? false;
+  const customItemsBySection = input.customItems.reduce<Record<string, MenuItem[]>>((itemsBySection, item) => {
+    const fallbackImage =
+      sections.find((section) => section.id === item.sectionId)?.items[0]?.image ??
+      defaultImage("default-south-indian-thali", "/images/south-indian-thali.jpg", item.name);
+
+    const resolvedItem: MenuItem = {
+      id: item.id,
+      name: item.name,
+      description: item.description,
+      price: item.price,
+      tags: item.tags,
+      popular: item.popular,
+      cateringFriendly: item.cateringFriendly,
+      available: item.available ?? true,
+      image: resolveImageAsset(
+        { ...fallbackImage, alt: item.name },
+        item.imageAssetId,
+        input.assets,
+      ),
+    };
+
+    if (includeUnavailable || resolvedItem.available) {
+      itemsBySection[item.sectionId] = [...(itemsBySection[item.sectionId] ?? []), resolvedItem];
+    }
+
+    return itemsBySection;
+  }, {});
+
+  return mergeMenuContent(sections, input, options)
+    .map((section) => ({
+      ...section,
+      items: [...section.items, ...(customItemsBySection[section.id] ?? [])],
+    }))
+    .filter((section) => includeUnavailable || section.items.length > 0);
 }
 
 export function flattenMenuItems(sections: MenuSection[]) {

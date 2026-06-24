@@ -306,6 +306,55 @@ test("dashboard supports direct menu-item image uploads and unused image pruning
   assert.match(imagesRoute, /export async function POST/);
 });
 
+test("dashboard menu editor can publish, hide, and reset item overrides", async () => {
+  const [content, menu, store, itemRoute, dashboardClient] = await Promise.all([
+    readFile(new URL("../lib/content.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/menu.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/admin-content-store.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/dashboard/menu/[itemId]/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../components/dashboard-client.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(content, /available\?: boolean/);
+  assert.match(menu, /available: override\.available \?\? true/);
+  assert.match(menu, /\.filter\(\(item\) => includeUnavailable \|\| item\.available\)/);
+  assert.match(store, /mergeMenuContentWithCustomItems\(\s*defaultMenuSections,\s*\{ assets, itemOverrides, customItems \},\s*\{ includeUnavailable: false \}/);
+  assert.match(store, /includeUnavailable: true/);
+  assert.match(itemRoute, /available: typeof payload\?\.available === "boolean" \? payload\.available : true/);
+  assert.match(itemRoute, /export async function DELETE/);
+  assert.match(itemRoute, /\.doc\(itemId\)\.delete\(\)/);
+  assert.match(dashboardClient, /Show on public menu/);
+  assert.match(dashboardClient, /resetMenuItem/);
+  assert.match(dashboardClient, /Reset to defaults/);
+});
+
+test("dashboard menu editor can add custom dishes and remove dishes", async () => {
+  const [content, menu, store, collectionRoute, itemRoute, dashboardClient] = await Promise.all([
+    readFile(new URL("../lib/content.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/menu.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/admin-content-store.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/dashboard/menu/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/dashboard/menu/[itemId]/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../components/dashboard-client.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(content, /export type CustomMenuItem/);
+  assert.match(menu, /customItems: CustomMenuItem\[\]/);
+  assert.match(menu, /\.\.\.section\.items, \.\.\.\(customItemsBySection\[section\.id\] \?\? \[\]\)/);
+  assert.match(store, /MENU_CUSTOM_ITEM_COLLECTION/);
+  assert.match(store, /loadCustomMenuItems/);
+  assert.match(store, /menuCustomItems/);
+  assert.match(collectionRoute, /export async function POST/);
+  assert.match(collectionRoute, /randomUUID/);
+  assert.match(collectionRoute, /collection\("menuCustomItems"\)/);
+  assert.match(itemRoute, /const customItem = await getAdminDb\(\)\.collection\("menuCustomItems"\)\.doc\(itemId\)\.get\(\)/);
+  assert.match(itemRoute, /customItem\.ref\.delete\(\)/);
+  assert.match(dashboardClient, /Add dish/);
+  assert.match(dashboardClient, /saveNewMenuItem/);
+  assert.match(dashboardClient, /removeMenuItem/);
+  assert.match(dashboardClient, /Remove dish/);
+});
+
 test("home page has a premium review proof section for demo readiness", async () => {
   const [page, styles] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),

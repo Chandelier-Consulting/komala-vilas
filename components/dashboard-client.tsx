@@ -63,12 +63,14 @@ function getImagePreviewDimensions(file: File) {
 
 function toMenuForm(item: ReturnType<typeof flattenMenuItems>[number]) {
   return {
+    sectionId: item.sectionId,
     name: item.name,
     description: item.description,
     price: item.price,
     tags: item.tags.join(", "),
     popular: Boolean(item.popular),
     cateringFriendly: Boolean(item.cateringFriendly),
+    available: item.available !== false,
     imageAssetId: item.image.assetId,
   };
 }
@@ -86,12 +88,25 @@ export function DashboardClient() {
   const [menuAssets, setMenuAssets] = useState<Record<string, ImageAsset>>({});
   const [selectedMenuItemId, setSelectedMenuItemId] = useState("");
   const [menuForm, setMenuForm] = useState({
+    sectionId: "",
     name: "",
     description: "",
     price: "",
     tags: "",
     popular: false,
     cateringFriendly: false,
+    available: true,
+    imageAssetId: "",
+  });
+  const [newMenuForm, setNewMenuForm] = useState({
+    sectionId: "",
+    name: "",
+    description: "",
+    price: "",
+    tags: "",
+    popular: false,
+    cateringFriendly: false,
+    available: true,
     imageAssetId: "",
   });
   const [photoAssets, setPhotoAssets] = useState<Record<string, ImageAsset>>({});
@@ -199,6 +214,14 @@ export function DashboardClient() {
 
         setMenuSections(nextSections);
         setSelectedMenuItemId(nextMenuItem?.id ?? "");
+        setNewMenuForm((current) => ({
+          ...current,
+          sectionId: current.sectionId || nextSections[0]?.id || "",
+          imageAssetId:
+            current.imageAssetId ||
+            Object.values(menuBody.assets ?? {}).find((asset) => asset.status === "active")?.id ||
+            "",
+        }));
         if (nextMenuItem) {
           setMenuForm(toMenuForm(nextMenuItem));
         }
@@ -233,6 +256,7 @@ export function DashboardClient() {
 
   function getMenuItemPayload(imageAssetId = menuForm.imageAssetId) {
     return {
+      sectionId: menuForm.sectionId || selectedMenuItem?.sectionId || menuSections[0]?.id || "",
       name: menuForm.name,
       description: menuForm.description,
       price: menuForm.price,
@@ -242,7 +266,25 @@ export function DashboardClient() {
         .filter(Boolean),
       popular: menuForm.popular,
       cateringFriendly: menuForm.cateringFriendly,
+      available: menuForm.available,
       imageAssetId,
+    };
+  }
+
+  function getNewMenuItemPayload() {
+    return {
+      sectionId: newMenuForm.sectionId || menuSections[0]?.id || "",
+      name: newMenuForm.name,
+      description: newMenuForm.description,
+      price: newMenuForm.price,
+      tags: newMenuForm.tags
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean),
+      popular: newMenuForm.popular,
+      cateringFriendly: newMenuForm.cateringFriendly,
+      available: newMenuForm.available,
+      imageAssetId: newMenuForm.imageAssetId,
     };
   }
 
@@ -328,6 +370,14 @@ export function DashboardClient() {
 
       setMenuSections(nextSections);
       setSelectedMenuItemId(nextMenuItem?.id ?? "");
+      setNewMenuForm((current) => ({
+        ...current,
+        sectionId: current.sectionId || nextSections[0]?.id || "",
+        imageAssetId:
+          current.imageAssetId ||
+          Object.values(menuBody.assets ?? {}).find((asset) => asset.status === "active")?.id ||
+          "",
+      }));
       if (nextMenuItem) {
         setMenuForm(toMenuForm(nextMenuItem));
       }
@@ -415,6 +465,113 @@ export function DashboardClient() {
         setMessage("Menu item saved.");
       } catch (error) {
         setMessage(getErrorMessage(error, "Could not save the menu item."));
+      }
+    });
+  }
+
+  async function saveNewMenuItem(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    startTransition(async () => {
+      try {
+        const itemId = await withToken(async (token) => {
+          const response = await fetch("/api/dashboard/menu", {
+            method: "POST",
+            headers: {
+              authorization: `Bearer ${token}`,
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(getNewMenuItemPayload()),
+          });
+
+          const body = (await response.json().catch(() => null)) as { itemId?: string; error?: string } | null;
+
+          if (!response.ok || !body?.itemId) {
+            throw new Error(body?.error ?? "Could not add the menu item.");
+          }
+
+          return body.itemId;
+        });
+
+        setNewMenuForm({
+          sectionId: menuSections[0]?.id ?? "",
+          name: "",
+          description: "",
+          price: "",
+          tags: "",
+          popular: false,
+          cateringFriendly: false,
+          available: true,
+          imageAssetId: Object.values(menuAssets).find((asset) => asset.status === "active")?.id ?? "",
+        });
+        selectedMenuItemIdRef.current = itemId;
+        await refreshMenuAndPhotos();
+        setMessage("Dish added to the menu.");
+      } catch (error) {
+        setMessage(getErrorMessage(error, "Could not add the menu item."));
+      }
+    });
+  }
+
+  function resetMenuItem() {
+    if (!selectedMenuItem) return;
+
+    startTransition(async () => {
+      try {
+        await withToken(async (token) => {
+          const response = await fetch(`/api/dashboard/menu/${selectedMenuItem.id}`, {
+            method: "DELETE",
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (!response.ok) {
+            const body = await response.json().catch(() => null);
+            throw new Error(body?.error ?? "Could not reset the menu item.");
+          }
+        });
+
+        await refreshMenuAndPhotos();
+        setMessage("Menu item reset to defaults.");
+      } catch (error) {
+        setMessage(getErrorMessage(error, "Could not reset the menu item."));
+      }
+    });
+  }
+
+  function removeMenuItem() {
+    if (!selectedMenuItem) return;
+
+    startTransition(async () => {
+      try {
+        await withToken(async (token) => {
+          const isCustomItem = selectedMenuItem.id.startsWith("custom-");
+          const response = await fetch(`/api/dashboard/menu/${selectedMenuItem.id}`, {
+            method: isCustomItem ? "DELETE" : "PUT",
+            headers: {
+              authorization: `Bearer ${token}`,
+              ...(isCustomItem ? {} : { "content-type": "application/json" }),
+            },
+            body: isCustomItem
+              ? undefined
+              : JSON.stringify({ ...getMenuItemPayload(), available: false }),
+          });
+
+          if (!response.ok) {
+            const body = await response.json().catch(() => null);
+            throw new Error(body?.error ?? "Could not remove the menu item.");
+          }
+        });
+
+        await refreshMenuAndPhotos();
+        setMessage(
+          selectedMenuItem.id.startsWith("custom-")
+            ? "Custom dish removed."
+            : "Dish removed from the public menu.",
+        );
+      } catch (error) {
+        setMessage(getErrorMessage(error, "Could not remove the menu item."));
       }
     });
   }
@@ -835,7 +992,7 @@ export function DashboardClient() {
           <div className="dashboard-panel menu-item-list">
             <div className="dashboard-panel-heading">
               <h3>Menu items</h3>
-              <span>{flattenedMenuItems.length} live items</span>
+              <span>{flattenedMenuItems.filter((item) => item.available !== false).length} live items</span>
             </div>
             {menuSections.map((section) => (
               <div key={section.id} className="menu-section-list">
@@ -848,19 +1005,129 @@ export function DashboardClient() {
                     onClick={() => selectMenuItem(item.id)}
                   >
                     <span>{item.name}</span>
-                    <small>{item.price}</small>
+                    <small>{item.available === false ? "Hidden" : item.price}</small>
                   </button>
                 ))}
               </div>
             ))}
           </div>
 
-          <form className="dashboard-panel content-editor" onSubmit={saveMenuItem}>
-            <div className="dashboard-panel-heading">
-              <h3>Menu item editor</h3>
-              <span>{selectedMenuItem?.sectionTitle ?? "Choose an item"}</span>
-            </div>
-            {selectedMenuItem ? (
+          <div className="photo-management-stack">
+            <form className="dashboard-panel content-editor" onSubmit={saveNewMenuItem}>
+              <div className="dashboard-panel-heading">
+                <h3>Add dish</h3>
+                <span>Create a menu item</span>
+              </div>
+              <div className="dashboard-form-grid">
+                <label>
+                  <span>Section</span>
+                  <select
+                    value={newMenuForm.sectionId}
+                    onChange={(event) => setNewMenuForm((current) => ({ ...current, sectionId: event.target.value }))}
+                  >
+                    {menuSections.map((section) => (
+                      <option key={section.id} value={section.id}>
+                        {section.title}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  <span>Price</span>
+                  <input
+                    value={newMenuForm.price}
+                    placeholder="$9.50"
+                    onChange={(event) => setNewMenuForm((current) => ({ ...current, price: event.target.value }))}
+                  />
+                </label>
+              </div>
+              <label>
+                <span>Name</span>
+                <input
+                  value={newMenuForm.name}
+                  onChange={(event) => setNewMenuForm((current) => ({ ...current, name: event.target.value }))}
+                />
+              </label>
+              <label>
+                <span>Description</span>
+                <textarea
+                  value={newMenuForm.description}
+                  rows={3}
+                  onChange={(event) =>
+                    setNewMenuForm((current) => ({ ...current, description: event.target.value }))
+                  }
+                />
+              </label>
+              <div className="dashboard-form-grid">
+                <label>
+                  <span>Photo</span>
+                  <select
+                    value={newMenuForm.imageAssetId}
+                    onChange={(event) =>
+                      setNewMenuForm((current) => ({ ...current, imageAssetId: event.target.value }))
+                    }
+                  >
+                    {Object.values(menuAssets)
+                      .filter((asset) => asset.status === "active")
+                      .map((asset) => (
+                        <option key={asset.id} value={asset.id}>
+                          {asset.label}
+                        </option>
+                      ))}
+                  </select>
+                </label>
+                <label>
+                  <span>Tags</span>
+                  <input
+                    value={newMenuForm.tags}
+                    placeholder="Vegan, Signature"
+                    onChange={(event) => setNewMenuForm((current) => ({ ...current, tags: event.target.value }))}
+                  />
+                </label>
+              </div>
+              <div className="dashboard-checkbox-row">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={newMenuForm.popular}
+                    onChange={(event) =>
+                      setNewMenuForm((current) => ({ ...current, popular: event.target.checked }))
+                    }
+                  />
+                  <span>Mark as popular</span>
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={newMenuForm.cateringFriendly}
+                    onChange={(event) =>
+                      setNewMenuForm((current) => ({ ...current, cateringFriendly: event.target.checked }))
+                    }
+                  />
+                  <span>Catering-friendly</span>
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={newMenuForm.available}
+                    onChange={(event) =>
+                      setNewMenuForm((current) => ({ ...current, available: event.target.checked }))
+                    }
+                  />
+                  <span>Show on public menu</span>
+                </label>
+              </div>
+              <button className="button button-primary" type="submit">
+                Add dish
+              </button>
+            </form>
+
+            <form className="dashboard-panel content-editor" onSubmit={saveMenuItem}>
+              <div className="dashboard-panel-heading">
+                <h3>Menu item editor</h3>
+                <span>{selectedMenuItem?.sectionTitle ?? "Choose an item"}</span>
+              </div>
+              {selectedMenuItem ? (
                 <>
                   <div className="content-preview">
                     <Image
@@ -874,6 +1141,20 @@ export function DashboardClient() {
                       <span>{selectedMenuItem.description}</span>
                   </div>
                 </div>
+                <label>
+                  <span>Section</span>
+                  <select
+                    value={menuForm.sectionId}
+                    onChange={(event) => setMenuForm((current) => ({ ...current, sectionId: event.target.value }))}
+                    disabled={!selectedMenuItem.id.startsWith("custom-")}
+                  >
+                    {menuSections.map((section) => (
+                      <option key={section.id} value={section.id}>
+                        {section.title}
+                      </option>
+                    ))}
+                  </select>
+                </label>
                 <label>
                   <span>Name</span>
                   <input
@@ -981,15 +1262,36 @@ export function DashboardClient() {
                     />
                     <span>Catering-friendly</span>
                   </label>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={menuForm.available}
+                      onChange={(event) =>
+                        setMenuForm((current) => ({ ...current, available: event.target.checked }))
+                      }
+                    />
+                    <span>Show on public menu</span>
+                  </label>
                 </div>
-                <button className="button button-primary" type="submit">
-                  Save menu item
-                </button>
+                <div className="action-row">
+                  <button className="button button-primary" type="submit">
+                    Save menu item
+                  </button>
+                  {!selectedMenuItem.id.startsWith("custom-") ? (
+                    <button className="button button-secondary" type="button" onClick={resetMenuItem}>
+                      Reset to defaults
+                    </button>
+                  ) : null}
+                  <button className="button button-secondary" type="button" onClick={removeMenuItem}>
+                    Remove dish
+                  </button>
+                </div>
               </>
-            ) : (
-              <p>Select a menu item to edit it.</p>
-            )}
-          </form>
+              ) : (
+                <p>Select a menu item to edit it.</p>
+              )}
+            </form>
+          </div>
         </section>
       ) : null}
 

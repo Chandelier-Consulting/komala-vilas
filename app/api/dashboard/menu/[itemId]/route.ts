@@ -16,9 +16,11 @@ export async function PUT(request: Request, context: RouteContext<"/api/dashboar
 
   const { itemId } = await context.params;
   const existingItem = flattenMenuItems(defaultMenuSections).find((item) => item.id === itemId);
-  if (!existingItem) return Response.json({ error: "Unknown item" }, { status: 404 });
+  const customItem = await getAdminDb().collection("menuCustomItems").doc(itemId).get();
+  if (!existingItem && !customItem.exists) return Response.json({ error: "Unknown item" }, { status: 404 });
 
   const payload = await request.json().catch(() => null);
+  const sectionId = asText(payload?.sectionId);
   const name = asText(payload?.name);
   const description = asText(payload?.description);
   const price = asText(payload?.price);
@@ -30,18 +32,60 @@ export async function PUT(request: Request, context: RouteContext<"/api/dashboar
   }
 
   const now = new Date().toISOString();
+  if (customItem.exists) {
+    await customItem.ref.set(
+      {
+        sectionId: defaultMenuSections.some((section) => section.id === sectionId)
+          ? sectionId
+          : String(customItem.data()?.sectionId ?? "specials"),
+        name,
+        description,
+        price,
+        tags,
+        popular: Boolean(payload?.popular),
+        cateringFriendly: Boolean(payload?.cateringFriendly),
+        available: typeof payload?.available === "boolean" ? payload.available : true,
+        imageAssetId,
+        updatedAt: now,
+      },
+      { merge: true },
+    );
+
+    return Response.json({ ok: true });
+  }
+
   await getAdminDb().collection("menuItemOverrides").doc(itemId).set({
     itemId,
-    sectionId: existingItem.sectionId,
+    sectionId: existingItem?.sectionId,
     name,
     description,
     price,
     tags,
     popular: Boolean(payload?.popular),
     cateringFriendly: Boolean(payload?.cateringFriendly),
+    available: typeof payload?.available === "boolean" ? payload.available : true,
     imageAssetId,
     updatedAt: now,
   });
+
+  return Response.json({ ok: true });
+}
+
+export async function DELETE(request: Request, context: RouteContext<"/api/dashboard/menu/[itemId]">) {
+  const user = await verifyAdminRequest(request);
+  if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { itemId } = await context.params;
+  const customItem = await getAdminDb().collection("menuCustomItems").doc(itemId).get();
+  if (customItem.exists) {
+    await customItem.ref.delete();
+    return Response.json({ ok: true });
+  }
+
+  const existingItem = flattenMenuItems(defaultMenuSections).find((item) => item.id === itemId);
+  if (!existingItem) return Response.json({ error: "Unknown item" }, { status: 404 });
+
+  await getAdminDb().collection("menuItemOverrides").doc(itemId).delete();
 
   return Response.json({ ok: true });
 }
