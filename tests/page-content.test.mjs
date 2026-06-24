@@ -21,13 +21,13 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
   assert.match(page, /South Indian food/);
   assert.match(page, /temple-town depth/);
   assert.match(page, /Every meal should feel like someone was expecting you/);
-  assert.match(page, /\/images\/komala-vilas-premium-hero\.jpg/);
-  assert.match(page, /\/images\/signature-paper-dosa\.jpg/);
-  assert.match(page, /\/images\/signature-thali\.jpg/);
+  assert.match(page, /getResolvedSitePhotoSlots/);
+  assert.match(page, /sitePhotos\["home-hero"\]/);
   assert.match(page, /<section className="hero-background background-pattern">/);
   assert.match(page, /<div className="hero-premium section-shell">/);
-  assert.match(menu, /export default function MenuPage/);
+  assert.match(menu, /export default async function MenuPage/);
   assert.match(menuData, /Unlimited South Indian Thali/);
+  assert.match(menuData, /export const defaultMenuSections/);
   assert.match(menuExplorer, /menu-filter-bar/);
   assert.match(menu, /<section className="hero-background background-pattern">/);
   assert.match(about, /<section className="hero-background background-pattern">/);
@@ -48,7 +48,7 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
     styles,
     /\.functional-menu-list \.menu-group \+ \.menu-group\s*{[^}]*(?:linear-gradient|border-top|border-bottom)/,
   );
-  assert.match(about, /export default function AboutPage/);
+  assert.match(about, /export default async function AboutPage/);
   assert.match(about, /timelineItems/);
   assert.match(restaurant, /1020 E El Camino Real/);
   assert.doesNotMatch(
@@ -70,10 +70,10 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
     orders,
     email,
     firebaseAdmin,
-    firebaseAdminAuth,
     cateringRoute,
     dashboardOrdersRoute,
     firebaseClient,
+    dashboardClient,
     pkg,
   ] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
@@ -87,10 +87,10 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
     readFile(new URL("../lib/orders.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/email.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/firebase-admin.ts", import.meta.url), "utf8"),
-    readFile(new URL("../lib/firebase-auth-rest.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/catering-orders/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/dashboard/orders/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/firebase-client.ts", import.meta.url), "utf8"),
+    readFile(new URL("../components/dashboard-client.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
   ]);
 
@@ -126,17 +126,23 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
   assert.doesNotMatch(email, /nodemailer|SMTP_/);
   assert.match(firebaseAdmin, /getFirebaseAdmin/);
   assert.match(firebaseAdmin, /getAdminDb/);
-  assert.doesNotMatch(firebaseAdmin, /firebase-admin\/auth|getAdminAuth/);
-  assert.match(firebaseAdminAuth, /accounts:lookup/);
-  assert.match(firebaseAdminAuth, /NEXT_PUBLIC_FIREBASE_API_KEY/);
-  assert.doesNotMatch(firebaseAdminAuth, /firebase-admin\/auth|getAdminAuth/);
+  assert.match(firebaseAdmin, /firebase-admin\/auth/);
+  assert.match(firebaseAdmin, /getAdminAuth/);
+  assert.match(firebaseAdmin, /verifyIdToken/);
+  assert.match(firebaseAdmin, /firebase-admin\/storage/);
+  assert.match(firebaseAdmin, /getStorage/);
   assert.match(cateringRoute, /getAdminDb/);
   assert.match(cateringRoute, /email/);
   assert.match(cateringRoute, /email_send_failed/);
-  assert.doesNotMatch(cateringRoute, /getAdminAuth|firebase-admin-auth|firebase-admin\/auth/);
-  assert.match(dashboardOrdersRoute, /verifyFirebaseIdToken/);
-  assert.doesNotMatch(dashboardOrdersRoute, /getAdminAuth|firebase-admin-auth|firebase-admin\/auth/);
+  assert.match(dashboardOrdersRoute, /verifyAdminRequest/);
+  assert.doesNotMatch(dashboardOrdersRoute, /verifyFirebaseIdToken|accounts:lookup/);
   assert.match(firebaseClient, /getFirebaseClientApp/);
+  assert.match(firebaseClient, /NEXT_PUBLIC_FIREBASE_APP_ID/);
+  assert.match(dashboardClient, /Orders/);
+  assert.match(dashboardClient, /Menu/);
+  assert.match(dashboardClient, /Photos/);
+  assert.match(dashboardClient, /menu items/i);
+  assert.match(dashboardClient, /upload image/i);
   assert.match(pkg, /"framer-motion"/);
   assert.match(pkg, /"firebase"/);
   assert.match(pkg, /"firebase-admin"/);
@@ -219,12 +225,13 @@ test("menu items render as image-backed accordion reveals", async () => {
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
 
-  const menuItemCount = (menuData.match(/\{\s*name:\s*"/g) ?? []).length;
-  const imageFieldCount = (menuData.match(/image:\s*"\/images\//g) ?? []).length;
+  const menuItemCount = (menuData.match(/id:\s*"[a-z0-9-]+",\s*name:\s*"/g) ?? []).length;
+  const imageFieldCount = (menuData.match(/image:\s*defaultImage\(/g) ?? []).length;
 
   assert.ok(menuItemCount > 20);
   assert.equal(imageFieldCount, menuItemCount);
-  assert.match(menuData, /image: string/);
+  assert.match(menuData, /image:\s*ResolvedImage/);
+  assert.match(menuExplorer, /menuSections:\s*MenuSection\[]/);
   assert.match(menuExplorer, /expandedItemKey/);
   assert.match(menuExplorer, /aria-expanded/);
   assert.match(menuExplorer, /onMouseEnter/);

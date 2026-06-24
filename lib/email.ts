@@ -31,29 +31,55 @@ function getSender() {
 
 function getOrderLines(order: CateringOrder, orderId: string) {
   return [
-    `Order: ${orderId}`,
+    "Komala Vilas catering request",
+    `Order ID: ${orderId}`,
+    "",
+    "Customer",
     `Name: ${order.name}`,
     `Email: ${order.email}`,
     `Phone: ${order.phone}`,
+    "",
+    "Event",
     `Date: ${order.eventDate}`,
     `Guests: ${order.guestCount}`,
     `Package: ${order.packageName}`,
     `Window: ${order.pickupWindow}`,
-    `Notes: ${order.notes || "None"}`,
+    "",
+    "Notes",
+    order.notes || "None",
   ];
 }
 
 function getOrderHtml(order: CateringOrder, orderId: string) {
-  const rows = getOrderLines(order, orderId)
-    .map((line) => {
-      const [label, ...value] = line.split(": ");
-      return `<tr><th align="left" style="padding:6px 12px 6px 0">${label}</th><td style="padding:6px 0">${value.join(": ")}</td></tr>`;
-    })
+  const details = [
+    ["Contact", order.name],
+    ["Email", order.email],
+    ["Phone", order.phone],
+    ["Event date", order.eventDate],
+    ["Guests", String(order.guestCount)],
+    ["Package", order.packageName],
+    ["Pickup or delivery", order.pickupWindow],
+    ["Notes", order.notes || "None"],
+  ]
+    .map(
+      ([label, value]) =>
+        `<div style="padding:12px 0;border-top:1px solid rgba(60,23,18,0.12)"><div style="font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#6b4d3b">${label}</div><div style="margin-top:6px;font-size:15px;color:#24150f">${value}</div></div>`,
+    )
     .join("");
 
-  return `<div style="font-family:Arial,sans-serif;line-height:1.5;color:#1f1a17">
-    <h1 style="font-size:20px;margin:0 0 12px">New catering order</h1>
-    <table style="border-collapse:collapse">${rows}</table>
+  return `<div style="margin:0;padding:24px;background:#f7eddc;font-family:Arial,sans-serif;color:#24150f">
+    <div style="max-width:640px;margin:0 auto;background:#fff8ea;border:1px solid rgba(60,23,18,0.12);border-radius:24px;overflow:hidden">
+      <div style="padding:24px 28px;background:linear-gradient(135deg,#7d2418,#b94224);color:#fff8ea">
+        <div style="font-size:12px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;opacity:0.88">Komala Vilas</div>
+        <h1 style="margin:10px 0 6px;font-size:28px;line-height:1.1">New catering request</h1>
+        <p style="margin:0;font-size:15px;line-height:1.5;opacity:0.94">${order.packageName} for ${order.guestCount} guests</p>
+      </div>
+      <div style="padding:24px 28px">
+        <div style="display:inline-block;padding:8px 12px;border-radius:999px;background:rgba(217,155,38,0.18);color:#7d2418;font-size:12px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase">Order ID ${orderId}</div>
+        <p style="margin:16px 0 0;font-size:15px;line-height:1.6;color:#4f3428">A new catering inquiry came in from the website. Reply directly to the customer to confirm menu, quantity, and timing.</p>
+        <div style="margin-top:22px">${details}</div>
+      </div>
+    </div>
   </div>`;
 }
 
@@ -76,7 +102,7 @@ export async function sendCateringOrderEmail(
   const response = await resend.emails.send({
     from: getSender(),
     to: recipients,
-    subject: `New catering order: ${order.packageName} for ${order.guestCount}`,
+    subject: `Komala Vilas catering request: ${order.packageName} · ${order.guestCount} guests`,
     html: getOrderHtml(order, orderId),
     text: getOrderLines(order, orderId).join("\n"),
     replyTo: order.email,

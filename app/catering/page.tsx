@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { CateringEstimator, CateringOrderForm } from "@/components/catering-form";
+import { getResolvedSitePhotoSlots } from "@/lib/admin-content-store";
 import {
   MotionCard,
   MotionGroup,
@@ -11,7 +12,11 @@ import {
 } from "@/components/motion-shell";
 import { cateringPackages } from "@/lib/orders";
 
-export default function CateringPage() {
+export const dynamic = "force-dynamic";
+
+export default async function CateringPage() {
+  const sitePhotos = await getResolvedSitePhotoSlots();
+
   return (
     <MotionMain className="catering-page">
       <section className="hero-background background-pattern">
@@ -34,10 +39,10 @@ export default function CateringPage() {
           <MotionHeroVisual className="page-hero-visual" labelledBy="Catering-ready South Indian vegetarian thali">
             <Image
               className="photo-grade"
-              src="/images/south-indian-thali.jpg"
-              alt="Catering-ready South Indian vegetarian thali"
-              width={900}
-              height={1008}
+              src={sitePhotos["catering-hero"].image.src}
+              alt={sitePhotos["catering-hero"].image.alt}
+              width={sitePhotos["catering-hero"].image.width}
+              height={sitePhotos["catering-hero"].image.height}
               priority
               quality={92}
             />
@@ -68,10 +73,10 @@ export default function CateringPage() {
                   className="photo-grade"
                   src={
                     index === 0
-                      ? "/images/south-indian-thali.jpg"
+                      ? sitePhotos["catering-package-temple-feast"].image.src
                       : index === 1
-                        ? "/images/idli-vada.jpg"
-                        : "/images/masala-dosa.jpg"
+                        ? sitePhotos["catering-package-tiffin-table"].image.src
+                        : sitePhotos["catering-package-dosa-counter"].image.src
                   }
                   alt={item.name}
                   width={900}

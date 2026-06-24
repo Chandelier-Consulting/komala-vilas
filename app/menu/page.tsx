@@ -1,8 +1,16 @@
 import Image from "next/image";
 import { MenuExplorer } from "@/components/menu-explorer";
+import { getResolvedMenuSections, getResolvedSitePhotoSlots } from "@/lib/admin-content-store";
 import { MotionGroup, MotionHeadline, MotionHeroVisual, MotionItem, MotionMain } from "@/components/motion-shell";
 
-export default function MenuPage() {
+export const dynamic = "force-dynamic";
+
+export default async function MenuPage() {
+  const [menuSections, sitePhotos] = await Promise.all([
+    getResolvedMenuSections(),
+    getResolvedSitePhotoSlots(),
+  ]);
+
   return (
     <MotionMain className="menu-page">
       <section className="hero-background background-pattern">
@@ -24,10 +32,10 @@ export default function MenuPage() {
           <MotionHeroVisual className="page-hero-visual" labelledBy="South Indian vegetarian thali">
             <Image
               className="photo-grade"
-              src="/images/south-indian-thali.jpg"
-              alt="South Indian vegetarian thali"
-              width={900}
-              height={1008}
+              src={sitePhotos["menu-hero"].image.src}
+              alt={sitePhotos["menu-hero"].image.alt}
+              width={sitePhotos["menu-hero"].image.width}
+              height={sitePhotos["menu-hero"].image.height}
               priority
               quality={92}
             />
@@ -35,7 +43,11 @@ export default function MenuPage() {
         </div>
       </section>
 
-      <MenuExplorer />
+      <MenuExplorer
+        menuSections={menuSections}
+        anchorImageSrc={sitePhotos["menu-anchor"].image.src}
+        anchorImageAlt={sitePhotos["menu-anchor"].image.alt}
+      />
     </MotionMain>
   );
 }

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FeastPlanner } from "@/components/feast-planner";
+import { getResolvedSitePhotoSlots } from "@/lib/admin-content-store";
 import {
   MotionAmbient,
   MotionCard,
@@ -17,23 +18,25 @@ import { OpenStatus } from "@/components/open-status";
 import { OrderLinkPanel } from "@/components/order-link-panel";
 import { restaurantInfo } from "@/lib/restaurant";
 
+export const dynamic = "force-dynamic";
+
 const signatureDishes = [
   {
+    id: "home-signature-paper-dosa",
     name: "Paper Masala Dosa",
     tamil: "மசாலா தோசை",
-    image: "/images/signature-paper-dosa.jpg",
     desc: "A long, crisp rice-lentil crepe folded around potato masala with sambar and chutneys.",
   },
   {
+    id: "home-signature-thali",
     name: "Unlimited South Indian Thali",
     tamil: "சாப்பாடு",
-    image: "/images/signature-thali.jpg",
     desc: "Rice, sambar, rasam, kootu, poriyal, sweet, buttermilk, and refills from the kitchen.",
   },
   {
+    id: "home-signature-idli-vada",
     name: "Idli Vada Sambar",
     tamil: "இட்லி வடை",
-    image: "/images/signature-idli-vada.jpg",
     desc: "Steamed idli and crisp medu vada built for hot sambar, coconut chutney, and coffee.",
   },
 ];
@@ -65,7 +68,9 @@ const featuredReview = {
 
 const reviewHighlights = ["Crisp dosas", "Unlimited thali", "Filter coffee", "Vegetarian catering"];
 
-export default function Home() {
+export default async function Home() {
+  const sitePhotos = await getResolvedSitePhotoSlots();
+
   return (
     <MotionMain>
       <section className="hero-background background-pattern">
@@ -107,10 +112,10 @@ export default function Home() {
             <div className="temple-border">
               <Image
                 className="photo-grade"
-                src="/images/komala-vilas-premium-hero.jpg"
-                alt="Premium Komala Vilas spread with dosa, thali, filter coffee, and temple pattern"
-                width={1400}
-                height={1800}
+                src={sitePhotos["home-hero"].image.src}
+                alt={sitePhotos["home-hero"].image.alt}
+                width={sitePhotos["home-hero"].image.width}
+                height={sitePhotos["home-hero"].image.height}
                 priority
                 quality={92}
               />
@@ -153,10 +158,10 @@ export default function Home() {
               <MotionCard key={dish.name} className="dish-card">
                 <Image
                   className="photo-grade"
-                  src={dish.image}
+                  src={sitePhotos[dish.id].image.src}
                   alt={dish.name}
-                  width={900}
-                  height={675}
+                  width={sitePhotos[dish.id].image.width}
+                  height={sitePhotos[dish.id].image.height}
                   quality={85}
                 />
                 <div>
@@ -208,10 +213,10 @@ export default function Home() {
           <MotionScrub className="story-image-motion" distance={28}>
             <Image
               className="photo-grade"
-              src="/images/south-indian-breakfast.jpg"
-              alt="South Indian breakfast with idli, vada, sambar, and chutney"
-              width={1024}
-              height={694}
+              src={sitePhotos["home-catering-feature"].image.src}
+              alt={sitePhotos["home-catering-feature"].image.alt}
+              width={sitePhotos["home-catering-feature"].image.width}
+              height={sitePhotos["home-catering-feature"].image.height}
               quality={92}
             />
           </MotionScrub>

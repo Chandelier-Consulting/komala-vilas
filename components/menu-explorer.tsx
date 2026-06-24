@@ -11,7 +11,7 @@ import {
   MotionPresence,
   MotionSection,
 } from "@/components/motion-shell";
-import { menuSections } from "@/lib/menu";
+import type { MenuSection } from "@/lib/menu";
 
 const filters = ["All", "Vegan", "Popular", "Catering-friendly"] as const;
 
@@ -27,11 +27,15 @@ function getItemBadges(item: {
   ].filter(Boolean);
 }
 
-function getMenuItemKey(sectionId: string, itemName: string) {
-  return `${sectionId}-${itemName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
-}
-
-export function MenuExplorer() {
+export function MenuExplorer({
+  menuSections,
+  anchorImageSrc,
+  anchorImageAlt,
+}: {
+  menuSections: MenuSection[];
+  anchorImageSrc: string;
+  anchorImageAlt: string;
+}) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<(typeof filters)[number]>("All");
   const [expandedItemKey, setExpandedItemKey] = useState("");
@@ -54,7 +58,7 @@ export function MenuExplorer() {
         return { ...section, items };
       })
       .filter((section) => section.items.length > 0);
-  }, [filter, query]);
+  }, [filter, menuSections, query]);
 
   return (
     <>
@@ -101,8 +105,8 @@ export function MenuExplorer() {
           <strong>Today&apos;s anchor</strong>
           <Image
             className="photo-grade"
-            src="/images/masala-dosa.jpg"
-            alt="Masala dosa"
+            src={anchorImageSrc}
+            alt={anchorImageAlt}
             width={1024}
             height={768}
             quality={85}
@@ -126,7 +130,7 @@ export function MenuExplorer() {
                   <MotionLayoutGroup className="menu-items-list">
                     <MotionPresence>
                       {section.items.map((item) => {
-                        const itemKey = getMenuItemKey(section.id, item.name);
+                        const itemKey = item.id;
                         const detailsId = `${itemKey}-details`;
                         const isExpanded = expandedItemKey === itemKey;
 
@@ -154,10 +158,10 @@ export function MenuExplorer() {
                             >
                               <Image
                                 className="menu-item-photo photo-grade"
-                                src={item.image}
-                                alt={item.name}
-                                width={360}
-                                height={240}
+                                src={item.image.src}
+                                alt={item.image.alt}
+                                width={item.image.width}
+                                height={item.image.height}
                                 quality={82}
                               />
                               <span className="menu-item-summary">

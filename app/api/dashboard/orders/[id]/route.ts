@@ -1,15 +1,8 @@
-import { getAdminDb } from "@/lib/firebase-admin";
-import { verifyFirebaseIdToken } from "@/lib/firebase-auth-rest";
+import { getAdminDb, verifyAdminRequest } from "@/lib/firebase-admin";
 import { isValidOrderStatus } from "@/lib/orders";
 
-async function verifyRequest(request: Request) {
-  const token = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
-  if (!token) return null;
-  return verifyFirebaseIdToken(token);
-}
-
 export async function PATCH(request: Request, context: RouteContext<"/api/dashboard/orders/[id]">) {
-  const user = await verifyRequest(request);
+  const user = await verifyAdminRequest(request);
   if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await context.params;

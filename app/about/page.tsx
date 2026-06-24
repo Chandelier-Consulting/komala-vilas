@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { getResolvedSitePhotoSlots } from "@/lib/admin-content-store";
 import {
   MotionCard,
   MotionGroup,
@@ -10,34 +11,38 @@ import {
   MotionSection,
 } from "@/components/motion-shell";
 
+export const dynamic = "force-dynamic";
+
 const timelineItems = [
   {
+    id: "about-timeline-before-opening",
     year: "Before opening",
     title: "Batter wakes up overnight",
     body: "Rice and lentils rest, ferment, and build the gentle tang that makes idli soft and dosa crisp.",
-    image: "/images/idli-vada.jpg",
   },
   {
+    id: "about-timeline-morning",
     year: "8:30 AM",
     title: "The griddle starts the day",
     body: "Pongal, vada, chutneys, and the first wave of paper dosas move across the counter.",
-    image: "/images/masala-dosa.jpg",
   },
   {
+    id: "about-timeline-lunch",
     year: "Lunch",
     title: "The thali becomes the room",
     body: "Rice, sambar, rasam, rotating vegetables, sweet, buttermilk, and refills slow the table down.",
-    image: "/images/south-indian-thali.jpg",
   },
   {
+    id: "about-timeline-coffee",
     year: "Afternoon",
     title: "Coffee pulls everyone back",
     body: "Filter coffee is poured between tumbler and dabarah until it foams, strong and sweet.",
-    image: "/images/filter-coffee.jpg",
   },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const sitePhotos = await getResolvedSitePhotoSlots();
+
   return (
     <MotionMain className="about-page">
       <section className="hero-background background-pattern">
@@ -65,10 +70,10 @@ export default function AboutPage() {
           <MotionHeroVisual className="page-hero-visual" labelledBy="South Indian breakfast plate">
             <Image
               className="photo-grade"
-              src="/images/south-indian-breakfast.jpg"
-              alt="South Indian breakfast plate"
-              width={1024}
-              height={694}
+              src={sitePhotos["about-hero"].image.src}
+              alt={sitePhotos["about-hero"].image.alt}
+              width={sitePhotos["about-hero"].image.width}
+              height={sitePhotos["about-hero"].image.height}
               priority
               quality={92}
             />
@@ -90,10 +95,10 @@ export default function AboutPage() {
             <MotionCard key={item.title} className="timeline-card">
               <Image
                 className="photo-grade"
-                src={item.image}
+                src={sitePhotos[item.id].image.src}
                 alt=""
-                width={520}
-                height={360}
+                width={sitePhotos[item.id].image.width}
+                height={sitePhotos[item.id].image.height}
                 quality={85}
               />
               <div>
