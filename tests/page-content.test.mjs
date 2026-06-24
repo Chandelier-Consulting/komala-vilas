@@ -249,11 +249,31 @@ test("scroll reveal motion waits for meaningful viewport visibility", async () =
 
   assert.match(motionShell, /REVEAL_VIEWPORT/);
   assert.match(motionShell, /once:\s*false/);
-  assert.match(motionShell, /amount:\s*0\.2/);
-  assert.match(motionShell, /margin:\s*"0px 0px -12% 0px"/);
+  assert.match(motionShell, /amount:\s*0\.4/);
+  assert.match(motionShell, /margin:\s*"0px 0px -10% 0px"/);
   assert.doesNotMatch(motionShell, /once:\s*true/);
   assert.doesNotMatch(motionShell, /viewport=\{\{ once: true, margin: "-70px" \}\}/);
   assert.doesNotMatch(motionShell, /viewport=\{\{ once: true, margin: "-80px" \}\}/);
+});
+
+test("all route pages use the shared reveal structure", async () => {
+  const [home, menu, catering, about, dashboard, dashboardClient] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/menu/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/catering/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/dashboard/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/dashboard-client.tsx", import.meta.url), "utf8"),
+  ]);
+
+  for (const source of [home, menu, catering, about, dashboard]) {
+    assert.match(source, /MotionMain/);
+  }
+
+  assert.match(dashboard, /MotionHeadline/);
+  assert.match(dashboard, /MotionSection/);
+  assert.match(dashboardClient, /MotionDiv/);
+  assert.match(dashboardClient, /MotionSection/);
 });
 
 test("home page has a premium review proof section for demo readiness", async () => {

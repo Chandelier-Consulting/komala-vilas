@@ -70,7 +70,7 @@ export function MenuExplorer({
         ))}
       </nav>
 
-      <section className="section-shell menu-tools" aria-label="Menu search and filters">
+      <MotionSection className="section-shell menu-tools">
         <label className="menu-search">
           <span>Search menu</span>
           <input
@@ -98,9 +98,9 @@ export function MenuExplorer({
             </MotionDiv>
           ))}
         </div>
-      </section>
+      </MotionSection>
 
-      <section className="section-shell menu-workspace">
+      <MotionSection className="section-shell menu-workspace">
         <MotionCard className="menu-aside">
           <strong>Today&apos;s anchor</strong>
           <Image
@@ -203,7 +203,7 @@ export function MenuExplorer({
             for today&apos;s thali and specials.
           </p>
         </MotionLayoutGroup>
-      </section>
+      </MotionSection>
     </>
   );
 }

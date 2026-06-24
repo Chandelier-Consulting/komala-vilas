@@ -8,6 +8,7 @@ import {
   signOut,
   type User,
 } from "firebase/auth";
+import { MotionDiv, MotionSection } from "@/components/motion-shell";
 import { hasFirebaseClientConfig, getFirebaseClientAuth } from "@/lib/firebase-client";
 import { flattenMenuItems, type MenuSection } from "@/lib/menu";
 import { defaultSitePhotoSlots, type SitePhotoSlot } from "@/lib/site-photos";
@@ -556,7 +557,7 @@ export function DashboardClient() {
 
   return (
     <section className="dashboard-shell" aria-label="Staff dashboard">
-      <div className="dashboard-overview-card">
+      <MotionDiv className="dashboard-overview-card">
         <div>
           <p className="eyebrow">Komala Vilas staff</p>
           <h2 className="text-balance">One place to run catering, menu items, and photos.</h2>
@@ -569,9 +570,9 @@ export function DashboardClient() {
           <span><strong>{flattenedMenuItems.length}</strong> menu items</span>
           <span><strong>{Object.keys(photoAssets).length}</strong> image assets</span>
         </div>
-      </div>
+      </MotionDiv>
 
-      <div className="dashboard-toolbar">
+      <MotionDiv className="dashboard-toolbar">
         <div>
           <span>Signed in</span>
           <strong>{user.email}</strong>
@@ -591,9 +592,9 @@ export function DashboardClient() {
             Sign out
           </button>
         </div>
-      </div>
+      </MotionDiv>
 
-      <div className="dashboard-tab-bar" role="tablist" aria-label="Dashboard surfaces">
+      <MotionDiv className="dashboard-tab-bar" role="tablist" aria-label="Dashboard surfaces">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -607,10 +608,13 @@ export function DashboardClient() {
             <span>{tab.detail}</span>
           </button>
         ))}
-      </div>
+      </MotionDiv>
 
       {activeTab === "orders" ? (
-        <section className="dashboard-grid" aria-label="Catering orders dashboard">
+        <MotionSection className="dashboard-grid" labelledBy="dashboard-orders-title">
+          <h2 id="dashboard-orders-title" className="sr-only">
+            Catering orders dashboard
+          </h2>
           <div className="dashboard-filters">
             <label>
               <span>Search</span>
@@ -703,11 +707,14 @@ export function DashboardClient() {
               <p>Select an order to see details.</p>
             )}
           </div>
-        </section>
+        </MotionSection>
       ) : null}
 
       {activeTab === "menu" ? (
-        <section className="dashboard-grid dashboard-content-grid" aria-label="Menu items dashboard">
+        <MotionSection className="dashboard-grid dashboard-content-grid" labelledBy="dashboard-menu-title">
+          <h2 id="dashboard-menu-title" className="sr-only">
+            Menu items dashboard
+          </h2>
           <div className="dashboard-panel menu-item-list">
             <div className="dashboard-panel-heading">
               <h3>Menu items</h3>
@@ -831,11 +838,14 @@ export function DashboardClient() {
               <p>Select a menu item to edit it.</p>
             )}
           </form>
-        </section>
+        </MotionSection>
       ) : null}
 
       {activeTab === "photos" ? (
-        <section className="dashboard-grid dashboard-content-grid" aria-label="Photo management dashboard">
+        <MotionSection className="dashboard-grid dashboard-content-grid" labelledBy="dashboard-photos-title">
+          <h2 id="dashboard-photos-title" className="sr-only">
+            Photo management dashboard
+          </h2>
           <div className="dashboard-panel photo-slot-list">
             <div className="dashboard-panel-heading">
               <h3>Website photo slots</h3>
@@ -976,7 +986,7 @@ export function DashboardClient() {
               )}
             </form>
           </div>
-        </section>
+        </MotionSection>
       ) : null}
 
       {message ? <p className="form-message dashboard-message">{message}</p> : null}

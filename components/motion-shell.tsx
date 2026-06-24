@@ -14,8 +14,8 @@ import { useMotionVariants } from "@/lib/variants";
 
 const REVEAL_VIEWPORT = {
   once: false,
-  amount: 0.2,
-  margin: "0px 0px -12% 0px",
+  amount: 0.4,
+  margin: "0px 0px -10% 0px",
 } as const;
 
 export function MotionMain({
