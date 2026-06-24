@@ -276,6 +276,22 @@ test("all route pages use the shared reveal structure", async () => {
   assert.match(dashboardClient, /MotionSection/);
 });
 
+test("dashboard supports direct menu-item image uploads and unused image pruning", async () => {
+  const [dashboardClient, imagesRoute] = await Promise.all([
+    readFile(new URL("../components/dashboard-client.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/dashboard/images/route.ts", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(dashboardClient, /Upload custom image/);
+  assert.match(dashboardClient, /Assign upload to this menu item/);
+  assert.match(dashboardClient, /uploadMenuItemImage/);
+  assert.match(dashboardClient, /Prune unused images/);
+  assert.match(dashboardClient, /\/api\/dashboard\/images\/prune/);
+  assert.match(dashboardClient, /\}, \[assetEditId, configured, user\]\);/);
+  assert.doesNotMatch(dashboardClient, /\}, \[assetEditId, configured, selectedMenuItemId, selectedSlotId, user\]\);/);
+  assert.match(imagesRoute, /export async function POST/);
+});
+
 test("home page has a premium review proof section for demo readiness", async () => {
   const [page, styles] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),

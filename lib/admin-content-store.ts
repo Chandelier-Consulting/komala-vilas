@@ -1,4 +1,4 @@
-import { getAdminDb } from "@/lib/firebase-admin";
+import { getAdminDb, getAdminStorage } from "@/lib/firebase-admin";
 import { buildAssetMap, defaultMenuSections, mergeMenuContent, type MenuSection } from "@/lib/menu";
 import { defaultSitePhotoSlots, resolveSitePhotoSlots, type SitePhotoSlot } from "@/lib/site-photos";
 import type { ImageAsset, MenuItemOverride, SitePhotoAssignment } from "@/lib/content";
@@ -132,4 +132,54 @@ export async function getUploadedImageAsset(assetId: string) {
   const uploadedAssets = await loadUploadedAssets();
   const asset = uploadedAssets[assetId];
   return asset?.kind === "uploaded" ? asset : null;
+}
+
+async function getReferencedImageAssetIds() {
+  const [menuOverrides, assignments] = await Promise.all([loadMenuOverrides(), loadSitePhotoAssignments()]);
+  const referencedAssetIds = new Set<string>();
+
+  for (const override of Object.values(menuOverrides)) {
+    if (typeof override.imageAssetId === "string" && override.imageAssetId) {
+      referencedAssetIds.add(override.imageAssetId);
+    }
+  }
+
+  for (const assignment of Object.values(assignments)) {
+    if (assignment.assetId) {
+      referencedAssetIds.add(assignment.assetId);
+    }
+  }
+
+  return referencedAssetIds;
+}
+
+export async function getUnusedUploadedImageAssets() {
+  const [uploadedAssets, referencedAssetIds] = await Promise.all([
+    loadUploadedAssets(),
+    getReferencedImageAssetIds(),
+  ]);
+
+  return Object.values(uploadedAssets).filter(
+    (asset) => asset.kind === "uploaded" && !referencedAssetIds.has(asset.id),
+  );
+}
+
+export async function pruneUnusedUploadedImageAssets() {
+  const unusedAssets = await getUnusedUploadedImageAssets();
+  const bucket = getAdminStorage().bucket();
+
+  await Promise.all(
+    unusedAssets.map(async (asset) => {
+      if (asset.storagePath) {
+        await bucket.file(asset.storagePath).delete({ ignoreNotFound: true });
+      }
+
+      await getAdminDb().collection(IMAGE_ASSET_COLLECTION).doc(asset.id).delete();
+    }),
+  );
+
+  return {
+    deletedAssetIds: unusedAssets.map((asset) => asset.id),
+    deletedCount: unusedAssets.length,
+  };
 }

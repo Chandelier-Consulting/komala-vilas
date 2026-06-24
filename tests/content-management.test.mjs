@@ -24,3 +24,15 @@ test("site photo slots support uploaded asset assignment with bundled fallback i
   assert.match(sitePhotos, /input\.assignments/);
   assert.match(sitePhotos, /resolveImageAsset/);
 });
+
+test("admin content store can find and prune unused uploaded assets", async () => {
+  const store = await readFile(new URL("../lib/admin-content-store.ts", import.meta.url), "utf8");
+
+  assert.match(store, /export async function getUnusedUploadedImageAssets/);
+  assert.match(store, /export async function pruneUnusedUploadedImageAssets/);
+  assert.match(store, /menuItemOverrides/);
+  assert.match(store, /sitePhotoAssignments/);
+  assert.match(store, /asset\.kind === "uploaded"/);
+  assert.match(store, /getAdminStorage\(\)/);
+  assert.match(store, /collection\(IMAGE_ASSET_COLLECTION\)\.doc\(asset\.id\)\.delete\(\)/);
+});

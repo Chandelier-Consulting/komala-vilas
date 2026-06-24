@@ -2112,6 +2112,31 @@ em,
   height: 18px;
 }
 
+.dashboard-inline-upload {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--color-line);
+  border-radius: 18px;
+  background: rgba(255, 248, 234, 0.68);
+}
+
+.dashboard-inline-upload-heading {
+  display: grid;
+  gap: 4px;
+}
+
+.dashboard-inline-upload-heading strong {
+  color: var(--color-ink);
+  font-size: 0.95rem;
+}
+
+.dashboard-inline-upload-heading span {
+  color: var(--color-muted);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
 .order-list {
   display: grid;
   align-content: start;

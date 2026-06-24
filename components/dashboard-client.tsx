@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import Image from "next/image";
 import {
   onAuthStateChanged,
@@ -25,6 +25,11 @@ type MenuPayload = {
 type PhotoPayload = {
   assets: Record<string, ImageAsset>;
   slots: Record<string, SitePhotoSlot>;
+};
+
+type AssetUploadResponse = {
+  assetId?: string;
+  error?: string;
 };
 
 const tabs: Array<{ id: DashboardTab; label: string; detail: string }> = [
@@ -94,6 +99,9 @@ export function DashboardClient() {
   const [photoSlots, setPhotoSlots] = useState<Record<string, SitePhotoSlot>>(defaultSitePhotoSlots);
   const [selectedSlotId, setSelectedSlotId] = useState("home-hero");
   const [selectedSlotAssetId, setSelectedSlotAssetId] = useState("");
+  const [menuImageFile, setMenuImageFile] = useState<File | null>(null);
+  const [menuImageLabel, setMenuImageLabel] = useState("");
+  const [menuImageAlt, setMenuImageAlt] = useState("");
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [uploadLabel, setUploadLabel] = useState("");
   const [uploadAlt, setUploadAlt] = useState("");
@@ -103,6 +111,8 @@ export function DashboardClient() {
   const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
   const configured = hasFirebaseClientConfig();
+  const selectedMenuItemIdRef = useRef(selectedMenuItemId);
+  const selectedSlotIdRef = useRef(selectedSlotId);
 
   const flattenedMenuItems = useMemo(() => flattenMenuItems(menuSections), [menuSections]);
 
@@ -145,6 +155,14 @@ export function DashboardClient() {
   const selectedSlot = photoSlots[selectedSlotId] ?? photoSlots["home-hero"];
 
   useEffect(() => {
+    selectedMenuItemIdRef.current = selectedMenuItemId;
+  }, [selectedMenuItemId]);
+
+  useEffect(() => {
+    selectedSlotIdRef.current = selectedSlotId;
+  }, [selectedSlotId]);
+
+  useEffect(() => {
     if (!configured) return;
     const auth = getFirebaseClientAuth();
     return onAuthStateChanged(auth, (currentUser) => setUser(currentUser));
@@ -178,7 +196,7 @@ export function DashboardClient() {
         const nextSections = menuBody.sections ?? [];
         const nextItems = flattenMenuItems(nextSections);
         const nextMenuItem =
-          nextItems.find((item) => item.id === selectedMenuItemId) ?? nextItems[0];
+          nextItems.find((item) => item.id === selectedMenuItemIdRef.current) ?? nextItems[0];
 
         setMenuSections(nextSections);
         setSelectedMenuItemId(nextMenuItem?.id ?? "");
@@ -188,7 +206,8 @@ export function DashboardClient() {
 
         const nextSlots = photosBody.slots ?? defaultSitePhotoSlots;
         const nextAssets = photosBody.assets ?? {};
-        const nextSlot = nextSlots[selectedSlotId] ?? nextSlots["home-hero"] ?? Object.values(nextSlots)[0];
+        const nextSlot =
+          nextSlots[selectedSlotIdRef.current] ?? nextSlots["home-hero"] ?? Object.values(nextSlots)[0];
 
         setPhotoAssets(nextAssets);
         setPhotoSlots(nextSlots);
@@ -205,7 +224,7 @@ export function DashboardClient() {
         setMessage(getErrorMessage(error, "Could not load the staff dashboard."));
       }
     });
-  }, [assetEditId, configured, selectedMenuItemId, selectedSlotId, user]);
+  }, [assetEditId, configured, user]);
 
   async function withToken<T>(callback: (token: string) => Promise<T>) {
     if (!user) throw new Error("Sign in required.");
@@ -213,9 +232,58 @@ export function DashboardClient() {
     return callback(token);
   }
 
+  function getMenuItemPayload(imageAssetId = menuForm.imageAssetId) {
+    return {
+      name: menuForm.name,
+      description: menuForm.description,
+      price: menuForm.price,
+      tags: menuForm.tags
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean),
+      popular: menuForm.popular,
+      cateringFriendly: menuForm.cateringFriendly,
+      imageAssetId,
+    };
+  }
+
+  async function createUploadedImageAsset(
+    token: string,
+    file: File,
+    label: string,
+    alt: string,
+  ) {
+    const dimensions = await getImagePreviewDimensions(file);
+    const formData = new FormData();
+    formData.set("file", file);
+    formData.set("label", label || file.name.replace(/\.[a-z0-9]+$/i, ""));
+    formData.set("alt", alt || label || file.name.replace(/\.[a-z0-9]+$/i, ""));
+    formData.set("width", String(dimensions.width));
+    formData.set("height", String(dimensions.height));
+
+    const response = await fetch("/api/dashboard/images", {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    const body = (await response.json().catch(() => null)) as AssetUploadResponse | null;
+
+    if (!response.ok || !body?.assetId) {
+      throw new Error(body?.error ?? "Image upload failed.");
+    }
+
+    return body.assetId;
+  }
+
   function selectMenuItem(itemId: string) {
     const nextSelectedItem = flattenedMenuItems.find((item) => item.id === itemId);
     setSelectedMenuItemId(itemId);
+    setMenuImageFile(null);
+    setMenuImageLabel(nextSelectedItem?.name ?? "");
+    setMenuImageAlt(nextSelectedItem?.name ?? "");
     if (nextSelectedItem) {
       setMenuForm(toMenuForm(nextSelectedItem));
     }
@@ -257,7 +325,7 @@ export function DashboardClient() {
       const nextSections = menuBody.sections ?? [];
       const nextItems = flattenMenuItems(nextSections);
       const nextMenuItem =
-        nextItems.find((item) => item.id === selectedMenuItemId) ?? nextItems[0];
+        nextItems.find((item) => item.id === selectedMenuItemIdRef.current) ?? nextItems[0];
 
       setMenuSections(nextSections);
       setSelectedMenuItemId(nextMenuItem?.id ?? "");
@@ -267,7 +335,8 @@ export function DashboardClient() {
 
       const nextSlots = photosBody.slots ?? defaultSitePhotoSlots;
       const nextAssets = photosBody.assets ?? {};
-      const nextSlot = nextSlots[selectedSlotId] ?? nextSlots["home-hero"] ?? Object.values(nextSlots)[0];
+      const nextSlot =
+        nextSlots[selectedSlotIdRef.current] ?? nextSlots["home-hero"] ?? Object.values(nextSlots)[0];
 
       setPhotoAssets(nextAssets);
       setPhotoSlots(nextSlots);
@@ -334,18 +403,7 @@ export function DashboardClient() {
               authorization: `Bearer ${token}`,
               "content-type": "application/json",
             },
-            body: JSON.stringify({
-              name: menuForm.name,
-              description: menuForm.description,
-              price: menuForm.price,
-              tags: menuForm.tags
-                .split(",")
-                .map((item) => item.trim())
-                .filter(Boolean),
-              popular: menuForm.popular,
-              cateringFriendly: menuForm.cateringFriendly,
-              imageAssetId: menuForm.imageAssetId,
-            }),
+            body: JSON.stringify(getMenuItemPayload()),
           });
 
           if (!response.ok) {
@@ -401,28 +459,8 @@ export function DashboardClient() {
 
     startTransition(async () => {
       try {
-        const dimensions = await getImagePreviewDimensions(uploadFile);
-
         await withToken(async (token) => {
-          const formData = new FormData();
-          formData.set("file", uploadFile);
-          formData.set("label", uploadLabel || uploadFile.name.replace(/\.[a-z0-9]+$/i, ""));
-          formData.set("alt", uploadAlt || uploadLabel || uploadFile.name.replace(/\.[a-z0-9]+$/i, ""));
-          formData.set("width", String(dimensions.width));
-          formData.set("height", String(dimensions.height));
-
-          const response = await fetch("/api/dashboard/images", {
-            method: "POST",
-            headers: {
-              authorization: `Bearer ${token}`,
-            },
-            body: formData,
-          });
-
-          if (!response.ok) {
-            const body = await response.json().catch(() => null);
-            throw new Error(body?.error ?? "Image upload failed.");
-          }
+          await createUploadedImageAsset(token, uploadFile, uploadLabel, uploadAlt);
         });
 
         setUploadFile(null);
@@ -432,6 +470,52 @@ export function DashboardClient() {
         setMessage("Image uploaded.");
       } catch (error) {
         setMessage(getErrorMessage(error, "Image upload failed."));
+      }
+    });
+  }
+
+  function uploadMenuItemImage() {
+    if (!selectedMenuItem) return;
+    if (!menuImageFile) {
+      setMessage("Choose a custom image before uploading.");
+      return;
+    }
+
+    startTransition(async () => {
+      try {
+        const uploadedAssetId = await withToken(async (token) => {
+          const assetId = await createUploadedImageAsset(
+            token,
+            menuImageFile,
+            menuImageLabel || selectedMenuItem.name,
+            menuImageAlt || menuImageLabel || selectedMenuItem.name,
+          );
+
+          const response = await fetch(`/api/dashboard/menu/${selectedMenuItem.id}`, {
+            method: "PUT",
+            headers: {
+              authorization: `Bearer ${token}`,
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(getMenuItemPayload(assetId)),
+          });
+
+          if (!response.ok) {
+            const body = await response.json().catch(() => null);
+            throw new Error(body?.error ?? "Could not assign the custom menu image.");
+          }
+
+          return assetId;
+        });
+
+        setMenuForm((current) => ({ ...current, imageAssetId: uploadedAssetId }));
+        setMenuImageFile(null);
+        setMenuImageLabel(selectedMenuItem.name);
+        setMenuImageAlt(selectedMenuItem.name);
+        await refreshMenuAndPhotos();
+        setMessage("Custom image uploaded and assigned to this menu item.");
+      } catch (error) {
+        setMessage(getErrorMessage(error, "Could not upload the custom menu image."));
       }
     });
   }
@@ -514,6 +598,40 @@ export function DashboardClient() {
         setMessage("Image library updated.");
       } catch (error) {
         setMessage(getErrorMessage(error, "Could not update the image status."));
+      }
+    });
+  }
+
+  function pruneUnusedImages() {
+    startTransition(async () => {
+      try {
+        const result = await withToken(async (token) => {
+          const response = await fetch("/api/dashboard/images/prune", {
+            method: "POST",
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+          });
+
+          const body = (await response.json().catch(() => null)) as
+            | { deletedCount?: number; error?: string }
+            | null;
+
+          if (!response.ok) {
+            throw new Error(body?.error ?? "Could not prune unused images.");
+          }
+
+          return body?.deletedCount ?? 0;
+        });
+
+        await refreshMenuAndPhotos();
+        setMessage(
+          result > 0
+            ? `Pruned ${result} unused uploaded image${result === 1 ? "" : "s"}.`
+            : "No unused uploaded images to prune.",
+        );
+      } catch (error) {
+        setMessage(getErrorMessage(error, "Could not prune unused images."));
       }
     });
   }
@@ -800,6 +918,41 @@ export function DashboardClient() {
                     </select>
                   </label>
                 </div>
+                <div className="dashboard-inline-upload">
+                  <div className="dashboard-inline-upload-heading">
+                    <strong>Upload custom image</strong>
+                    <span>Assign upload to this menu item</span>
+                  </div>
+                  <div className="dashboard-form-grid">
+                    <label>
+                      <span>Custom image file</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(event) => setMenuImageFile(event.target.files?.[0] ?? null)}
+                      />
+                    </label>
+                    <label>
+                      <span>Upload label</span>
+                      <input
+                        value={menuImageLabel}
+                        onChange={(event) => setMenuImageLabel(event.target.value)}
+                        placeholder={selectedMenuItem.name}
+                      />
+                    </label>
+                  </div>
+                  <label>
+                    <span>Upload alt text</span>
+                    <input
+                      value={menuImageAlt}
+                      onChange={(event) => setMenuImageAlt(event.target.value)}
+                      placeholder={selectedMenuItem.name}
+                    />
+                  </label>
+                  <button className="button button-secondary" type="button" onClick={uploadMenuItemImage}>
+                    Assign upload to this menu item
+                  </button>
+                </div>
                 <label>
                   <span>Tags</span>
                   <input
@@ -931,6 +1084,9 @@ export function DashboardClient() {
               </label>
               <button className="button button-primary" type="submit">
                 Upload image
+              </button>
+              <button className="button button-secondary" type="button" onClick={pruneUnusedImages}>
+                Prune unused images
               </button>
             </form>
 
