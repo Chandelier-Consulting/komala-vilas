@@ -33,8 +33,7 @@ export function getFirebaseAdmin() {
       clientEmail: requireEnv("FIREBASE_CLIENT_EMAIL"),
       privateKey: requireEnv("FIREBASE_PRIVATE_KEY").replace(/\\n/g, "\n"),
     }),
-    storageBucket:
-      process.env.FIREBASE_STORAGE_BUCKET || DEFAULT_FIREBASE_STORAGE_BUCKET,
+    storageBucket: DEFAULT_FIREBASE_STORAGE_BUCKET,
   });
 
   return firebaseAdminApp;

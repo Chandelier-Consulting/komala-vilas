@@ -138,6 +138,7 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
   assert.match(firebaseAdmin, /DEFAULT_FIREBASE_STORAGE_BUCKET/);
   assert.match(firebaseConfig, /komala-vilas-4f0c5\.firebasestorage\.app/);
   assert.doesNotMatch(firebaseAdmin, /appspot\.com/);
+  assert.doesNotMatch(firebaseAdmin, /process\.env\.FIREBASE_STORAGE_BUCKET/);
   assert.match(cateringRoute, /getAdminDb/);
   assert.match(cateringRoute, /email/);
   assert.match(cateringRoute, /email_send_failed/);
@@ -145,6 +146,7 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
   assert.doesNotMatch(dashboardOrdersRoute, /verifyFirebaseIdToken|accounts:lookup/);
   assert.match(firebaseClient, /getFirebaseClientApp/);
   assert.match(firebaseClient, /NEXT_PUBLIC_FIREBASE_APP_ID/);
+  assert.doesNotMatch(firebaseClient, /process\.env\.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET/);
   assert.match(dashboardClient, /Orders/);
   assert.match(dashboardClient, /Menu/);
   assert.match(dashboardClient, /Photos/);

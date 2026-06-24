@@ -20,8 +20,7 @@ function getFirebaseClientConfig() {
     projectId:
       process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || defaultFirebaseClientConfig.projectId,
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || defaultFirebaseClientConfig.appId,
-    storageBucket:
-      process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || defaultFirebaseClientConfig.storageBucket,
+    storageBucket: defaultFirebaseClientConfig.storageBucket,
   };
 }
 
