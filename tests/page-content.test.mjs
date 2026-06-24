@@ -70,6 +70,7 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
     orders,
     email,
     firebaseAdmin,
+    firebaseConfig,
     cateringRoute,
     dashboardOrdersRoute,
     firebaseClient,
@@ -87,6 +88,7 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
     readFile(new URL("../lib/orders.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/email.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/firebase-admin.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/firebase-config.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/catering-orders/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/dashboard/orders/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/firebase-client.ts", import.meta.url), "utf8"),
@@ -133,6 +135,9 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
   assert.match(firebaseAdmin, /securetoken\.google\.com/);
   assert.match(firebaseAdmin, /firebase-admin\/storage/);
   assert.match(firebaseAdmin, /getStorage/);
+  assert.match(firebaseAdmin, /DEFAULT_FIREBASE_STORAGE_BUCKET/);
+  assert.match(firebaseConfig, /komala-vilas-4f0c5\.firebasestorage\.app/);
+  assert.doesNotMatch(firebaseAdmin, /appspot\.com/);
   assert.match(cateringRoute, /getAdminDb/);
   assert.match(cateringRoute, /email/);
   assert.match(cateringRoute, /email_send_failed/);
@@ -395,4 +400,16 @@ test("catering package cards, calculator, and request form share package and gue
   assert.match(styles, /\.estimator-actions/);
   assert.match(orders, /Crisp dosa, masala filling, sambar, chutneys, and rotating chef specials\./);
   assert.doesNotMatch(orders, /focused live-station style menu/);
+});
+
+test("about hospitality cards stack title and body on separate lines", async () => {
+  const [about, styles] = await Promise.all([
+    readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(about, /className="about-value-card"/);
+  assert.match(styles, /\.about-value-card\s*{[^}]*display:\s*grid/);
+  assert.match(styles, /\.about-value-card strong\s*{[^}]*display:\s*block/);
+  assert.match(styles, /\.about-value-card span\s*{[^}]*display:\s*block/);
 });

@@ -1196,6 +1196,19 @@ img {
   line-height: 1.62;
 }
 
+.about-value-card {
+  display: grid;
+  gap: 12px;
+}
+
+.about-value-card strong {
+  display: block;
+}
+
+.about-value-card span {
+  display: block;
+}
+
 .story-panel img,
 .page-hero img {
   border-radius: var(--radius-card);

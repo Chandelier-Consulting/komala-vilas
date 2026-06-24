@@ -195,7 +195,7 @@ export default async function AboutPage() {
         </div>
         <MotionGroup className="values-panel about-values-grid">
           {hospitalityPillars.map((item) => (
-            <MotionCard key={item.title}>
+            <MotionCard key={item.title} className="about-value-card">
               <strong>{item.title}</strong>
               <span>{item.body}</span>
             </MotionCard>

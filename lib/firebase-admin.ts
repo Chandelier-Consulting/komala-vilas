@@ -1,6 +1,7 @@
 import { cert, getApps, initializeApp, type App } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { getStorage } from "firebase-admin/storage";
+import { DEFAULT_FIREBASE_STORAGE_BUCKET } from "@/lib/firebase-config";
 
 let firebaseAdminApp: App | null = null;
 let googleCertCache:
@@ -33,8 +34,7 @@ export function getFirebaseAdmin() {
       privateKey: requireEnv("FIREBASE_PRIVATE_KEY").replace(/\\n/g, "\n"),
     }),
     storageBucket:
-      process.env.FIREBASE_STORAGE_BUCKET ||
-      `${requireEnv("FIREBASE_PROJECT_ID")}.appspot.com`,
+      process.env.FIREBASE_STORAGE_BUCKET || DEFAULT_FIREBASE_STORAGE_BUCKET,
   });
 
   return firebaseAdminApp;
