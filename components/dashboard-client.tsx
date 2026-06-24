@@ -98,17 +98,6 @@ export function DashboardClient() {
     available: true,
     imageAssetId: "",
   });
-  const [newMenuForm, setNewMenuForm] = useState({
-    sectionId: "",
-    name: "",
-    description: "",
-    price: "",
-    tags: "",
-    popular: false,
-    cateringFriendly: false,
-    available: true,
-    imageAssetId: "",
-  });
   const [photoAssets, setPhotoAssets] = useState<Record<string, ImageAsset>>({});
   const [photoSlots, setPhotoSlots] = useState<Record<string, SitePhotoSlot>>(defaultSitePhotoSlots);
   const [selectedSlotId, setSelectedSlotId] = useState("home-hero");
@@ -214,14 +203,6 @@ export function DashboardClient() {
 
         setMenuSections(nextSections);
         setSelectedMenuItemId(nextMenuItem?.id ?? "");
-        setNewMenuForm((current) => ({
-          ...current,
-          sectionId: current.sectionId || nextSections[0]?.id || "",
-          imageAssetId:
-            current.imageAssetId ||
-            Object.values(menuBody.assets ?? {}).find((asset) => asset.status === "active")?.id ||
-            "",
-        }));
         if (nextMenuItem) {
           setMenuForm(toMenuForm(nextMenuItem));
         }
@@ -268,23 +249,6 @@ export function DashboardClient() {
       cateringFriendly: menuForm.cateringFriendly,
       available: menuForm.available,
       imageAssetId,
-    };
-  }
-
-  function getNewMenuItemPayload() {
-    return {
-      sectionId: newMenuForm.sectionId || menuSections[0]?.id || "",
-      name: newMenuForm.name,
-      description: newMenuForm.description,
-      price: newMenuForm.price,
-      tags: newMenuForm.tags
-        .split(",")
-        .map((item) => item.trim())
-        .filter(Boolean),
-      popular: newMenuForm.popular,
-      cateringFriendly: newMenuForm.cateringFriendly,
-      available: newMenuForm.available,
-      imageAssetId: newMenuForm.imageAssetId,
     };
   }
 
@@ -370,14 +334,6 @@ export function DashboardClient() {
 
       setMenuSections(nextSections);
       setSelectedMenuItemId(nextMenuItem?.id ?? "");
-      setNewMenuForm((current) => ({
-        ...current,
-        sectionId: current.sectionId || nextSections[0]?.id || "",
-        imageAssetId:
-          current.imageAssetId ||
-          Object.values(menuBody.assets ?? {}).find((asset) => asset.status === "active")?.id ||
-          "",
-      }));
       if (nextMenuItem) {
         setMenuForm(toMenuForm(nextMenuItem));
       }
@@ -469,19 +425,28 @@ export function DashboardClient() {
     });
   }
 
-  async function saveNewMenuItem(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
+  function createDraftMenuItem() {
     startTransition(async () => {
       try {
         const itemId = await withToken(async (token) => {
+          const activeAssetId = Object.values(menuAssets).find((asset) => asset.status === "active")?.id ?? "";
           const response = await fetch("/api/dashboard/menu", {
             method: "POST",
             headers: {
               authorization: `Bearer ${token}`,
               "content-type": "application/json",
             },
-            body: JSON.stringify(getNewMenuItemPayload()),
+            body: JSON.stringify({
+              sectionId: selectedMenuItem?.sectionId || menuSections[0]?.id || "",
+              name: "New menu item",
+              description: "Add a description for this dish.",
+              price: "$0.00",
+              tags: [],
+              popular: false,
+              cateringFriendly: false,
+              available: false,
+              imageAssetId: activeAssetId,
+            }),
           });
 
           const body = (await response.json().catch(() => null)) as { itemId?: string; error?: string } | null;
@@ -493,20 +458,9 @@ export function DashboardClient() {
           return body.itemId;
         });
 
-        setNewMenuForm({
-          sectionId: menuSections[0]?.id ?? "",
-          name: "",
-          description: "",
-          price: "",
-          tags: "",
-          popular: false,
-          cateringFriendly: false,
-          available: true,
-          imageAssetId: Object.values(menuAssets).find((asset) => asset.status === "active")?.id ?? "",
-        });
         selectedMenuItemIdRef.current = itemId;
         await refreshMenuAndPhotos();
-        setMessage("Dish added to the menu.");
+        setMessage("Draft dish added. Edit it, then show it on the public menu when ready.");
       } catch (error) {
         setMessage(getErrorMessage(error, "Could not add the menu item."));
       }
@@ -992,7 +946,18 @@ export function DashboardClient() {
           <div className="dashboard-panel menu-item-list">
             <div className="dashboard-panel-heading">
               <h3>Menu items</h3>
-              <span>{flattenedMenuItems.filter((item) => item.available !== false).length} live items</span>
+              <div className="dashboard-heading-actions">
+                <span>{flattenedMenuItems.filter((item) => item.available !== false).length} live items</span>
+                <button
+                  className="dashboard-icon-button"
+                  type="button"
+                  aria-label="Add dish"
+                  title="Add dish"
+                  onClick={createDraftMenuItem}
+                >
+                  +
+                </button>
+              </div>
             </div>
             {menuSections.map((section) => (
               <div key={section.id} className="menu-section-list">
@@ -1012,117 +977,7 @@ export function DashboardClient() {
             ))}
           </div>
 
-          <div className="photo-management-stack">
-            <form className="dashboard-panel content-editor" onSubmit={saveNewMenuItem}>
-              <div className="dashboard-panel-heading">
-                <h3>Add dish</h3>
-                <span>Create a menu item</span>
-              </div>
-              <div className="dashboard-form-grid">
-                <label>
-                  <span>Section</span>
-                  <select
-                    value={newMenuForm.sectionId}
-                    onChange={(event) => setNewMenuForm((current) => ({ ...current, sectionId: event.target.value }))}
-                  >
-                    {menuSections.map((section) => (
-                      <option key={section.id} value={section.id}>
-                        {section.title}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  <span>Price</span>
-                  <input
-                    value={newMenuForm.price}
-                    placeholder="$9.50"
-                    onChange={(event) => setNewMenuForm((current) => ({ ...current, price: event.target.value }))}
-                  />
-                </label>
-              </div>
-              <label>
-                <span>Name</span>
-                <input
-                  value={newMenuForm.name}
-                  onChange={(event) => setNewMenuForm((current) => ({ ...current, name: event.target.value }))}
-                />
-              </label>
-              <label>
-                <span>Description</span>
-                <textarea
-                  value={newMenuForm.description}
-                  rows={3}
-                  onChange={(event) =>
-                    setNewMenuForm((current) => ({ ...current, description: event.target.value }))
-                  }
-                />
-              </label>
-              <div className="dashboard-form-grid">
-                <label>
-                  <span>Photo</span>
-                  <select
-                    value={newMenuForm.imageAssetId}
-                    onChange={(event) =>
-                      setNewMenuForm((current) => ({ ...current, imageAssetId: event.target.value }))
-                    }
-                  >
-                    {Object.values(menuAssets)
-                      .filter((asset) => asset.status === "active")
-                      .map((asset) => (
-                        <option key={asset.id} value={asset.id}>
-                          {asset.label}
-                        </option>
-                      ))}
-                  </select>
-                </label>
-                <label>
-                  <span>Tags</span>
-                  <input
-                    value={newMenuForm.tags}
-                    placeholder="Vegan, Signature"
-                    onChange={(event) => setNewMenuForm((current) => ({ ...current, tags: event.target.value }))}
-                  />
-                </label>
-              </div>
-              <div className="dashboard-checkbox-row">
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={newMenuForm.popular}
-                    onChange={(event) =>
-                      setNewMenuForm((current) => ({ ...current, popular: event.target.checked }))
-                    }
-                  />
-                  <span>Mark as popular</span>
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={newMenuForm.cateringFriendly}
-                    onChange={(event) =>
-                      setNewMenuForm((current) => ({ ...current, cateringFriendly: event.target.checked }))
-                    }
-                  />
-                  <span>Catering-friendly</span>
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={newMenuForm.available}
-                    onChange={(event) =>
-                      setNewMenuForm((current) => ({ ...current, available: event.target.checked }))
-                    }
-                  />
-                  <span>Show on public menu</span>
-                </label>
-              </div>
-              <button className="button button-primary" type="submit">
-                Add dish
-              </button>
-            </form>
-
-            <form className="dashboard-panel content-editor" onSubmit={saveMenuItem}>
+          <form className="dashboard-panel content-editor" onSubmit={saveMenuItem}>
               <div className="dashboard-panel-heading">
                 <h3>Menu item editor</h3>
                 <span>{selectedMenuItem?.sectionTitle ?? "Choose an item"}</span>
@@ -1290,8 +1145,7 @@ export function DashboardClient() {
               ) : (
                 <p>Select a menu item to edit it.</p>
               )}
-            </form>
-          </div>
+          </form>
         </section>
       ) : null}
 

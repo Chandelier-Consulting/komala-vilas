@@ -349,8 +349,12 @@ test("dashboard menu editor can add custom dishes and remove dishes", async () =
   assert.match(collectionRoute, /collection\("menuCustomItems"\)/);
   assert.match(itemRoute, /const customItem = await getAdminDb\(\)\.collection\("menuCustomItems"\)\.doc\(itemId\)\.get\(\)/);
   assert.match(itemRoute, /customItem\.ref\.delete\(\)/);
-  assert.match(dashboardClient, /Add dish/);
-  assert.match(dashboardClient, /saveNewMenuItem/);
+  assert.match(dashboardClient, /aria-label="Add dish"/);
+  assert.match(dashboardClient, /createDraftMenuItem/);
+  assert.match(dashboardClient, /New menu item/);
+  assert.match(dashboardClient, /selectedMenuItemIdRef\.current = itemId/);
+  assert.doesNotMatch(dashboardClient, /newMenuForm/);
+  assert.doesNotMatch(dashboardClient, /saveNewMenuItem/);
   assert.match(dashboardClient, /removeMenuItem/);
   assert.match(dashboardClient, /Remove dish/);
 });

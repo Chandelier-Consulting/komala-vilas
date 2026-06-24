@@ -2063,6 +2063,35 @@ em,
   font-weight: 800;
 }
 
+.dashboard-heading-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard-icon-button {
+  display: inline-grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid var(--color-line);
+  border-radius: 50%;
+  background: rgba(125, 36, 24, 0.08);
+  color: var(--color-tamarind);
+  font: inherit;
+  font-size: 1.25rem;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.dashboard-icon-button:hover {
+  border-color: rgba(125, 36, 24, 0.34);
+  background: rgba(125, 36, 24, 0.13);
+  transform: translateY(-1px);
+}
+
 .dashboard-filters,
 .status-counts {
   grid-column: 1 / -1;
