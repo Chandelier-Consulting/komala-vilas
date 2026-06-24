@@ -126,9 +126,11 @@ test("premium catering refresh adds design tokens, motion, Firebase, and dashboa
   assert.doesNotMatch(email, /nodemailer|SMTP_/);
   assert.match(firebaseAdmin, /getFirebaseAdmin/);
   assert.match(firebaseAdmin, /getAdminDb/);
-  assert.match(firebaseAdmin, /firebase-admin\/auth/);
-  assert.match(firebaseAdmin, /getAdminAuth/);
-  assert.match(firebaseAdmin, /verifyIdToken/);
+  assert.doesNotMatch(firebaseAdmin, /firebase-admin\/auth/);
+  assert.doesNotMatch(firebaseAdmin, /getAdminAuth/);
+  assert.match(firebaseAdmin, /verifyAdminRequest/);
+  assert.match(firebaseAdmin, /import\("jose"\)/);
+  assert.match(firebaseAdmin, /securetoken\.google\.com/);
   assert.match(firebaseAdmin, /firebase-admin\/storage/);
   assert.match(firebaseAdmin, /getStorage/);
   assert.match(cateringRoute, /getAdminDb/);
