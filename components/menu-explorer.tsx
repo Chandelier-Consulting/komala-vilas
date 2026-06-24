@@ -100,7 +100,7 @@ export function MenuExplorer({
         </div>
       </MotionSection>
 
-      <MotionSection className="section-shell menu-workspace">
+      <div className="section-shell menu-workspace">
         <MotionCard className="menu-aside">
           <strong>Today&apos;s anchor</strong>
           <Image
@@ -203,7 +203,7 @@ export function MenuExplorer({
             for today&apos;s thali and specials.
           </p>
         </MotionLayoutGroup>
-      </MotionSection>
+      </div>
     </>
   );
 }
