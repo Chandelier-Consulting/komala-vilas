@@ -418,3 +418,17 @@ test("about hospitality cards stack title and body on separate lines", async () 
   assert.match(styles, /\.about-value-card strong\s*{[^}]*display:\s*block/);
   assert.match(styles, /\.about-value-card span\s*{[^}]*display:\s*block/);
 });
+
+test("root metadata uses a Komala Vilas app icon instead of template branding", async () => {
+  const [layout, icon] = await Promise.all([
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/icon.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(layout, /icons:\s*\{/);
+  assert.match(layout, /icon:\s*"\/*icon"/);
+  assert.match(icon, /ImageResponse/);
+  assert.match(icon, /Komala Vilas/);
+  assert.match(icon, /க/);
+  assert.doesNotMatch(`${layout}\n${icon}`, /vercel/i);
+});

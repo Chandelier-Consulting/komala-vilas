@@ -36,6 +36,11 @@ export const metadata: Metadata = {
   title: "Komala Vilas | South Indian Vegetarian Restaurant",
   description:
     "Komala Vilas serves South Indian vegetarian dosas, idli, thali, filter coffee, and catering in Sunnyvale, California.",
+  icons: {
+    icon: "/icon",
+    shortcut: "/icon",
+    apple: "/icon",
+  },
 };
 
 export default function RootLayout({
