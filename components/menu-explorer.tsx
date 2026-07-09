@@ -168,21 +168,23 @@ export function MenuExplorer({
                               <div className="menu-item-summary">
                                 <div className="menu-item-title">
                                   <span>{item.name}</span>
+                                  {item.price ? <strong>{item.price}</strong> : null}
+                                </div>
+                                {getItemBadges(item).length > 0 ? (
                                   <div className="menu-item-badges">
                                     {getItemBadges(item).map((tag) => (
                                       <span key={tag}>{tag}</span>
                                     ))}
                                   </div>
-                                </div>
+                                ) : null}
                                 <MotionPresence>
-                                  {isExpanded ? (
+                                  {isExpanded && item.description ? (
                                     <MotionLayoutItem id={detailsId} className="menu-item-details">
                                       <p>{item.description}</p>
                                     </MotionLayoutItem>
                                   ) : null}
                                 </MotionPresence>
                               </div>
-                              <strong>{item.price}</strong>
                             </div>
                           </MotionLayoutItem>
                         );
