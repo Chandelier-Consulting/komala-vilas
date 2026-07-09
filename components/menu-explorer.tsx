@@ -111,7 +111,7 @@ export function MenuExplorer({
             height={768}
             quality={85}
           />
-          <p>Unlimited South Indian Thali: $13.50</p>
+          <p>Daily Lunch Thali: $16.50</p>
           <MotionLink className="button button-primary" href="/catering">
             Order Catering
           </MotionLink>
