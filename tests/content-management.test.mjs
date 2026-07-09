@@ -6,7 +6,7 @@ test("menu content layer supports Firestore overrides on top of fixed sections",
   const menu = await readFile(new URL("../lib/menu.ts", import.meta.url), "utf8");
 
   assert.match(menu, /export const defaultMenuSections/);
-  assert.match(menu, /id:\s*"dosa-masala-dosa"/);
+  assert.match(menu, /id:\s*"dosas-masala"/);
   assert.match(menu, /image:\s*ResolvedImage/);
   assert.match(menu, /export function mergeMenuContent/);
   assert.match(menu, /override\.imageAssetId/);

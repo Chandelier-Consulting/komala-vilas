@@ -28,9 +28,12 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
   assert.match(page, /<section className="hero-background background-pattern">/);
   assert.match(page, /<div className="hero-premium section-shell">/);
   assert.match(menu, /export default async function MenuPage/);
-  assert.match(menuData, /Unlimited South Indian Thali/);
+  assert.match(menuData, /Daily Lunch Thali/);
   assert.match(menuData, /export const defaultMenuSections/);
-  assert.match(menuExplorer, /menu-filter-bar/);
+  assert.match(menuExplorer, /chapter-rail/);
+  assert.match(menuExplorer, /IntersectionObserver/);
+  assert.match(menuExplorer, /chapter-watermark/);
+  assert.match(menuExplorer, /menu-featured/);
   assert.match(menu, /<section className="hero-background background-pattern">/);
   assert.match(about, /<section className="hero-background background-pattern">/);
   assert.match(
@@ -39,13 +42,10 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
   );
   assert.match(styles, /\.menu-item:hover[\s\S]*background:/);
   assert.match(styles, /\.menu-page,\s*\.about-page,\s*\.catering-page,\s*\.dashboard-page\s*{[^}]*background: transparent/);
-  assert.match(styles, /\.menu-filter-bar\s*{[^}]*width: 100%/);
-  assert.match(styles, /\.menu-filter-bar\s*{[^}]*padding:/);
-  assert.match(styles, /\.menu-filter-bar a\s*{[^}]*background: var\(--color-tamarind\)/);
-  assert.match(styles, /\.menu-filter-bar a\s*{[^}]*box-shadow:[^}]*0 10px 24px -14px rgba\(44, 29, 18, 0\.72\)/);
-  assert.match(styles, /\.menu-filter-bar a:hover,\s*\.menu-filter-bar a:focus-visible\s*{[^}]*box-shadow:[^}]*0 16px 30px -12px rgba\(44, 29, 18, 0\.78\)/);
-  assert.doesNotMatch(styles, /\.menu-filter-bar a\s*{[^}]*box-shadow:[^}]*0 \d+px 0 rgba/);
-  assert.doesNotMatch(styles, /\.menu-filter-bar a::before/);
+  assert.match(styles, /\.chapter-rail\s*{[^}]*display:/);
+  assert.match(styles, /\.chapter-link\.active\s*{[^}]*border-left-color:/);
+  assert.match(styles, /\.chapter-watermark\s*{[^}]*opacity:/);
+  assert.doesNotMatch(styles, /\.menu-filter-bar/);
   assert.doesNotMatch(
     styles,
     /\.functional-menu-list \.menu-group \+ \.menu-group\s*{[^}]*(?:linear-gradient|border-top|border-bottom)/,
@@ -252,7 +252,7 @@ test("menu items render as image-backed accordion reveals", async () => {
   assert.match(menuExplorer, /menu-item-details/);
   assert.match(menuExplorer, /<div className="section-shell menu-workspace">/);
   assert.doesNotMatch(menuExplorer, /<MotionSection className="section-shell menu-workspace">/);
-  assert.match(menuExplorer, /<MotionSection id=\{section\.id\} className="menu-group" inherit=\{false\}>/);
+  assert.match(menuExplorer, /<MotionSection[\s\S]{0,120}id=\{section\.id\}[\s\S]{0,120}className="menu-group"[\s\S]{0,120}inherit=\{false\}/);
   assert.match(styles, /\.menu-item-accordion/);
   assert.match(styles, /\.menu-item-photo/);
   assert.match(styles, /\.menu-item-details/);
