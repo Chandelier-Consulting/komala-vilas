@@ -4,16 +4,12 @@ import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import {
   MotionCard,
-  MotionDiv,
   MotionLayoutGroup,
   MotionLayoutItem,
   MotionLink,
   MotionPresence,
-  MotionSection,
 } from "@/components/motion-shell";
 import type { MenuSection } from "@/lib/menu";
-
-const filters = ["All", "Vegan", "Popular", "Catering-friendly"] as const;
 
 const CHAPTER_ACCENTS = [
   "var(--color-tamarind)",
@@ -50,31 +46,25 @@ export function MenuExplorer({
   anchorImageAlt: string;
 }) {
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<(typeof filters)[number]>("All");
   const [expandedItemKey, setExpandedItemKey] = useState("");
   const [activeChapter, setActiveChapter] = useState(menuSections[0]?.id ?? "");
 
   const filteredSections = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
+    if (!normalizedQuery) return menuSections;
 
     return menuSections
       .map((section) => {
         const items = section.items.filter((item) => {
           const haystack = `${item.name} ${item.description} ${item.tags.join(" ")}`.toLowerCase();
-          const matchesQuery = !normalizedQuery || haystack.includes(normalizedQuery);
-          const matchesFilter =
-            filter === "All" ||
-            (filter === "Popular" && item.popular) ||
-            (filter === "Catering-friendly" && item.cateringFriendly) ||
-            item.tags.includes(filter);
-          return matchesQuery && matchesFilter;
+          return haystack.includes(normalizedQuery);
         });
         return { ...section, items };
       })
       .filter((section) => section.items.length > 0);
-  }, [filter, menuSections, query]);
+  }, [menuSections, query]);
 
-  const isBrowsingAll = filter === "All" && query.trim() === "";
+  const isBrowsingAll = query.trim() === "";
 
   useEffect(() => {
     const sectionEls = filteredSections
@@ -83,19 +73,36 @@ export function MenuExplorer({
 
     if (sectionEls.length === 0) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+    // Scroll-spy by "last heading crossed above the activation line" rather than
+    // intersection ratio: a ratio comparison picks short sections over sections
+    // taller than the viewport, which can never show a high visible ratio.
+    const activationLine = 160;
+    let ticking = false;
 
-        if (visible[0]) setActiveChapter(visible[0].target.id);
-      },
-      { rootMargin: "-15% 0px -70% 0px", threshold: [0, 0.25, 0.5, 0.75, 1] },
-    );
+    function updateActiveChapter() {
+      ticking = false;
+      let current = sectionEls[0];
+      for (const el of sectionEls) {
+        if (el.getBoundingClientRect().top <= activationLine) {
+          current = el;
+        }
+      }
+      setActiveChapter(current.id);
+    }
 
-    sectionEls.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(updateActiveChapter);
+    }
+
+    updateActiveChapter();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, [filteredSections]);
 
   return (
@@ -133,7 +140,7 @@ export function MenuExplorer({
       </MotionCard>
 
       <div className="menu-content">
-        <MotionSection className="menu-tools">
+        <div className="menu-tools">
           <label className="menu-search">
             <span>Search menu</span>
             <input
@@ -145,23 +152,7 @@ export function MenuExplorer({
               }}
             />
           </label>
-          <div className="menu-tabs" role="tablist" aria-label="Dietary and menu filters">
-            {filters.map((item) => (
-              <MotionDiv key={item} className="menu-tab-motion">
-                <button
-                  type="button"
-                  className={filter === item ? "active" : ""}
-                  onClick={() => {
-                    setFilter(item);
-                    setExpandedItemKey("");
-                  }}
-                >
-                  {item}
-                </button>
-              </MotionDiv>
-            ))}
-          </div>
-        </MotionSection>
+        </div>
 
         <MotionLayoutGroup className="menu-list functional-menu-list">
           <MotionPresence>
@@ -173,11 +164,10 @@ export function MenuExplorer({
 
               return (
                 <div key={section.id}>
-                  <MotionSection
+                  <section
                     id={section.id}
                     className="menu-group"
                     style={{ "--chapter-accent": accent } as CSSProperties}
-                    inherit={false}
                   >
                     <span className="chapter-watermark" aria-hidden="true">
                       {section.tamil}
@@ -288,7 +278,7 @@ export function MenuExplorer({
                         })}
                       </MotionPresence>
                     </MotionLayoutGroup>
-                  </MotionSection>
+                  </section>
                 </div>
               );
             })}

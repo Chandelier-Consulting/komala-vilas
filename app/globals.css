@@ -1282,11 +1282,103 @@ img {
   gap: 28px;
 }
 
-.menu-page,
 .about-page,
 .catering-page,
 .dashboard-page {
   background: transparent;
+}
+
+.menu-page {
+  position: relative;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(217, 155, 38, 0.16), transparent 60%),
+    linear-gradient(180deg, rgba(125, 36, 24, 0.05), transparent 22%),
+    var(--color-ivory);
+}
+
+.menu-backdrop-shell {
+  position: relative;
+  width: 100%;
+}
+
+.menu-workspace {
+  position: relative;
+  z-index: 1;
+}
+
+.menu-page-gopuram {
+  display: none;
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  z-index: 0;
+  width: 560px;
+  height: 780px;
+  transform: translateX(-50%);
+  color: var(--color-tamarind);
+  opacity: 0.09;
+  fill: currentColor;
+  pointer-events: none;
+}
+
+.menu-page-rail {
+  display: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 0;
+  width: 26px;
+  opacity: 0.65;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(45deg, var(--color-turmeric) 0 3px, transparent 3px 22px),
+    repeating-linear-gradient(-45deg, var(--color-tamarind) 0 3px, transparent 3px 22px);
+  background-size: 100% 44px, 100% 44px;
+  mask-image: linear-gradient(180deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.menu-page-rail::before,
+.menu-page-rail::after {
+  content: "";
+  position: absolute;
+  top: 4%;
+  bottom: 4%;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--color-brass) 10%, var(--color-brass) 90%, transparent);
+}
+
+.menu-page-rail-left {
+  left: 44px;
+}
+
+.menu-page-rail-left::before {
+  left: -6px;
+}
+
+.menu-page-rail-left::after {
+  right: -6px;
+}
+
+.menu-page-rail-right {
+  right: 44px;
+}
+
+.menu-page-rail-right::before {
+  left: -6px;
+}
+
+.menu-page-rail-right::after {
+  right: -6px;
+}
+
+@media (min-width: 1440px) {
+  .menu-page-rail {
+    display: block;
+  }
+
+  .menu-page-gopuram {
+    display: block;
+  }
 }
 
 .menu-workspace {
@@ -1396,43 +1488,11 @@ img {
 }
 
 .menu-tools {
-  display: grid;
-  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
-  gap: 16px;
-  align-items: end;
+  max-width: 480px;
 }
 
 .menu-search {
   margin: 0;
-}
-
-.menu-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: flex-end;
-}
-
-.menu-tab-motion {
-  display: inline-flex;
-}
-
-.menu-tabs button {
-  min-height: 42px;
-  border: 1px solid var(--color-line);
-  border-radius: 999px;
-  background: rgba(255, 248, 234, 0.72);
-  color: var(--color-muted);
-  font: inherit;
-  font-size: 0.88rem;
-  font-weight: 900;
-  padding-inline: 14px;
-}
-
-.menu-tabs button.active {
-  border-color: var(--color-tamarind);
-  background: var(--color-tamarind);
-  color: var(--color-ivory);
 }
 
 .menu-list {
@@ -2647,7 +2707,6 @@ dd {
   .feast-planner-section,
   .review-layout,
   .menu-workspace,
-  .menu-tools,
   .order-link-panel,
   .catering-layout,
   .dashboard-grid,
@@ -2780,11 +2839,7 @@ dd {
   }
 
   .menu-tools {
-    align-items: stretch;
-  }
-
-  .menu-tabs {
-    justify-content: flex-start;
+    max-width: none;
   }
 
   .menu-items-list {

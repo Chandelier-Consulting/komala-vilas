@@ -31,9 +31,10 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
   assert.match(menuData, /Daily Lunch Thali/);
   assert.match(menuData, /export const defaultMenuSections/);
   assert.match(menuExplorer, /chapter-rail/);
-  assert.match(menuExplorer, /IntersectionObserver/);
+  assert.match(menuExplorer, /getBoundingClientRect/);
   assert.match(menuExplorer, /chapter-watermark/);
   assert.match(menuExplorer, /menu-featured/);
+  assert.doesNotMatch(menuExplorer, /const filters = \["All", "Vegan", "Popular", "Catering-friendly"\]/);
   assert.match(menu, /<section className="hero-background background-pattern">/);
   assert.match(about, /<section className="hero-background background-pattern">/);
   assert.match(
@@ -41,7 +42,9 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
     /https:\/\/www\.google\.com\/maps\/place\/Komala\+Vilas\/@37\.3531031,-122\.0116365,15\.64z/,
   );
   assert.match(styles, /\.menu-item:hover[\s\S]*background:/);
-  assert.match(styles, /\.menu-page,\s*\.about-page,\s*\.catering-page,\s*\.dashboard-page\s*{[^}]*background: transparent/);
+  assert.match(styles, /\.about-page,\s*\.catering-page,\s*\.dashboard-page\s*{[^}]*background: transparent/);
+  assert.match(styles, /\.menu-page\s*{[^}]*background:[^}]*radial-gradient/);
+  assert.match(styles, /\.menu-page-gopuram/);
   assert.match(styles, /\.chapter-rail\s*{[^}]*display:/);
   assert.match(styles, /\.chapter-link\.active\s*{[^}]*border-left-color:/);
   assert.match(styles, /\.chapter-watermark\s*{[^}]*opacity:/);
@@ -252,7 +255,8 @@ test("menu items render as image-backed accordion reveals", async () => {
   assert.match(menuExplorer, /menu-item-details/);
   assert.match(menuExplorer, /<div className="section-shell menu-workspace">/);
   assert.doesNotMatch(menuExplorer, /<MotionSection className="section-shell menu-workspace">/);
-  assert.match(menuExplorer, /<MotionSection[\s\S]{0,120}id=\{section\.id\}[\s\S]{0,120}className="menu-group"[\s\S]{0,120}inherit=\{false\}/);
+  assert.match(menuExplorer, /<section[\s\S]{0,120}id=\{section\.id\}[\s\S]{0,120}className="menu-group"/);
+  assert.doesNotMatch(menuExplorer, /<MotionSection[\s\S]{0,40}id=\{section\.id\}/);
   assert.match(styles, /\.menu-item-accordion/);
   assert.match(styles, /\.menu-item-photo/);
   assert.match(styles, /\.menu-item-details/);
