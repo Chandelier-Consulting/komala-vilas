@@ -169,10 +169,6 @@ export function MenuExplorer({
                     className="menu-group"
                     style={{ "--chapter-accent": accent } as CSSProperties}
                   >
-                    <span className="chapter-watermark" aria-hidden="true">
-                      {section.tamil}
-                    </span>
-
                     <div className="menu-group-heading">
                       <span className="chapter-index" aria-hidden="true">
                         {chapterNumber(index)}

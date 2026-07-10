@@ -32,8 +32,8 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
   assert.match(menuData, /export const defaultMenuSections/);
   assert.match(menuExplorer, /chapter-rail/);
   assert.match(menuExplorer, /getBoundingClientRect/);
-  assert.match(menuExplorer, /chapter-watermark/);
   assert.match(menuExplorer, /menu-featured/);
+  assert.doesNotMatch(menuExplorer, /chapter-watermark/);
   assert.doesNotMatch(menuExplorer, /const filters = \["All", "Vegan", "Popular", "Catering-friendly"\]/);
   assert.match(menu, /<section className="hero-background background-pattern">/);
   assert.match(about, /<section className="hero-background background-pattern">/);
@@ -47,7 +47,7 @@ test("app uses the corrected Komala Vilas brand and restaurant content", async (
   assert.match(styles, /\.menu-page-gopuram/);
   assert.match(styles, /\.chapter-rail\s*{[^}]*display:/);
   assert.match(styles, /\.chapter-link\.active\s*{[^}]*border-left-color:/);
-  assert.match(styles, /\.chapter-watermark\s*{[^}]*opacity:/);
+  assert.doesNotMatch(styles, /\.chapter-watermark/);
   assert.doesNotMatch(styles, /\.menu-filter-bar/);
   assert.doesNotMatch(
     styles,
