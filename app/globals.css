@@ -1371,7 +1371,7 @@ img {
   right: -6px;
 }
 
-@media (min-width: 1440px) {
+@media (min-width: 1560px) {
   .menu-page-rail {
     display: block;
   }
@@ -1383,8 +1383,9 @@ img {
 
 .menu-workspace {
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
+  grid-template-columns: 320px minmax(0, 1fr);
   gap: 40px;
+  width: min(1320px, calc(100% - 64px));
   padding-block: 64px 96px;
   align-items: start;
 }
